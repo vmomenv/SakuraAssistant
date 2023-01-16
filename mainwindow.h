@@ -5,7 +5,6 @@
 DWIDGET_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 #include <DMainWindow>
-
 class MainWindow :public DMainWindow
 {
     Q_OBJECT
@@ -15,7 +14,6 @@ public:
 private:
 
 protected:
-//    void mousePressEvent(QMouseEvent *event) override;
+    void focusOutEvent(QFocusEvent *event);
 };
-
 #endif // DMAINWINDOW_H
