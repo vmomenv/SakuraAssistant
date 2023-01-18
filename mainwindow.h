@@ -7,6 +7,8 @@
 #include<DPushButton>
 #include<DLabel>
 #include<QPixmap>
+#include<QTextEdit>
+#include<QProcess>
 DWIDGET_USE_NAMESPACE
 class MainWindow :public DMainWindow
 {
@@ -28,11 +30,17 @@ private:
     DLabel *WeatherTemperature;
     DLabel *weatherPic;
 
+    bool isUpdating;
+
+
 
 protected:
     void focusOutEvent(QFocusEvent *event);
     void updateUpdateButton();
     void weather();
+private slots:
+    void on_sysUpdateButton_clicked();
+
 
 };
 #endif // DMAINWINDOW_H
