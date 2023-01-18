@@ -4,6 +4,9 @@
 #include <DMainWindow>
 #include <QDesktopWidget>
 #include<DApplication>
+#include<DPushButton>
+#include<DLabel>
+#include<QPixmap>
 DWIDGET_USE_NAMESPACE
 class MainWindow :public DMainWindow
 {
@@ -18,8 +21,18 @@ private:
     int desktopWidget =desktop->width();
     int desktopHeight = desktop->height();
 
+    DPushButton *sysUpdateButton;
+    DPushButton *appUpdateButton;
+
+    DLabel *weatherCity;
+    DLabel *WeatherTemperature;
+    DLabel *weatherPic;
+
+
 protected:
     void focusOutEvent(QFocusEvent *event);
+    void updateUpdateButton();
+    void weather();
 
 };
 #endif // DMAINWINDOW_H
