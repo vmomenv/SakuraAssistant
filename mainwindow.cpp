@@ -24,8 +24,10 @@ MainWindow::MainWindow(DWidget *parent)
 
 //失焦关闭窗口
 void MainWindow::focusOutEvent(QFocusEvent *event){
-    if(!isUpdating)
+    if(isUpdating==false){
         close();
+    }
+
 }
 
 void MainWindow::updateUpdateButton(){
@@ -49,13 +51,42 @@ void MainWindow::weather(){
 void MainWindow::on_sysUpdateButton_clicked(){
     isUpdating=true;//正在系统更新，取消失焦关闭动作
     QProcess process;
-        process.start("bash", QStringList() << "-c" << "pkexec apt update && apt list --upgradable");
-        process.waitForFinished();
-        QString result;
-        result = process.readAllStandardOutput();
-        qDebug()<<result;
+    process.start("bash", QStringList() << "-c" << "pkexec apt update && apt list --upgradable");
+
+    process.waitForFinished();
+    QString updateResult;
+    updateResult = process.readAllStandardOutput();
 //    QProcess::startDetached("pkexec apt-get update && apt-get upgrade");
-    bool isUpdating=false;
+    qDebug()<<updateResult;
+
+//    //更新信息编写
+//    QStringList updateInfo=updateResult.split("\n");
+//    QString packageName;
+//    QString currentVersion;
+//    QString newVersion;
+//    for (const QString& line : updateInfo) {
+//        if (line.startsWith("Package:")) {
+//            packageName = line.mid(8).trimmed();
+
+//        } else if (line.startsWith("Current Version:")) {
+//            currentVersion = line.mid(15).trimmed();
+//        } else if (line.startsWith("New Version:")) {
+//            newVersion = line.mid(12).trimmed();
+//        }
+//    }
+
+//    qDebug()<<packageName;
+    QDialog *resultDialog = new QDialog(this);
+    resultDialog->setWindowTitle("Update Result");
+    QTextEdit *textEdit = new QTextEdit(resultDialog);
+    textEdit->setText(updateResult);
+    QVBoxLayout *layout = new QVBoxLayout(resultDialog);
+    layout->addWidget(textEdit);
+    resultDialog->exec();
+    isUpdating=false;
+
+
+
 }
 MainWindow::~MainWindow(){
 
