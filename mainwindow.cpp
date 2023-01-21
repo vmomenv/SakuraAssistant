@@ -7,6 +7,9 @@
 #include<DDialog>
 #include<DPasswordEdit>
 #include <QInputDialog>
+#include<QPixmap>
+#include<QCheckBox>
+#include<QListWidgetItem>
 MainWindow::MainWindow(DWidget *parent)
 {
     setFixedSize(230,376);
@@ -46,43 +49,73 @@ void MainWindow::updateUpdateButton(){
 }
 
 void MainWindow::weather(){
+    weatherCity=new DLabel(this);
+    weatherPic=new DLabel(this);
+    WeatherTemperature=new DLabel(this);
+
+//    weatherCity->setText("正在获取城市中..");
+//    weatherPic->setPixmap(":/res/type/Qing.png");
 
 }
 void MainWindow::on_sysUpdateButton_clicked(){
     isUpdating=true;//正在系统更新，取消失焦关闭动作
-    QProcess process;
-    process.start("bash", QStringList() << "-c" << "pkexec apt update && apt list --upgradable");
+    QProcess processUpdate;//apt update
+    QProcess processList;//apt list
 
-    process.waitForFinished();
+    processUpdate.start("bash", QStringList() << "-c" << "pkexec apt update");
+    processUpdate.waitForFinished();
+
+    processList.start("bash", QStringList() << "-c" << "apt list --upgradable");
+    processList.waitForFinished();
+
     QString updateResult;
-    updateResult = process.readAllStandardOutput();
+    updateResult = processList.readAllStandardOutput();
 //    QProcess::startDetached("pkexec apt-get update && apt-get upgrade");
     qDebug()<<updateResult;
 
-//    //更新信息编写
-//    QStringList updateInfo=updateResult.split("\n");
-//    QString packageName;
-//    QString currentVersion;
-//    QString newVersion;
-//    for (const QString& line : updateInfo) {
-//        if (line.startsWith("Package:")) {
-//            packageName = line.mid(8).trimmed();
+    //将更新信息呈现到对话框中
+    QDialog *resultDialog = new QDialog(this);//删除输入框
+    resultDialog->setWindowTitle("待升级的应用");
 
-//        } else if (line.startsWith("Current Version:")) {
-//            currentVersion = line.mid(15).trimmed();
-//        } else if (line.startsWith("New Version:")) {
-//            newVersion = line.mid(12).trimmed();
-//        }
-//    }
+    // 创建QListWidget并添加到对话框中
+    QListWidget *listWidget = new QListWidget(resultDialog);
+    QStringList lines = updateResult.split("\n");
+    for (int i = 0; i < lines.size(); i++) {
+        QString line = lines[i];
+        if (line.startsWith("Listing"))
+            continue;
 
-//    qDebug()<<packageName;
-    QDialog *resultDialog = new QDialog(this);
-    resultDialog->setWindowTitle("Update Result");
-    QTextEdit *textEdit = new QTextEdit(resultDialog);
-    textEdit->setText(updateResult);
+        QStringList parts = line.split("/");
+        if (parts.size() < 2)
+            continue;
+
+        QString packageName = parts[0];
+        QListWidgetItem *item = new QListWidgetItem(packageName);
+        item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+        item->setCheckState(Qt::Unchecked);
+        listWidget->addItem(item);
+    }
+
+    //添加按钮
+    QPushButton *updateButton = new QPushButton("Update", resultDialog);
+    //布局
     QVBoxLayout *layout = new QVBoxLayout(resultDialog);
-    layout->addWidget(textEdit);
+    layout->addWidget(listWidget);
+    layout->addWidget(updateButton);
+    resultDialog->setLayout(layout);
+    //设置信号槽
+    connect(updateButton, &QPushButton::clicked, this, [=](){
+        for (int i = 0; i < listWidget->count(); i++) {
+            QListWidgetItem *item = listWidget->item(i);
+            if (item->checkState() == Qt::Checked) {
+                QProcess process;
+                process.start("bash", QStringList() << "-c" << "pkexec apt install " + item->text());
+                process.waitForFinished();
+            }
+        }
+    });
     resultDialog->exec();
+
     isUpdating=false;
 
 
