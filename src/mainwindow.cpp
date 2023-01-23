@@ -11,6 +11,7 @@
 #include<QCheckBox>
 #include<QListWidgetItem>
 #include<QProgressDialog>
+#include<DSpinner>
 MainWindow::MainWindow(DWidget *parent)
 {
     setFixedSize(230,376);
@@ -59,17 +60,18 @@ void MainWindow::weather(){
 
 }
 void MainWindow::on_sysUpdateButton_clicked(){
+
+    //等待特效
+    DSpinner *waitDspinner =new DSpinner(MainWindow::sysUpdateButton);
+    waitDspinner->start();
+    waitDspinner->isPlaying();
+    waitDspinner->show();
+
     isUpdating=true;//正在系统更新，取消失焦关闭动作
     QProcess processUpdate;//apt update
     QProcess processList;//apt list
+    QProcess processDspinner;
 
-    //等待特效
-    QProgressDialog *progressDialog = new QProgressDialog(this);
-    progressDialog->setLabelText("Updating, please wait...");
-    progressDialog->setCancelButton(0);
-    progressDialog->setRange(0, 0);
-    progressDialog->setModal(true);
-    progressDialog->show();
 
 
     processUpdate.start("bash", QStringList() << "-c" << "pkexec apt update");
@@ -77,7 +79,6 @@ void MainWindow::on_sysUpdateButton_clicked(){
 
     processList.start("bash", QStringList() << "-c" << "apt list --upgradable");
     processList.waitForFinished();
-    progressDialog->hide();
 
     QString updateResult;
     updateResult = processList.readAllStandardOutput();
