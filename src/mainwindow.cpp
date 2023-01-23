@@ -10,6 +10,7 @@
 #include<QPixmap>
 #include<QCheckBox>
 #include<QListWidgetItem>
+#include<QProgressDialog>
 MainWindow::MainWindow(DWidget *parent)
 {
     setFixedSize(230,376);
@@ -62,11 +63,21 @@ void MainWindow::on_sysUpdateButton_clicked(){
     QProcess processUpdate;//apt update
     QProcess processList;//apt list
 
+    //等待特效
+    QProgressDialog *progressDialog = new QProgressDialog(this);
+    progressDialog->setLabelText("Updating, please wait...");
+    progressDialog->setCancelButton(0);
+    progressDialog->setRange(0, 0);
+    progressDialog->setModal(true);
+    progressDialog->show();
+
+
     processUpdate.start("bash", QStringList() << "-c" << "pkexec apt update");
     processUpdate.waitForFinished();
 
     processList.start("bash", QStringList() << "-c" << "apt list --upgradable");
     processList.waitForFinished();
+    progressDialog->hide();
 
     QString updateResult;
     updateResult = processList.readAllStandardOutput();
@@ -103,14 +114,25 @@ void MainWindow::on_sysUpdateButton_clicked(){
     layout->addWidget(listWidget);
     layout->addWidget(updateButton);
     resultDialog->setLayout(layout);
+
     //设置信号槽
     connect(updateButton, &QPushButton::clicked, this, [=](){
         for (int i = 0; i < listWidget->count(); i++) {
             QListWidgetItem *item = listWidget->item(i);
             if (item->checkState() == Qt::Checked) {
                 QProcess process;
-                process.start("bash", QStringList() << "-c" << "pkexec apt install " + item->text());
+
+                QProgressDialog *progressDialog = new QProgressDialog(this);
+                progressDialog->setLabelText("Updating, please wait...");
+                progressDialog->setCancelButton(0);
+                progressDialog->setRange(0, 0);
+                progressDialog->setModal(true);
+                progressDialog->show();
+
+                process.start("bash", QStringList() << "-c" << "pkexec apt install -y " + item->text());
                 process.waitForFinished();
+
+                progressDialog->hide();
             }
         }
     });
