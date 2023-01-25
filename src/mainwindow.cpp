@@ -12,8 +12,10 @@
 #include<QListWidgetItem>
 #include<QProgressDialog>
 #include<DSpinner>
+#include<QThread>
 MainWindow::MainWindow(DWidget *parent)
 {
+    isUpdating=false;
     setFixedSize(230,376);
     titlebar()->setFixedHeight(0);
     qDebug()<<desktopWidget<<desktopHeight;
@@ -23,7 +25,11 @@ MainWindow::MainWindow(DWidget *parent)
     setEnableBlurWindow(true);
 
     updateUpdateButton();
+
     connect(sysUpdateButton, SIGNAL(clicked()), this, SLOT(on_sysUpdateButton_clicked()));
+
+    weather();
+
 
 }
 
@@ -51,31 +57,47 @@ void MainWindow::updateUpdateButton(){
 }
 
 void MainWindow::weather(){
+    //天气预报
+    //初始化温度
+    weatherTemperature=new DLabel(this);
+    weatherTemperature->move(56,34);
+    weatherTemperature->setText("0℃");
+    weatherTemperature->setIndent(20);
+    QFont tempFont;
+    tempFont.setPointSize(18);
+    weatherTemperature->setFont(tempFont);
+    QFont cityFont;
+    weatherTemperature->setFont(cityFont);
+    weatherTemperature->setAlignment(Qt::AlignLeft);
+    //初始化城市
     weatherCity=new DLabel(this);
-    weatherPic=new DLabel(this);
-    WeatherTemperature=new DLabel(this);
+    weatherCity->move(56,12);
+    cityFont.setPointSize(12);
+    weatherCity->setText("正在获取城市中..");
+    weatherCity->setAlignment(Qt::AlignLeft);
+    QPixmap *cityPix=new QPixmap(":/res/type/Qing.png");
 
-//    weatherCity->setText("正在获取城市中..");
-//    weatherPic->setPixmap(":/res/type/Qing.png");
+    //初始化天气图标
+    weatherPic=new DLabel(this);
+    weatherPic->move(22,26);
+    weatherPic->setScaledContents(true);//设置自适应
+    weatherPic->setMaximumSize(24,24);
+    weatherPic->setPixmap(*cityPix);
+
+
 
 }
 void MainWindow::on_sysUpdateButton_clicked(){
 
-    //等待特效
-    DSpinner *waitDspinner =new DSpinner(MainWindow::sysUpdateButton);
-    waitDspinner->start();
-    waitDspinner->isPlaying();
-    waitDspinner->show();
-
     isUpdating=true;//正在系统更新，取消失焦关闭动作
+
+
     QProcess processUpdate;//apt update
     QProcess processList;//apt list
-    QProcess processDspinner;
-
-
 
     processUpdate.start("bash", QStringList() << "-c" << "pkexec apt update");
     processUpdate.waitForFinished();
+
 
     processList.start("bash", QStringList() << "-c" << "apt list --upgradable");
     processList.waitForFinished();
@@ -122,22 +144,14 @@ void MainWindow::on_sysUpdateButton_clicked(){
             QListWidgetItem *item = listWidget->item(i);
             if (item->checkState() == Qt::Checked) {
                 QProcess process;
-
-                QProgressDialog *progressDialog = new QProgressDialog(this);
-                progressDialog->setLabelText("Updating, please wait...");
-                progressDialog->setCancelButton(0);
-                progressDialog->setRange(0, 0);
-                progressDialog->setModal(true);
-                progressDialog->show();
-
                 process.start("bash", QStringList() << "-c" << "pkexec apt install -y " + item->text());
                 process.waitForFinished();
 
-                progressDialog->hide();
             }
         }
     });
     resultDialog->exec();
+
 
     isUpdating=false;
 

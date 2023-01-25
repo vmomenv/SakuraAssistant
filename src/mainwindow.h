@@ -9,6 +9,7 @@
 #include<QPixmap>
 #include<QTextEdit>
 #include<QProcess>
+#include<DSpinner>
 DWIDGET_USE_NAMESPACE
 class MainWindow :public DMainWindow
 {
@@ -27,10 +28,14 @@ private:
     DPushButton *appUpdateButton;
 
     DLabel *weatherCity;
-    DLabel *WeatherTemperature;
+    DLabel *weatherTemperature;
     DLabel *weatherPic;
 
     bool isUpdating;
+
+    QThread *spinnerThread;
+
+
 
 
 
@@ -40,6 +45,7 @@ protected:
     void weather();
 private slots:
     void on_sysUpdateButton_clicked();
+
 
 
 };
