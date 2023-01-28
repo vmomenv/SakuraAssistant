@@ -7,9 +7,11 @@ TEMPLATE = app
 
 SOURCES += \
         main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    weatherparse.cpp
 
 RESOURCES +=         resources.qrc
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    weatherparse.h

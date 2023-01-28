@@ -13,6 +13,7 @@
 #include<QProgressDialog>
 #include<DSpinner>
 #include<QThread>
+#include<weatherparse.h>
 MainWindow::MainWindow(DWidget *parent)
 {
     isUpdating=false;
@@ -29,8 +30,7 @@ MainWindow::MainWindow(DWidget *parent)
     connect(sysUpdateButton, SIGNAL(clicked()), this, SLOT(on_sysUpdateButton_clicked()));
 
     weather();
-
-
+    WeatherParse qqqq;
 }
 
 //失焦关闭窗口
@@ -83,6 +83,9 @@ void MainWindow::weather(){
     weatherPic->setScaledContents(true);//设置自适应
     weatherPic->setMaximumSize(24,24);
     weatherPic->setPixmap(*cityPix);
+
+    //解析天气
+
 
 
 
