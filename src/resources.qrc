@@ -37,5 +37,6 @@
         <file>res/type/ZhongDaoDaYu.png</file>
         <file>res/type/ZhongXue.png</file>
         <file>res/type/ZhongYu.png</file>
+        <file>res/citycode.json</file>
     </qresource>
 </RCC>
