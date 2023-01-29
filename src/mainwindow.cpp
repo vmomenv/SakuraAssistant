@@ -30,7 +30,7 @@ MainWindow::MainWindow(DWidget *parent)
     connect(sysUpdateButton, SIGNAL(clicked()), this, SLOT(on_sysUpdateButton_clicked()));
 
     weather();
-    WeatherParse qqqq;
+    WeatherParse *qqqq=new WeatherParse;
 }
 
 //失焦关闭窗口

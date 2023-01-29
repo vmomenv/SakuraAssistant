@@ -1,9 +1,6 @@
 #include "weatherparse.h"
-#include<QMessageBox>
-#include<QDebug>
-#include<QUrl>
-#include<QNetworkReply>
-WeatherParse::WeatherParse()
+
+WeatherParse::WeatherParse(QObject *parent) : QObject(parent)
 {
     qDebug()<<"weatherparse";
     //在map中导入键值
@@ -45,11 +42,15 @@ WeatherParse::WeatherParse()
 
     mNetAccessManager = new QNetworkAccessManager(this);//实现qt网络模块
 
+//    connect(mNetAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestWeatherData(QNetworkReply*)));
     connect(mNetAccessManager,&QNetworkAccessManager::finished,this,&WeatherParse::requestWeatherData);
+
     QUrl url("http://t.weather.itboy.net/api/weather/city/101010100");
     mNetAccessManager->get(QNetworkRequest(url));
 
 }
+
+
 
 void WeatherParse::requestWeatherData(QNetworkReply *reply){
     qDebug()<<"请求天气服务商数据";
@@ -69,3 +70,4 @@ void WeatherParse::requestWeatherData(QNetworkReply *reply){
     }
     reply->deleteLater();
 }
+
