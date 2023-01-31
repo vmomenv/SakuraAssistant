@@ -1,7 +1,7 @@
 #include "weatherparse.h"
 #include<QMessageBox>
 #include<mainwindow.h>
-
+#include<iptoweathercity.h>
 
 WeatherParse::WeatherParse(QObject *parent) : QObject(parent)
 {
@@ -101,48 +101,13 @@ void WeatherParse::ipCityParseJson(QByteArray &byteArray)
         QJsonObject rootObj=doc.object();
         CityName=rootObj.value("city").toString();
         qDebug()<<CityName;
-        getCityCode(CityName);
+        IpToWeatherCity *ip2city=new IpToWeatherCity;
+        ip2city->getCityCode(CityName);
 //        QUrl url("http://t.weather.itboy.net/api/weather/city/101010100");
         //        mNetAccessManager->get(QNetworkRequest(url));
 }
 
 
-QString WeatherParse::getCityCode(QString CityName){
-
-//    if(CityName.isEmpty()){
-        initCityMap();
-//    }
-}
-//初始化城市map表
-void WeatherParse::initCityMap(){
-    qDebug()<<1;
-    //1.读取文件
-    QFile file(":/res/citycode.json");
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QByteArray json = file.readAll();
-    file.close();
-
-    //2.解析并写入map
-    QJsonParseError err;
-    QJsonDocument doc = QJsonDocument::fromJson(json,&err);
-    if(err.error != QJsonParseError::NoError){
-        return;
-    }
-    if(!doc.isArray()){//如果不是数组
-        return;
-    }
-    QJsonArray cities = doc.array();
-
-    //导入map表
-    for(int i=0;i<cities.size();i++){
-        QString ENcity_name = cities[i].toObject().value("ENcity_name").toString();
-        QString cityCode =cities[i].toObject().value("city_code").toString();
-        if(cityCode.size()>0)
-        {
-            cityMap.insert(ENcity_name,cityCode);//导入map表
-        }
-    }
-}
 
 
 
