@@ -7,9 +7,20 @@ IpToWeatherCity::IpToWeatherCity(QObject *parent) : QObject(parent)
 
 QString IpToWeatherCity::getCityCode(QString CityName)
 {
-
-    if(CityName.isEmpty()){
         initCityMap();
+    QMap<QString,QString>::iterator it=cityMap.find(CityName);//通过cityname获得citycode
+    if(it==cityMap.end()){
+        it=cityMap.find(CityName+"shi");
+    }
+    if(it==cityMap.end()){
+        it=cityMap.find(CityName+"xian");
+    }
+    if(it!=cityMap.end()){
+        qDebug()<<it.value();
+        return it.value();
+    }else{
+        qDebug()<<"未找到"<<CityName<<"的天气";
+        return "";
     }
 
 }
@@ -18,7 +29,6 @@ void IpToWeatherCity::initCityMap()
 {
 
 
-//        QMap<QString,QString> *cityMap=new QMap<QString,QString>;
     qDebug()<<1;
     //1.读取文件
     QFile file(":/res/citycode.json");

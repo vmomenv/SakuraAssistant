@@ -102,9 +102,10 @@ void WeatherParse::ipCityParseJson(QByteArray &byteArray)
         CityName=rootObj.value("city").toString();
         qDebug()<<CityName;
         IpToWeatherCity *ip2city=new IpToWeatherCity;
-        ip2city->getCityCode(CityName);
-//        QUrl url("http://t.weather.itboy.net/api/weather/city/101010100");
-        //        mNetAccessManager->get(QNetworkRequest(url));
+        QString citycode;
+        citycode=ip2city->getCityCode(CityName);
+        QUrl url("http://t.weather.itboy.net/api/weather/city/"+citycode);
+        mNetAccessManager->get(QNetworkRequest(url));
 }
 
 
