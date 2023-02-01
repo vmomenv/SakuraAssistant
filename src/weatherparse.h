@@ -24,6 +24,7 @@ public:
     void ipCityParseJson(QByteArray &byteArray);//ip转城市服务json
     QString cityName;//所在城市city
     QString cityTemperature;
+    QString weatherType;
 
 
 private:

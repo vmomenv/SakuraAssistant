@@ -82,14 +82,22 @@ void WeatherParse::requestServer(QNetworkReply *reply){
 void WeatherParse::weatherParseJson(QByteArray &byteArray)
 {
     QJsonParseError err;
-    QJsonDocument doc=QJsonDocument::fromJson(byteArray,&err);
+    QJsonDocument doc=QJsonDocument::fromJson(byteArray,&err);    
     if(err.error!=QJsonParseError::NoError){
         qDebug()<<"解析失败";
     }
     QJsonObject rootObj=doc.object();
     qDebug()<<rootObj.value("message").toString();
+    QJsonObject objData = rootObj.value("data").toObject();//解析所有数据
+    QJsonArray forecastArr = objData.value("forecast").toArray();//解析5天数组中的数据
+    QJsonObject objForecast=forecastArr[1].toObject();//解析5天中第一天的数据
     cityName = rootObj.value("cityInfo").toObject().value("city").toString();//toObject()是将得到的内容再次转换为QjsonObject
     cityTemperature=rootObj.value("data").toObject().value("wendu").toString();
+    QMap<QString,QString>::iterator it=mTypeMap.find(objForecast.value("type").toString());
+    if(it!=mTypeMap.end()){
+        qDebug()<<it.value();
+        weatherType=it.value();
+    }
     emit update();
 
 }

@@ -34,6 +34,8 @@ MainWindow::MainWindow(DWidget *parent)
     connect(weather,&WeatherParse::update,[=](){
             weatherCity->setText(weather->cityName);
             weatherTemperature->setText(weather->cityTemperature+"℃");
+            QPixmap *cityPix=new QPixmap(weather->weatherType);
+            weatherPic->setPixmap(*cityPix);
             weather->deleteLater();
     });
 }
@@ -73,16 +75,25 @@ void MainWindow::weather(){
     weatherTemperature->setFont(tempFont);
     QFont cityFont;
     weatherTemperature->setFont(cityFont);
-//    weatherTemperature->setAlignment(Qt::AlignLeft);
-    //初始化城市
+    // weatherTemperature->setAlignment(Qt::AlignLeft);
+
+    // 初始化城市
     weatherCity=new DLabel(this);
     weatherCity->move(56,12);
     cityFont.setPointSize(12);
     weatherCity->setText("正在获取城市中..");
-//    weatherCity->setAlignment(Qt::AlignLeft);
-    QPixmap *cityPix=new QPixmap(":/res/type/Qing.png");
+
+    // 将weatherCity 和 weatherTemperature 垂直布局
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->addWidget(weatherTemperature);
+    layout->addWidget(weatherCity);
+    layout->setAlignment(Qt::AlignLeft);
+    this->setLayout(layout);
+    weatherTemperature->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    weatherCity->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     //初始化天气图标
+    QPixmap *cityPix=new QPixmap(":/res/type/Qing.png");
     weatherPic=new DLabel(this);
     weatherPic->move(22,26);
     weatherPic->setScaledContents(true);//设置自适应
