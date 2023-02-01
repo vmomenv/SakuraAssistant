@@ -65,23 +65,25 @@ void MainWindow::updateUpdateButton(){
 
 void MainWindow::weather(){
     //天气预报
-    //初始化温度
-    weatherTemperature=new DLabel(this);
-    weatherTemperature->move(56,34);
-    weatherTemperature->setText("0℃");
-    weatherTemperature->setIndent(20);
     QFont tempFont;
-    tempFont.setPointSize(18);
-    weatherTemperature->setFont(tempFont);
-    QFont cityFont;
-    weatherTemperature->setFont(cityFont);
-    // weatherTemperature->setAlignment(Qt::AlignLeft);
 
     // 初始化城市
     weatherCity=new DLabel(this);
-    weatherCity->move(56,12);
-    cityFont.setPointSize(12);
+    weatherCity->move(70,12);
+    weatherCity->resize(156,23);
+    tempFont.setPointSize(10);
+    weatherCity->setFont(tempFont);
     weatherCity->setText("正在获取城市中..");
+
+    //初始化温度
+    weatherTemperature=new DLabel(this);
+    weatherTemperature->move(50,34);
+    weatherTemperature->setIndent(20);
+    tempFont.setPointSize(18);
+    weatherTemperature->setFont(tempFont);
+    weatherTemperature->setText("--℃");
+
+
 
     // 将weatherCity 和 weatherTemperature 垂直布局
     QVBoxLayout *layout = new QVBoxLayout();
