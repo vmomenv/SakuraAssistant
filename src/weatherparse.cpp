@@ -88,6 +88,9 @@ void WeatherParse::weatherParseJson(QByteArray &byteArray)
     }
     QJsonObject rootObj=doc.object();
     qDebug()<<rootObj.value("message").toString();
+    cityName = rootObj.value("cityInfo").toObject().value("city").toString();//toObject()是将得到的内容再次转换为QjsonObject
+    cityTemperature=rootObj.value("data").toObject().value("wendu").toString();
+    emit update();
 
 }
 
@@ -99,11 +102,11 @@ void WeatherParse::ipCityParseJson(QByteArray &byteArray)
         qDebug()<<"解析失败";
     }
         QJsonObject rootObj=doc.object();
-        CityName=rootObj.value("city").toString();
-        qDebug()<<CityName;
+        cityName=rootObj.value("city").toString();
+        qDebug()<<cityName;
         IpToWeatherCity *ip2city=new IpToWeatherCity;
         QString citycode;
-        citycode=ip2city->getCityCode(CityName);
+        citycode=ip2city->getCityCode(cityName);
         QUrl url("http://t.weather.itboy.net/api/weather/city/"+citycode);
         mNetAccessManager->get(QNetworkRequest(url));
 }

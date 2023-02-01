@@ -22,15 +22,17 @@ public:
     void requestServer(QNetworkReply *reply);//与天气和ip服务商通信
     void weatherParseJson(QByteArray &byteArray);//天气服务json
     void ipCityParseJson(QByteArray &byteArray);//ip转城市服务json
+    QString cityName;//所在城市city
+    QString cityTemperature;
 
 
 private:
-    QString CityName;//所在城市city
 
 
 
 
 signals:
+    void update();
 public slots:
 
 

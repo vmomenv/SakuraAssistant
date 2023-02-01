@@ -30,7 +30,12 @@ MainWindow::MainWindow(DWidget *parent)
     connect(sysUpdateButton, SIGNAL(clicked()), this, SLOT(on_sysUpdateButton_clicked()));
 
     weather();
-    WeatherParse *qqqq=new WeatherParse;
+    WeatherParse *weather=new WeatherParse;
+    connect(weather,&WeatherParse::update,[=](){
+            weatherCity->setText(weather->cityName);
+            weatherTemperature->setText(weather->cityTemperature+"℃");
+            weather->deleteLater();
+    });
 }
 
 //失焦关闭窗口
@@ -68,13 +73,13 @@ void MainWindow::weather(){
     weatherTemperature->setFont(tempFont);
     QFont cityFont;
     weatherTemperature->setFont(cityFont);
-    weatherTemperature->setAlignment(Qt::AlignLeft);
+//    weatherTemperature->setAlignment(Qt::AlignLeft);
     //初始化城市
     weatherCity=new DLabel(this);
     weatherCity->move(56,12);
     cityFont.setPointSize(12);
     weatherCity->setText("正在获取城市中..");
-    weatherCity->setAlignment(Qt::AlignLeft);
+//    weatherCity->setAlignment(Qt::AlignLeft);
     QPixmap *cityPix=new QPixmap(":/res/type/Qing.png");
 
     //初始化天气图标
