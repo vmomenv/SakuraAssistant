@@ -9,11 +9,13 @@ SOURCES += \
         main.cpp \
     mainwindow.cpp \
     weatherparse.cpp \
-    iptoweathercity.cpp
+    iptoweathercity.cpp \
+    todo.cpp
 
 RESOURCES +=         resources.qrc
 
 HEADERS += \
     mainwindow.h \
     weatherparse.h \
-    iptoweathercity.h
+    iptoweathercity.h \
+    todo.h

@@ -14,6 +14,7 @@
 #include<DSpinner>
 #include<QThread>
 #include<weatherparse.h>
+#include<todo.h>
 MainWindow::MainWindow(DWidget *parent)
 {
     isUpdating=false;
@@ -38,6 +39,8 @@ MainWindow::MainWindow(DWidget *parent)
             weatherPic->setPixmap(*cityPix);
             weather->deleteLater();
     });
+    ToDo todoList;
+
 }
 
 //失焦关闭窗口
