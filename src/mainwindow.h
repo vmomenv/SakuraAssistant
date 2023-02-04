@@ -43,6 +43,7 @@ protected:
     void focusOutEvent(QFocusEvent *event);
     void updateUpdateButton();
     void weather();
+    void setToDo();
 private slots:
     void on_sysUpdateButton_clicked();
 

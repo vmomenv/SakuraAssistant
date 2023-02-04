@@ -24,7 +24,7 @@ public:
     QList<TodoItem> items() const {
       return m_items;
     }
-
+    QJsonArray itemArray;
 private:
   QList<TodoItem> m_items;
 };

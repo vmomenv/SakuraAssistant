@@ -3,7 +3,6 @@
 #include<QDebug>
 ToDo::ToDo()
 {
-    loadFromJsonFile();
 }
 
 
@@ -15,20 +14,12 @@ void ToDo::loadFromJsonFile(){
     if(!file.open(QIODevice::ReadOnly)){
         return;
     }
-    QByteArray data=file.readAll();
+    QByteArray data=file.readAll();//将内容加载到data中
     file.close();
-    QJsonDocument doc=QJsonDocument::fromJson(data);
+    QJsonDocument doc=QJsonDocument::fromJson(data);//将data转为json格式
     qDebug()<<doc;
-    QJsonObject item=doc.object();
-    QJsonArray itemArray=item.value("items").toArray();//解析items数组
-    for(int i=0;i<itemArray.size();i++){
-        QJsonObject item =itemArray[i].toObject();
-        TodoItem todoItem;
-        todoItem.name=item.value("name").toString();
-        todoItem.completed=item.value("completed").toBool();
-        qDebug()<<todoItem.name<<todoItem.completed;
-        m_items.append(todoItem);
-    }
+    QJsonObject itemObj=doc.object();//将json格式的内容初始化
+    itemArray=itemObj.value("items").toArray();//解析items数组,将json存放于itemArray
     file.close();
 }
 void ToDo::saveToJsonFile(const QString &fileName){

@@ -39,8 +39,7 @@ MainWindow::MainWindow(DWidget *parent)
             weatherPic->setPixmap(*cityPix);
             weather->deleteLater();
     });
-    ToDo todoList;
-
+    setToDo();
 }
 
 //失焦关闭窗口
@@ -56,12 +55,12 @@ void MainWindow::updateUpdateButton(){
     sysUpdateButton->resize(97,34);
     sysUpdateButton->move(10,322);
     sysUpdateButton->setText("系统更新");
-    system("sudo apt update");
+//    system("sudo apt update");
 \
     appUpdateButton=new DPushButton(this);
     appUpdateButton->resize(97,34);
     appUpdateButton->move(115,322);
-    appUpdateButton->setText("应用更新");
+    appUpdateButton->setText("我是凑数的");
 
 
 }
@@ -108,6 +107,21 @@ void MainWindow::weather(){
     //解析天气
 
 
+
+
+}
+
+void MainWindow::setToDo()
+{
+    ToDo *todoList=new ToDo;
+    todoList->loadFromJsonFile();//加载todo.json
+    for(int i=0;i<todoList->itemArray.size();i++){
+        QJsonObject item =todoList->itemArray[i].toObject();
+        TodoItem todoItem;
+        todoItem.name=item.value("name").toString();
+        todoItem.completed=item.value("completed").toBool();
+        qDebug()<<todoItem.name<<todoItem.completed;
+    }
 
 
 }
