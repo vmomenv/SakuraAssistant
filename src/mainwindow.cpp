@@ -15,6 +15,8 @@
 #include<QThread>
 #include<weatherparse.h>
 #include<todo.h>
+#include<QButtonGroup>
+#include<QWidget>
 MainWindow::MainWindow(DWidget *parent)
 {
     isUpdating=false;
@@ -115,11 +117,41 @@ void MainWindow::setToDo()
 {
     ToDo *todoList=new ToDo;
     todoList->loadFromJsonFile();//加载todo.json
+    int radioButtonHigh=70;
+    int radioButtonWeight=18;
+
     for(int i=0;i<todoList->itemArray.size();i++){
         QJsonObject item =todoList->itemArray[i].toObject();
         TodoItem todoItem;
         todoItem.name=item.value("name").toString();
         todoItem.completed=item.value("completed").toBool();
+        QCheckBox *checkBox = new QCheckBox(this);
+        checkBox->setChecked(todoItem.completed);
+        checkBox->setText(todoItem.name);
+        checkBox->resize(177,40);
+        checkBox->move(radioButtonWeight,radioButtonHigh);
+
+
+        QLineEdit *lineEdit;
+        // 连接信号和槽
+        connect(checkBox, &QCheckBox::clicked, this,[=] {
+            isUpdating=true;
+            QLineEdit *lineEdit = new QLineEdit(checkBox);
+            lineEdit->setVisible(true);
+            lineEdit->setReadOnly(false);
+            lineEdit->move(radioButtonWeight+10,0);
+
+        });
+
+        connect(lineEdit, &QLineEdit::editingFinished, this,[=] {
+            checkBox->setText(lineEdit->text());
+            lineEdit->setVisible(false);
+            isUpdating=false;
+        });
+
+
+
+        radioButtonHigh+=35;
         qDebug()<<todoItem.name<<todoItem.completed;
     }
 
