@@ -22,6 +22,7 @@ MainWindow::MainWindow(DWidget *parent)
     isUpdating=false;
     setFixedSize(230,376);
     titlebar()->setFixedHeight(0);
+    setFocusPolicy(Qt::ClickFocus);
     qDebug()<<desktopWidget<<desktopHeight;
     this->move(desktopWidget-230,desktopHeight-376);
 //    setWindowOpacity(0.5);//设置透明
@@ -121,7 +122,7 @@ void MainWindow::setToDo()
     int radioButtonWeight=18;
 
     for(int i=0;i<todoList->itemArray.size();i++){
-        isUpdating=true;
+//        isUpdating=true;
         QJsonObject item =todoList->itemArray[i].toObject();
         TodoItem todoItem;
         todoItem.name=item.value("name").toString();
@@ -142,7 +143,7 @@ void MainWindow::setToDo()
             qDebug()<<1;
 
 //            todoList->saveToJsonFile();
-            isUpdating=false;
+//            isUpdating=false;
         });
         // 连接信号和槽
 //        connect(checkBox, &QCheckBox::clicked, this,[=] {
@@ -231,7 +232,10 @@ void MainWindow::on_sysUpdateButton_clicked(){
                 QProcess process;
                 process.start("bash", QStringList() << "-c" << "pkexec apt install -y " + item->text());
                 process.waitForFinished();
-
+                QString updatedResult;
+                updatedResult = process.readAllStandardOutput();//更新后信息输出
+                qDebug()<<updatedResult;
+                item->setHidden(true);
             }
         }
     });
