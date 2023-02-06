@@ -41,7 +41,12 @@ void ToDo::saveToJsonFile(QString name,bool completed,int i){
       QJsonDocument doc = QJsonDocument::fromJson(data);
       QJsonObject itemObj = doc.object();
       QJsonArray itemArr = itemObj["items"].toArray();
-      itemArr[i]=smallObj;
+      if(name.size()==0){
+          itemArr.removeAt(i);//删除第i组
+      }else{
+          itemArr[i]=smallObj;
+      }
+
       itemObj.insert("items", itemArr);
 
       doc.setObject(itemObj);
@@ -50,3 +55,5 @@ void ToDo::saveToJsonFile(QString name,bool completed,int i){
       file.close();
 
 }
+
+

@@ -138,14 +138,19 @@ void MainWindow::setToDo()
         lineEdit->move(radioButtonWeight+10,0);
         lineEdit->setText(todoItem.name);
 
+        //删除按钮
         QPushButton *delPushbutton=new QPushButton(checkBox);
+        QPixmap *res=new QPixmap(":/res/delete.png");
+        delPushbutton->setIcon(QPixmap(":/res/delete.png"));
         delPushbutton->setVisible(false);
         delPushbutton->resize(30,30);
         delPushbutton->move(170,5);
-        delPushbutton->setText("X");
+
         //读取文档。如果条目被选择则显示删除按钮
         if(todoItem.completed==true){
             delPushbutton->setVisible(true);
+            lineEdit->setEnabled(false);
+
         }
 
 
@@ -158,19 +163,20 @@ void MainWindow::setToDo()
 
         connect(checkBox, &QCheckBox::clicked, this,[=] {
             if(checkBox->checkState()){
+                todoList->saveToJsonFile(lineEdit->text(),checkBox->checkState(),i);
+                lineEdit->setEnabled(false);
                 delPushbutton->setVisible(true);
                 delPushbutton->resize(30,30);
                 delPushbutton->move(170,5);
-                delPushbutton->setText("X");
             }else{
+                todoList->saveToJsonFile(lineEdit->text(),checkBox->checkState(),i);
                 delPushbutton->setVisible(false);
                 lineEdit->setEnabled(true);
             }
 
         });
         connect(delPushbutton,&QPushButton::clicked,this,[=]{
-            delPushbutton->setVisible(false);
-            lineEdit->setEnabled(false);
+            todoList->saveToJsonFile("","",i);
         });
 
 
@@ -179,7 +185,13 @@ void MainWindow::setToDo()
         radioButtonHigh+=40;
         qDebug()<<todoItem.name<<todoItem.completed;
     }
-
+    //新建条目按钮
+//        QPushButton *delPushbutton=new QPushButton(checkBox);
+//        delPushbutton->setIcon(QPixmap(":/res/delete.png"));
+//        delPushbutton->setVisible(false);
+//        delPushbutton->resize(30,30);
+//        delPushbutton->move(170,5);
+//        delPushbutton->setText("X");
 
 }
 void MainWindow::on_sysUpdateButton_clicked(){
@@ -279,3 +291,5 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)//感谢柚柚帮�
 MainWindow::~MainWindow(){
 
 }
+
+
