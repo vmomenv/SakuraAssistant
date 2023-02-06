@@ -43,7 +43,9 @@ void ToDo::saveToJsonFile(QString name,bool completed,int i){
       QJsonArray itemArr = itemObj["items"].toArray();
       if(name.size()==0){
           itemArr.removeAt(i);//删除第i组
-      }else{
+      }else if(i==-1){//新增一条
+          itemArr.append(smallObj);
+      }else{//保存该条
           itemArr[i]=smallObj;
       }
 

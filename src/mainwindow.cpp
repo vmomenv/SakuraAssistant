@@ -123,6 +123,7 @@ void MainWindow::setToDo()
     int radioButtonWeight=18;
 
     for(int i=0;i<todoList->itemArray.size();i++){
+
         QJsonObject item =todoList->itemArray[i].toObject();
         TodoItem todoItem;
         todoItem.name=item.value("name").toString();
@@ -153,8 +154,6 @@ void MainWindow::setToDo()
 
         }
 
-
-
         connect(lineEdit,&QLineEdit::editingFinished,this,[=]{
             qDebug()<<"完成编辑";
             todoList->saveToJsonFile(lineEdit->text(),checkBox->checkState(),i);//将条目，选中状态，第i条传回
@@ -178,20 +177,24 @@ void MainWindow::setToDo()
         connect(delPushbutton,&QPushButton::clicked,this,[=]{
             todoList->saveToJsonFile("","",i);
         });
-
-
-
-
         radioButtonHigh+=40;
         qDebug()<<todoItem.name<<todoItem.completed;
+
+
+        if(i==todoList->itemArray.size()-1){//最后一行增加添加按钮
+            //新建条目按钮
+                QPushButton *addPushbutton=new QPushButton(this);
+                addPushbutton->setIcon(QPixmap(":/res/plus.png"));
+                addPushbutton->setVisible(true);
+                addPushbutton->resize(30,30);
+                addPushbutton->move(47,checkBox->y()+50);
+                connect(addPushbutton,&QPushButton::clicked,this,[=]{
+                    qDebug()<<0;
+                    todoList->saveToJsonFile(" ",false,-1);
+                });
+        }
     }
-    //新建条目按钮
-//        QPushButton *delPushbutton=new QPushButton(checkBox);
-//        delPushbutton->setIcon(QPixmap(":/res/delete.png"));
-//        delPushbutton->setVisible(false);
-//        delPushbutton->resize(30,30);
-//        delPushbutton->move(170,5);
-//        delPushbutton->setText("X");
+
 
 }
 void MainWindow::on_sysUpdateButton_clicked(){
