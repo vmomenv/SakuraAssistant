@@ -20,7 +20,7 @@ public:
     void addItem(const TodoItem &item);
     //从json中加载todo项目
     void loadFromJsonFile();
-    void saveToJsonFile(const QString &fileName);
+    void saveToJsonFile();
     QList<TodoItem> items() const {
       return m_items;
     }

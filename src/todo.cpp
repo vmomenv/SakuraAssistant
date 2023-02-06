@@ -22,7 +22,7 @@ void ToDo::loadFromJsonFile(){
     itemArray=itemObj.value("items").toArray();//解析items数组,将json存放于itemArray
     file.close();
 }
-void ToDo::saveToJsonFile(const QString &fileName){
+void ToDo::saveToJsonFile(){
     QFile file(":/res/todo.json");
     if(!file.open(QIODevice::WriteOnly)){
         return;

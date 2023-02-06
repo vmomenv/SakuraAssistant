@@ -121,37 +121,52 @@ void MainWindow::setToDo()
     int radioButtonWeight=18;
 
     for(int i=0;i<todoList->itemArray.size();i++){
+        isUpdating=true;
         QJsonObject item =todoList->itemArray[i].toObject();
         TodoItem todoItem;
         todoItem.name=item.value("name").toString();
         todoItem.completed=item.value("completed").toBool();
         QCheckBox *checkBox = new QCheckBox(this);
         checkBox->setChecked(todoItem.completed);
-        checkBox->setText(todoItem.name);
-        checkBox->resize(177,40);
+        checkBox->resize(250,40);
         checkBox->move(radioButtonWeight,radioButtonHigh);
 
+        QLineEdit *lineEdit = new QLineEdit(checkBox);
+        lineEdit->setVisible(true);
+        lineEdit->setReadOnly(false);
+        lineEdit->move(radioButtonWeight+10,0);
+        lineEdit->setText(todoItem.name);
+        QPushButton *pushbutton;
 
-        QLineEdit *lineEdit;
-        // 连接信号和槽
-        connect(checkBox, &QCheckBox::clicked, this,[=] {
-            isUpdating=true;
-            QLineEdit *lineEdit = new QLineEdit(checkBox);
-            lineEdit->setVisible(true);
-            lineEdit->setReadOnly(false);
-            lineEdit->move(radioButtonWeight+10,0);
+        connect(lineEdit,&QLineEdit::editingFinished,this,[=]{
+            qDebug()<<1;
 
-        });
-
-        connect(lineEdit, &QLineEdit::editingFinished, this,[=] {
-            checkBox->setText(lineEdit->text());
-            lineEdit->setVisible(false);
+//            todoList->saveToJsonFile();
             isUpdating=false;
         });
+        // 连接信号和槽
+//        connect(checkBox, &QCheckBox::clicked, this,[=] {
+//            isUpdating=true;
+
+//            QPushButton *pushbutton=new QPushButton(checkBox);
+//            lineEdit->setVisible(true);
+//            lineEdit->setReadOnly(false);
+//            lineEdit->move(radioButtonWeight+10,0);
+//            pushbutton->setVisible(true);
+//            pushbutton->resize(30,30);
+//            pushbutton->move(170,5);
+//            pushbutton->setText("√");
+//            connect(pushbutton,&QPushButton::clicked,this,[=]{
+//                pushbutton->hide();
+//                checkBox->setText(lineEdit->text());
+//            });
+
+//        });
 
 
 
-        radioButtonHigh+=35;
+
+        radioButtonHigh+=40;
         qDebug()<<todoItem.name<<todoItem.completed;
     }
 
