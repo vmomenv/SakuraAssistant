@@ -10,7 +10,7 @@ void ToDo::addItem(const TodoItem &item) {
     m_items.append(item);
   }
 void ToDo::loadFromJsonFile(){
-    QFile file(":/res/todo.json");
+    QFile file("/home/momen/Desktop/todo.json");
     if(!file.open(QIODevice::ReadOnly)){
         return;
     }
@@ -22,19 +22,31 @@ void ToDo::loadFromJsonFile(){
     itemArray=itemObj.value("items").toArray();//解析items数组,将json存放于itemArray
     file.close();
 }
-void ToDo::saveToJsonFile(){
-    QFile file(":/res/todo.json");
-    if(!file.open(QIODevice::WriteOnly)){
-        return;
-    }
-    QJsonArray array;
-    for(const TodoItem &item : m_items){
-        QJsonObject obj;
-        obj["name"]=item.name;
-        obj["completed"]=item.completed;
-        array.append(obj);
-    }
-    QJsonDocument doc(array);
-    file.write(doc.toJson());
-    file.close();
+void ToDo::saveToJsonFile(QString name,bool completed,int i){
+    qDebug()<<name<<completed<<i;
+    QFile file("/home/momen/Desktop/todo.json");
+    file.open(QIODevice::ReadWrite);
+
+      if(!file.open(QIODevice::ReadWrite)) {
+          qDebug() << "File open error";
+      } else {
+          qDebug() <<"File open!";
+      }
+
+      QByteArray data = file.readAll();
+      QJsonObject smallObj;
+      smallObj.insert("completed", completed);
+      smallObj.insert("name", name);
+
+      QJsonDocument doc = QJsonDocument::fromJson(data);
+      QJsonObject itemObj = doc.object();
+      QJsonArray itemArr = itemObj["items"].toArray();
+      itemArr[i]=smallObj;
+      itemObj.insert("items", itemArr);
+
+      doc.setObject(itemObj);
+      file.resize(0);
+      file.write(doc.toJson());
+      file.close();
+
 }

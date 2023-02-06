@@ -151,9 +151,8 @@ void MainWindow::setToDo()
 
 
         connect(lineEdit,&QLineEdit::editingFinished,this,[=]{
-            qDebug()<<1;
-
-//            todoList->saveToJsonFile();
+            qDebug()<<"完成编辑";
+            todoList->saveToJsonFile(lineEdit->text(),checkBox->checkState(),i);//将条目，选中状态，第i条传回
 
         });
 
@@ -165,11 +164,13 @@ void MainWindow::setToDo()
                 delPushbutton->setText("X");
             }else{
                 delPushbutton->setVisible(false);
+                lineEdit->setEnabled(true);
             }
 
         });
         connect(delPushbutton,&QPushButton::clicked,this,[=]{
             delPushbutton->setVisible(false);
+            lineEdit->setEnabled(false);
         });
 
 
