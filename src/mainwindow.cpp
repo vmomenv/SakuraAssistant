@@ -23,6 +23,7 @@ MainWindow::MainWindow(DWidget *parent)
     setFixedSize(230,376);
     titlebar()->setFixedHeight(0);
     setFocusPolicy(Qt::ClickFocus);
+    installEventFilter(this);//安装事件过滤器
     qDebug()<<desktopWidget<<desktopHeight;
     this->move(desktopWidget-230,desktopHeight-376);
 //    setWindowOpacity(0.5);//设置透明
@@ -45,13 +46,13 @@ MainWindow::MainWindow(DWidget *parent)
     setToDo();
 }
 
-//失焦关闭窗口
-void MainWindow::focusOutEvent(QFocusEvent *event){
-    if(isUpdating==false){
-        close();
-    }
+////失焦关闭窗口 --已替换为eventFilter：失焦判断更精确，单击文本框不会判定为失焦
+//void MainWindow::focusOutEvent(QFocusEvent *event){
+//    if(isUpdating==false){
+//        close();
+//    }
 
-}
+//}
 
 void MainWindow::updateUpdateButton(){
     sysUpdateButton =new DPushButton(this);
@@ -122,7 +123,6 @@ void MainWindow::setToDo()
     int radioButtonWeight=18;
 
     for(int i=0;i<todoList->itemArray.size();i++){
-//        isUpdating=true;
         QJsonObject item =todoList->itemArray[i].toObject();
         TodoItem todoItem;
         todoItem.name=item.value("name").toString();
@@ -137,32 +137,40 @@ void MainWindow::setToDo()
         lineEdit->setReadOnly(false);
         lineEdit->move(radioButtonWeight+10,0);
         lineEdit->setText(todoItem.name);
-        QPushButton *pushbutton;
+
+        QPushButton *delPushbutton=new QPushButton(checkBox);
+        delPushbutton->setVisible(false);
+        delPushbutton->resize(30,30);
+        delPushbutton->move(170,5);
+        delPushbutton->setText("X");
+        //读取文档。如果条目被选择则显示删除按钮
+        if(todoItem.completed==true){
+            delPushbutton->setVisible(true);
+        }
+
+
 
         connect(lineEdit,&QLineEdit::editingFinished,this,[=]{
             qDebug()<<1;
 
 //            todoList->saveToJsonFile();
-//            isUpdating=false;
+
         });
-        // 连接信号和槽
-//        connect(checkBox, &QCheckBox::clicked, this,[=] {
-//            isUpdating=true;
 
-//            QPushButton *pushbutton=new QPushButton(checkBox);
-//            lineEdit->setVisible(true);
-//            lineEdit->setReadOnly(false);
-//            lineEdit->move(radioButtonWeight+10,0);
-//            pushbutton->setVisible(true);
-//            pushbutton->resize(30,30);
-//            pushbutton->move(170,5);
-//            pushbutton->setText("√");
-//            connect(pushbutton,&QPushButton::clicked,this,[=]{
-//                pushbutton->hide();
-//                checkBox->setText(lineEdit->text());
-//            });
+        connect(checkBox, &QCheckBox::clicked, this,[=] {
+            if(checkBox->checkState()){
+                delPushbutton->setVisible(true);
+                delPushbutton->resize(30,30);
+                delPushbutton->move(170,5);
+                delPushbutton->setText("X");
+            }else{
+                delPushbutton->setVisible(false);
+            }
 
-//        });
+        });
+        connect(delPushbutton,&QPushButton::clicked,this,[=]{
+            delPushbutton->setVisible(false);
+        });
 
 
 
@@ -246,6 +254,26 @@ void MainWindow::on_sysUpdateButton_clicked(){
 
 
 
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)//感谢柚柚帮我解决了这个麻烦
+/*如果发生ActivationChange事件，则检查当前活动窗口是否为此窗口。
+ * 如果不是，则关闭该窗口。在这种情况下，如果isUpdating标志为false，则关闭该窗口。*/
+{
+    if (Q_NULLPTR == watched)
+    {
+        return false;
+    }
+    if (QEvent::ActivationChange == event->type())
+    {
+        if (QApplication::activeWindow() != this)
+        {
+            if(isUpdating==false){
+                this->close();
+            }
+        }
+    }
+    return QWidget::eventFilter(watched, event);
 }
 MainWindow::~MainWindow(){
 

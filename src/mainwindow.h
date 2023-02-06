@@ -40,14 +40,14 @@ private:
 
 
 protected:
-    void focusOutEvent(QFocusEvent *event);
+//    void focusOutEvent(QFocusEvent *event);
     void updateUpdateButton();
     void weather();
     void setToDo();
 
 private slots:
     void on_sysUpdateButton_clicked();
-
+    bool eventFilter(QObject *,QEvent *);
 
 
 };
