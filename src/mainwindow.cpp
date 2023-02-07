@@ -17,6 +17,9 @@
 #include<todo.h>
 #include<QButtonGroup>
 #include<QWidget>
+#include<QScrollArea>
+#include<QStandardItemModel>
+#include<QAbstractItemModel>
 MainWindow::MainWindow(DWidget *parent)
 {
     isUpdating=false;
@@ -108,7 +111,6 @@ void MainWindow::weather(){
     weatherPic->setMaximumSize(24,24);
     weatherPic->setPixmap(*cityPix);
 
-    //解析天气
 
 
 
@@ -119,8 +121,16 @@ void MainWindow::setToDo()
 {
     ToDo *todoList=new ToDo;
     todoList->loadFromJsonFile();//加载todo.json
-    int radioButtonHigh=70;
-    int radioButtonWeight=18;
+    int checkBoxHigh=75;
+    int checkBoxWeight=18;
+
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setGeometry(18, 50, 200, 262);
+    scrollArea->setMinimumHeight(262);
+    QWidget *scrollWidget = new QWidget(scrollArea);
+    scrollArea->setWidgetResizable(true);
+
+
 
     for(int i=0;i<todoList->itemArray.size();i++){
 
@@ -128,15 +138,15 @@ void MainWindow::setToDo()
         TodoItem todoItem;
         todoItem.name=item.value("name").toString();
         todoItem.completed=item.value("completed").toBool();
-        QCheckBox *checkBox = new QCheckBox(this);
+        QCheckBox *checkBox = new QCheckBox(scrollWidget);
         checkBox->setChecked(todoItem.completed);
         checkBox->resize(250,40);
-        checkBox->move(radioButtonWeight,radioButtonHigh);
+        checkBox->move(checkBoxWeight,checkBoxHigh);
 
         QLineEdit *lineEdit = new QLineEdit(checkBox);
         lineEdit->setVisible(true);
         lineEdit->setReadOnly(false);
-        lineEdit->move(radioButtonWeight+10,0);
+        lineEdit->move(checkBoxWeight+10,0);
         lineEdit->setText(todoItem.name);
 
         //删除按钮
@@ -177,7 +187,7 @@ void MainWindow::setToDo()
         connect(delPushbutton,&QPushButton::clicked,this,[=]{
             todoList->saveToJsonFile("","",i);
         });
-        radioButtonHigh+=40;
+        checkBoxHigh+=40;
         qDebug()<<todoItem.name<<todoItem.completed;
 
 
@@ -191,10 +201,13 @@ void MainWindow::setToDo()
                 connect(addPushbutton,&QPushButton::clicked,this,[=]{
                     qDebug()<<0;
                     todoList->saveToJsonFile(" ",false,-1);
+//                    destructToDo();
+//                    setToDo();
                 });
-        }
-    }
 
+        }
+
+    }
 
 }
 void MainWindow::on_sysUpdateButton_clicked(){
@@ -295,4 +308,24 @@ MainWindow::~MainWindow(){
 
 }
 
+void MainWindow::destructToDo()
+{
+    //Delete the created widgets
+    QList<QCheckBox*> checkBoxList = this->findChildren<QCheckBox*>();
+    for (int i = 0; i < checkBoxList.size(); i++) {
+        QCheckBox* checkBox = checkBoxList.at(i);
+        delete(checkBox);
+    }
 
+    QList<QLineEdit*> lineEditList = this->findChildren<QLineEdit*>();
+    for (int i = 0; i < lineEditList.size(); i++) {
+        QLineEdit* lineEdit = lineEditList.at(i);
+        lineEdit->deleteLater();
+    }
+
+    QList<QPushButton*> pushButtonList = this->findChildren<QPushButton*>();
+    for (int i = 0; i < pushButtonList.size(); i++) {
+        QPushButton* pushButton = pushButtonList.at(i);
+        pushButton->deleteLater();
+    }
+}

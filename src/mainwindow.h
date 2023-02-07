@@ -18,6 +18,7 @@ class MainWindow :public DMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void destructToDo();
 private:
     //读取屏幕信息
     QDesktopWidget *desktop=DApplication::desktop();
@@ -35,7 +36,7 @@ private:
 
     QThread *spinnerThread;
 
-
+    
 
 
 

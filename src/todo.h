@@ -25,6 +25,7 @@ public:
       return m_items;
     }
     QJsonArray itemArray;
+
 private:
   QList<TodoItem> m_items;
 };
