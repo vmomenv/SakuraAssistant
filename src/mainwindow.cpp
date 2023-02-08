@@ -124,12 +124,6 @@ void MainWindow::setToDo()
     int checkBoxHigh=75;
     int checkBoxWeight=18;
 
-    QScrollArea *scrollArea = new QScrollArea(this);
-    scrollArea->setGeometry(18, 50, 200, 262);
-    scrollArea->setMinimumHeight(262);
-    QWidget *scrollWidget = new QWidget(scrollArea);
-    scrollArea->setWidgetResizable(true);
-
 
 
     for(int i=0;i<todoList->itemArray.size();i++){
@@ -138,7 +132,7 @@ void MainWindow::setToDo()
         TodoItem todoItem;
         todoItem.name=item.value("name").toString();
         todoItem.completed=item.value("completed").toBool();
-        QCheckBox *checkBox = new QCheckBox(scrollWidget);
+        QCheckBox *checkBox = new QCheckBox(this);
         checkBox->setChecked(todoItem.completed);
         checkBox->resize(250,40);
         checkBox->move(checkBoxWeight,checkBoxHigh);
@@ -151,7 +145,6 @@ void MainWindow::setToDo()
 
         //删除按钮
         QPushButton *delPushbutton=new QPushButton(checkBox);
-        QPixmap *res=new QPixmap(":/res/delete.png");
         delPushbutton->setIcon(QPixmap(":/res/delete.png"));
         delPushbutton->setVisible(false);
         delPushbutton->resize(30,30);
@@ -173,7 +166,6 @@ void MainWindow::setToDo()
         connect(checkBox, &QCheckBox::clicked, this,[=] {
             if(checkBox->checkState()){
                 todoList->saveToJsonFile(lineEdit->text(),checkBox->checkState(),i);
-                lineEdit->setEnabled(false);
                 delPushbutton->setVisible(true);
                 delPushbutton->resize(30,30);
                 delPushbutton->move(170,5);
@@ -185,6 +177,7 @@ void MainWindow::setToDo()
 
         });
         connect(delPushbutton,&QPushButton::clicked,this,[=]{
+            lineEdit->setEnabled(false);
             todoList->saveToJsonFile("","",i);
         });
         checkBoxHigh+=40;
@@ -198,16 +191,20 @@ void MainWindow::setToDo()
                 addPushbutton->setVisible(true);
                 addPushbutton->resize(30,30);
                 addPushbutton->move(47,checkBox->y()+50);
+
                 connect(addPushbutton,&QPushButton::clicked,this,[=]{
                     qDebug()<<0;
                     todoList->saveToJsonFile(" ",false,-1);
-//                    destructToDo();
-//                    setToDo();
                 });
-
         }
-
     }
+
+//    QHBoxLayout *layout = new QHBoxLayout(this);
+//    layout->addWidget(scrollArea);
+
+
+
+
 
 }
 void MainWindow::on_sysUpdateButton_clicked(){
