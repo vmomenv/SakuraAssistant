@@ -1,0 +1,10 @@
+Package: sparkassistant
+Version: 1.0.0
+Architecture: amd64
+Maintainer: momen  <momen@deepinos.org>
+Installed-Size: 7
+Recommends: spark-store
+Section: utils
+Priority: optional
+Homepage: sparkassistant
+Description: 星火小助手

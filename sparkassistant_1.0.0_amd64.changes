@@ -1,0 +1,25 @@
+Format: 1.8
+Date: Wed, 8 Feb 2023 16:32:34 +0800
+Source: sparkassistant
+Binary: sparkassistant
+Architecture: amd64
+Version: 1.0.0
+Distribution: unstable
+Urgency: low
+Maintainer: momen  <momen@deepinos.org>
+Changed-By: Deepin Packages Builder <momen@deepinos.org>
+Description:
+ sparkassistant - 星火小助手
+Changes:
+ sparkassistant (1.0.0) unstable; urgency=low
+ .
+   * Initial release.
+Checksums-Sha1:
+ 4306f419232e25062ec08d1791281bcf1d429747 10999 sparkassistant_1.0.0_amd64.buildinfo
+ 288e22a2e06951a9e11327465e2d5c27de0a896c 1064 sparkassistant_1.0.0_amd64.deb
+Checksums-Sha256:
+ e9b3b27b85d13538db2d0c6bd385a9b163b7b061c299cdffca644b86f2be37df 10999 sparkassistant_1.0.0_amd64.buildinfo
+ cbc2e2fe9c616652fc37665cb47ea82d57d8b7adb52256acf7ea9a2db36a8941 1064 sparkassistant_1.0.0_amd64.deb
+Files:
+ abf2ff55f4c10de507f171350e2c3800 10999 utils optional sparkassistant_1.0.0_amd64.buildinfo
+ b92b216145bd390e2f9926d88d455ea2 1064 utils optional sparkassistant_1.0.0_amd64.deb
