@@ -1,7 +1,7 @@
 Format: 1.8
 Date: Wed, 8 Feb 2023 16:32:34 +0800
 Source: sparkassistant
-Binary: sparkassistant
+Binary: sparkassistant sparkassistant-dbgsym
 Architecture: amd64
 Version: 1.0.0
 Distribution: unstable
@@ -15,11 +15,14 @@ Changes:
  .
    * Initial release.
 Checksums-Sha1:
- 4306f419232e25062ec08d1791281bcf1d429747 10999 sparkassistant_1.0.0_amd64.buildinfo
- 288e22a2e06951a9e11327465e2d5c27de0a896c 1064 sparkassistant_1.0.0_amd64.deb
+ dd159c30453d585995ccba19d82cf10ca31cfdcf 1539628 sparkassistant-dbgsym_1.0.0_amd64.deb
+ 0ba48c702b9919f0445e34704fa51867ba5622b6 11285 sparkassistant_1.0.0_amd64.buildinfo
+ 7ac82e0b06f5608c2fa0527dccf94ab2c4d879a4 185904 sparkassistant_1.0.0_amd64.deb
 Checksums-Sha256:
- e9b3b27b85d13538db2d0c6bd385a9b163b7b061c299cdffca644b86f2be37df 10999 sparkassistant_1.0.0_amd64.buildinfo
- cbc2e2fe9c616652fc37665cb47ea82d57d8b7adb52256acf7ea9a2db36a8941 1064 sparkassistant_1.0.0_amd64.deb
+ 4709a099bcb76287ebe2d6e9238ddab6aa36e8aa71402eb537efa564d9761e18 1539628 sparkassistant-dbgsym_1.0.0_amd64.deb
+ fe503b25d36b7def25d96bd79678a527f21a75bd954f03f8148d57bd162cc4ed 11285 sparkassistant_1.0.0_amd64.buildinfo
+ 320ac8589e951ffac7e815d023d8cb781f30557dde439a3647559c7fdae1cdf0 185904 sparkassistant_1.0.0_amd64.deb
 Files:
- abf2ff55f4c10de507f171350e2c3800 10999 utils optional sparkassistant_1.0.0_amd64.buildinfo
- b92b216145bd390e2f9926d88d455ea2 1064 utils optional sparkassistant_1.0.0_amd64.deb
+ 73f0193c21b80f80eabb44f8d3710c13 1539628 debug optional sparkassistant-dbgsym_1.0.0_amd64.deb
+ a28ba73a4c95353e3360008158e392fb 11285 utils optional sparkassistant_1.0.0_amd64.buildinfo
+ 0521eedd5d91707642d90ef409dbec07 185904 utils optional sparkassistant_1.0.0_amd64.deb

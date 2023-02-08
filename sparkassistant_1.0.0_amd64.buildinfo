@@ -4,14 +4,17 @@ Binary: sparkassistant
 Architecture: amd64
 Version: 1.0.0
 Checksums-Md5:
- b92b216145bd390e2f9926d88d455ea2 1064 sparkassistant_1.0.0_amd64.deb
+ 73f0193c21b80f80eabb44f8d3710c13 1539628 sparkassistant-dbgsym_1.0.0_amd64.deb
+ 0521eedd5d91707642d90ef409dbec07 185904 sparkassistant_1.0.0_amd64.deb
 Checksums-Sha1:
- 288e22a2e06951a9e11327465e2d5c27de0a896c 1064 sparkassistant_1.0.0_amd64.deb
+ dd159c30453d585995ccba19d82cf10ca31cfdcf 1539628 sparkassistant-dbgsym_1.0.0_amd64.deb
+ 7ac82e0b06f5608c2fa0527dccf94ab2c4d879a4 185904 sparkassistant_1.0.0_amd64.deb
 Checksums-Sha256:
- cbc2e2fe9c616652fc37665cb47ea82d57d8b7adb52256acf7ea9a2db36a8941 1064 sparkassistant_1.0.0_amd64.deb
+ 4709a099bcb76287ebe2d6e9238ddab6aa36e8aa71402eb537efa564d9761e18 1539628 sparkassistant-dbgsym_1.0.0_amd64.deb
+ 320ac8589e951ffac7e815d023d8cb781f30557dde439a3647559c7fdae1cdf0 185904 sparkassistant_1.0.0_amd64.deb
 Build-Origin: Deepin
 Build-Architecture: amd64
-Build-Date: Wed, 08 Feb 2023 23:01:11 +0800
+Build-Date: Wed, 08 Feb 2023 23:53:43 +0800
 Build-Tainted-By:
  merged-usr-via-symlinks
  usr-local-has-configs
