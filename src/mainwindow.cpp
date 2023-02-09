@@ -20,9 +20,10 @@
 #include<QScrollArea>
 #include<QStandardItemModel>
 #include<QAbstractItemModel>
+#include<QTableView>
 MainWindow::MainWindow(DWidget *parent)
 {
-    isUpdating=false;
+    isUpdating=true;
     setFixedSize(230,376);
     titlebar()->setFixedHeight(0);
     setFocusPolicy(Qt::ClickFocus);
@@ -119,11 +120,15 @@ void MainWindow::weather(){
 
 void MainWindow::setToDo()
 {
+
+
     ToDo *todoList=new ToDo;
     todoList->loadFromJsonFile();//加载todo.json
     int checkBoxHigh=75;
     int checkBoxWeight=18;
 
+    QStandardItemModel *model = new QStandardItemModel();
+    model->setColumnCount(3);
 
 
     for(int i=0;i<todoList->itemArray.size();i++){
@@ -132,16 +137,21 @@ void MainWindow::setToDo()
         TodoItem todoItem;
         todoItem.name=item.value("name").toString();
         todoItem.completed=item.value("completed").toBool();
+
         QCheckBox *checkBox = new QCheckBox(this);
         checkBox->setChecked(todoItem.completed);
         checkBox->resize(250,40);
         checkBox->move(checkBoxWeight,checkBoxHigh);
+        QStandardItem *item1 = new QStandardItem();
+        item1->setData(QVariant::fromValue(checkBox), Qt::UserRole + 1);
 
         QLineEdit *lineEdit = new QLineEdit(checkBox);
         lineEdit->setVisible(true);
         lineEdit->setReadOnly(false);
         lineEdit->move(checkBoxWeight+10,0);
         lineEdit->setText(todoItem.name);
+        QStandardItem *item2 = new QStandardItem();
+        item2->setData(QVariant::fromValue(lineEdit), Qt::UserRole + 2);
 
         //删除按钮
         QPushButton *delPushbutton=new QPushButton(checkBox);
@@ -149,6 +159,11 @@ void MainWindow::setToDo()
         delPushbutton->setVisible(false);
         delPushbutton->resize(30,30);
         delPushbutton->move(170,5);
+        QStandardItem *item3 = new QStandardItem();
+        item3->setData(QVariant::fromValue(delPushbutton), Qt::UserRole + 3);
+        QList<QStandardItem*> row;
+        row << item1 << item2 << item3;
+        model->appendRow(row);
 
         //读取文档。如果条目被选择则显示删除按钮
         if(todoItem.completed==true){
@@ -184,23 +199,74 @@ void MainWindow::setToDo()
         qDebug()<<todoItem.name<<todoItem.completed;
 
 
-        if(i==todoList->itemArray.size()-1){//最后一行增加添加按钮
-            //新建条目按钮
-                QPushButton *addPushbutton=new QPushButton(this);
-                addPushbutton->setIcon(QPixmap(":/res/plus.png"));
-                addPushbutton->setVisible(true);
-                addPushbutton->resize(30,30);
-                addPushbutton->move(47,checkBox->y()+50);
+//        if(i==todoList->itemArray.size()-1){//最后一行增加添加按钮
+//            //新建条目按钮
+//                QPushButton *addPushbutton=new QPushButton(this);
+//                addPushbutton->setIcon(QPixmap(":/res/plus.png"));
+//                addPushbutton->setVisible(true);
+//                addPushbutton->resize(30,30);
+//                addPushbutton->move(47,checkBox->y()+50);
 
-                connect(addPushbutton,&QPushButton::clicked,this,[=]{
-                    qDebug()<<0;
-                    todoList->saveToJsonFile(" ",false,-1);
-                });
-        }
+//                connect(addPushbutton,&QPushButton::clicked,this,[=]{
+//                    qDebug()<<0;
+//                    todoList->saveToJsonFile(" ",false,-1);
+//                });
+//        }
     }
+    QTableView *tableView = new QTableView(this);
+    tableView->setModel(model);
+
+    QPushButton *addButton = new QPushButton(this);
+    addButton->setText("添加");
+
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->addWidget(tableView);
+    QHBoxLayout *hLayout = new QHBoxLayout();
+    hLayout->addStretch();
+    hLayout->addWidget(addButton);
+    layout->addLayout(hLayout);
+
+    QWidget *widget = new QWidget();
+    widget->setLayout(layout);
+    widget->show();
+    connect(addButton, &QPushButton::clicked, [=](bool checked){
+        QCheckBox *checkBox = new QCheckBox(this);
+        checkBox->setChecked(false);
+        checkBox->resize(250,40);
+        checkBox->move(checkBoxWeight,checkBoxHigh);
+        QStandardItem *item1 = new QStandardItem();
+        item1->setData(QVariant::fromValue(checkBox), Qt::UserRole + 1);
+
+        QLineEdit *lineEdit = new QLineEdit(checkBox);
+        lineEdit->setVisible(true);
+        lineEdit->setReadOnly(false);
+        lineEdit->move(checkBoxWeight+10,0);
+        lineEdit->setText("");
+        QStandardItem *item2 = new QStandardItem();
+        item2->setData(QVariant::fromValue(lineEdit), Qt::UserRole + 2);
+
+        //删除按钮
+        QPushButton *delPushbutton=new QPushButton(checkBox);
+        delPushbutton->setIcon(QPixmap(":/res/delete.png"));
+        delPushbutton->setVisible(false);
+        delPushbutton->resize(30,30);
+        delPushbutton->move(170,5);
+        QStandardItem *item3 = new QStandardItem();
+        item3->setData(QVariant::fromValue(delPushbutton), Qt::UserRole + 3);
+        QList<QStandardItem*> row;
+        row << item1 << item2 << item3;
+        model->appendRow(row);
+
+    });
+
+
+
 
 //    QHBoxLayout *layout = new QHBoxLayout(this);
 //    layout->addWidget(scrollArea);
+
+
+
 
 
 
