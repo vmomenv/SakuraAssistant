@@ -1,6 +1,7 @@
 #include "todo.h"
 #include<QPushButton>
 #include<QDebug>
+#include<QDir>
 ToDo::ToDo()
 {
 }
@@ -10,12 +11,32 @@ void ToDo::addItem(const TodoItem &item) {
     m_items.append(item);
   }
 void ToDo::loadFromJsonFile(){
-    QFile file("/home/momen/Desktop/todo.json");
-    if(!file.open(QIODevice::ReadOnly)){
-        return;
+
+
+    QDir home = QDir::home();
+    QString configPath = home.filePath(".config/sparkassistant");
+    QDir dir(configPath);
+    if (!dir.exists()) {
+        dir.mkpath(".");
     }
+
+    QString path = dir.filePath("todo.json");
+    QFile file(path);
+
+    if (!file.exists()) {
+        QFile todoJson(":/res/todo.json");
+        todoJson.copy(path);
+    }
+    file.setPermissions(QFile::ReadUser | QFile::WriteUser | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther | QFile::WriteOther);
+    if(!file.open(QIODevice::ReadWrite)) {
+        qDebug() << "File open error";
+    } else {
+        qDebug() <<"File open!";
+    }
+    qDebug()<<"file路径为"<<path;
+
     QByteArray data=file.readAll();//将内容加载到data中
-    file.close();
+
     QJsonDocument doc=QJsonDocument::fromJson(data);//将data转为json格式
     qDebug()<<doc;
     QJsonObject itemObj=doc.object();//将json格式的内容初始化
@@ -24,7 +45,20 @@ void ToDo::loadFromJsonFile(){
 }
 void ToDo::saveToJsonFile(QString name,bool completed,int i){
     qDebug()<<name<<completed<<i;
-    QFile file("/home/momen/Desktop/todo.json");
+    QDir home = QDir::home();
+    QString configPath = home.filePath(".config/sparkassistant");
+    QDir dir(configPath);
+    if (!dir.exists()) {
+        dir.mkpath(".");
+    }
+
+    QString path = dir.filePath("todo.json");
+    QFile file(path);
+
+    if (!file.exists()) {
+        QFile todoJson(":/res/todo.json");
+        todoJson.copy(path);
+    }
     file.open(QIODevice::ReadWrite);
 
       if(!file.open(QIODevice::ReadWrite)) {
