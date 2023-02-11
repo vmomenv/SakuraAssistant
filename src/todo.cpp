@@ -12,7 +12,7 @@ void ToDo::addItem(const TodoItem &item) {
   }
 void ToDo::loadFromJsonFile(){
 
-
+    //创建文件路径
     QDir home = QDir::home();
     QString configPath = home.filePath(".config/sparkassistant");
     QDir dir(configPath);
@@ -22,11 +22,12 @@ void ToDo::loadFromJsonFile(){
 
     QString path = dir.filePath("todo.json");
     QFile file(path);
-
+    //将qt中文件复制到~/.config/sparkassistant/
     if (!file.exists()) {
         QFile todoJson(":/res/todo.json");
         todoJson.copy(path);
     }
+    //设置文件权限
     file.setPermissions(QFile::ReadUser | QFile::WriteUser | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther | QFile::WriteOther);
     if(!file.open(QIODevice::ReadWrite)) {
         qDebug() << "File open error";
@@ -34,7 +35,7 @@ void ToDo::loadFromJsonFile(){
         qDebug() <<"File open!";
     }
     qDebug()<<"file路径为"<<path;
-
+/////
     QByteArray data=file.readAll();//将内容加载到data中
 
     QJsonDocument doc=QJsonDocument::fromJson(data);//将data转为json格式

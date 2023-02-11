@@ -21,6 +21,7 @@
 #include<QStandardItemModel>
 #include<QAbstractItemModel>
 #include<QTableView>
+#include<monitorthread.h>
 MainWindow::MainWindow(DWidget *parent)
 {
     isUpdating=true;
@@ -48,6 +49,7 @@ MainWindow::MainWindow(DWidget *parent)
             weather->deleteLater();
     });
     setToDo();
+
 }
 
 ////失焦关闭窗口 --已替换为eventFilter：失焦判断更精确，单击文本框不会判定为失焦
@@ -193,25 +195,28 @@ void MainWindow::setToDo()
         });
         connect(delPushbutton,&QPushButton::clicked,this,[=]{
             lineEdit->setEnabled(false);
+            checkBox->hide();
+            lineEdit->hide();
+            delPushbutton->hide();
             todoList->saveToJsonFile("","",i);
         });
         checkBoxHigh+=40;
         qDebug()<<todoItem.name<<todoItem.completed;
 
 
-//        if(i==todoList->itemArray.size()-1){//最后一行增加添加按钮
-//            //新建条目按钮
-//                QPushButton *addPushbutton=new QPushButton(this);
-//                addPushbutton->setIcon(QPixmap(":/res/plus.png"));
-//                addPushbutton->setVisible(true);
-//                addPushbutton->resize(30,30);
-//                addPushbutton->move(47,checkBox->y()+50);
+        if(i==todoList->itemArray.size()-1){//最后一行增加添加按钮
+            //新建条目按钮
+                QPushButton *addPushbutton=new QPushButton(this);
+                addPushbutton->setIcon(QPixmap(":/res/plus.png"));
+                addPushbutton->setVisible(true);
+                addPushbutton->resize(30,30);
+                addPushbutton->move(47,checkBox->y()+50);
 
-//                connect(addPushbutton,&QPushButton::clicked,this,[=]{
-//                    qDebug()<<0;
-//                    todoList->saveToJsonFile(" ",false,-1);
-//                });
-//        }
+                connect(addPushbutton,&QPushButton::clicked,this,[=]{
+                    qDebug()<<0;
+                    todoList->saveToJsonFile(" ",false,-1);
+                });
+        }
     }
     QTableView *tableView = new QTableView(this);
     tableView->setModel(model);
