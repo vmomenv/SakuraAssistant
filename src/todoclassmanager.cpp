@@ -1,13 +1,17 @@
 #include "todoclassmanager.h"
 #include<QDir>
 #include<QFile>
-
+#include<QScrollArea>
 TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
   , todos()
   , spacer(10,10, QSizePolicy::Minimum, QSizePolicy::Expanding)
 
 {
     this->loadFromJsonFile();
+    QPushButton *addBtn=new QPushButton(this);
+    addBtn->resize(30,30);
+    addBtn->setText("+");
+    addBtn->move(20,200);
     for(int i=0;i<this->itemArray.size();i++){
         QJsonObject item =this->itemArray[i].toObject();
         TodoItem todoItem;
@@ -25,38 +29,46 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
         todosVboxLayout.addLayout(todosLayout);
 
 
-        connect(todo->checkBox, &QCheckBox::stateChanged, this,[&](int){
+
+        connect(todo->checkBox, &QCheckBox::stateChanged, this,[=](){
             this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i);
         });
 
-        connect(todo->line, &QLineEdit::textChanged, this, [&](const QString &){
+        connect(todo->line, &QLineEdit::editingFinished, this, [=](){
             this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i);
         });
-        connect(todo->delBtn, &QPushButton::clicked, this, [&](){
+        connect(todo->delBtn, &QPushButton::clicked, this, [=](){
             todo->checkBox->deleteLater();
             todo->checkBox->setParent(nullptr);
             todo->line->deleteLater();
             todo->line->setParent(nullptr);
             todo->delBtn->deleteLater();
             todo->delBtn->setParent(nullptr);
+            this->saveToJsonFile("","",i);
 
         });
-    }
-    QPushButton *addBtn=new QPushButton(this);
-    addBtn->resize(30,30);
-    addBtn->setText("+");
-    addBtn->move(20,200);
-    QVBoxLayout *vbox =new QVBoxLayout(this);
 
+    }
+
+    QVBoxLayout *vbox =new QVBoxLayout(this);
     vbox->addLayout(&todosVboxLayout);
     vbox->addItem(&spacer);
+
+
+
+
 //    vbox->addWidget(addBtn);
 
     connect(addBtn,&QPushButton::clicked,this,[&](){
         QHBoxLayout *todosLayout =new QHBoxLayout();
         ToDo *todo=new ToDo();
+        todo->checkBox->setChecked(false);
+        todo->line->setText("");
+        todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
+
         todo->setLayout(todosLayout);
         todosVboxLayout.addLayout(todosLayout);
+        this->saveToJsonFile(false," ",-1);
 
     });
 
