@@ -11,7 +11,8 @@ SOURCES += \
     weatherparse.cpp \
     iptoweathercity.cpp \
     todo.cpp \
-    monitorthread.cpp
+    monitorthread.cpp \
+    todoclassmanager.cpp
 
 RESOURCES +=         resources.qrc
 
@@ -20,7 +21,8 @@ HEADERS += \
     weatherparse.h \
     iptoweathercity.h \
     todo.h \
-    monitorthread.h
+    monitorthread.h \
+    todoclassmanager.h
 
 target.path=/usr/bin
 

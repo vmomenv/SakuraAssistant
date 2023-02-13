@@ -3,31 +3,41 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include <QFile>
-#include <QList>
-#include <QTextStream>
+#include <QCheckBox>
+#include <QHBoxLayout>
+#include <QLineEdit>
 #include <QObject>
-#include<QString>
+#include <QPushButton>
+#include <QWidget>
 struct TodoItem{
     QString name;
     bool completed;
 };
 
-class ToDo
+class ToDo: public QWidget
 {
 public:
-    ToDo();
+
+    explicit ToDo(QWidget *parent = nullptr);
+    void setLayout(QHBoxLayout *hbox);//一组按钮样式
+
     void addItem(const TodoItem &item);
-    //从json中加载todo项目
-    void loadFromJsonFile();
-    void saveToJsonFile(QString name,bool completed,int i);
+
     QList<TodoItem> items() const {
       return m_items;
     }
-    QJsonArray itemArray;
 
+    //checkbox line delbtn为一组
+    QCheckBox *checkBox;
+    QLineEdit *line;
+    QPushButton *delBtn;
+    bool isDel;
 private:
   QList<TodoItem> m_items;
+
+
+signals:
+//    void statusChanged();
 };
 
 #endif // TODO_H
