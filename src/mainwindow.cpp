@@ -223,9 +223,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)//感谢柚柚帮�
     }
     return QWidget::eventFilter(watched, event);
 }
-MainWindow::~MainWindow(){
 
-}
 
 void MainWindow::destructToDo()
 {
@@ -247,4 +245,17 @@ void MainWindow::destructToDo()
         QPushButton* pushButton = pushButtonList.at(i);
         pushButton->deleteLater();
     }
+}
+MainWindow::~MainWindow(){
+    TodoClassManager *delToDo;
+    delToDo->loadFromJsonFile();
+    for(int i=0;i<delToDo->itemArray.size();i++){
+        QJsonObject item =delToDo->itemArray[i].toObject();
+        TodoItem todoItem;
+        if(item.value("isDel").toBool()==true){
+            delToDo->saveToJsonFile(false,"",i,true);
+        }
+
+    }
+
 }

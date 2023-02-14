@@ -3,8 +3,9 @@
 #include<QFile>
 #include<QScrollArea>
 TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
+  ,todosVboxLayout(new QVBoxLayout)
   , todos()
-  , spacer(10,10, QSizePolicy::Minimum, QSizePolicy::Expanding)
+  , spacer(new QSpacerItem(10,10, QSizePolicy::Minimum, QSizePolicy::Expanding))
 
 {
     this->loadFromJsonFile();
@@ -26,16 +27,16 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
         todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
 
         todo->setLayout(todosLayout);
-        todosVboxLayout.addLayout(todosLayout);
+        todosVboxLayout->addLayout(todosLayout);
 
 
 
         connect(todo->checkBox, &QCheckBox::stateChanged, this,[=](){
-            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i);
+            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i,false);
         });
 
         connect(todo->line, &QLineEdit::editingFinished, this, [=](){
-            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i);
+            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i,false);
         });
         connect(todo->delBtn, &QPushButton::clicked, this, [=](){
             todo->checkBox->deleteLater();
@@ -44,21 +45,22 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             todo->line->setParent(nullptr);
             todo->delBtn->deleteLater();
             todo->delBtn->setParent(nullptr);
-            this->saveToJsonFile("","",i);
+            this->saveToJsonFile(false,"",i,false);
 
         });
 
     }
 
     QVBoxLayout *vbox =new QVBoxLayout(this);
-    vbox->addLayout(&todosVboxLayout);
-    vbox->addItem(&spacer);
+    vbox->addLayout(todosVboxLayout);
+    vbox->addItem(spacer);
 
 
 
 
 //    vbox->addWidget(addBtn);
-
+    static int index;
+    index=this->itemArray.size()-1;//将计数器调到最后一位
     connect(addBtn,&QPushButton::clicked,this,[&](){
         QHBoxLayout *todosLayout =new QHBoxLayout();
         ToDo *todo=new ToDo();
@@ -67,10 +69,28 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
         todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
 
         todo->setLayout(todosLayout);
-        todosVboxLayout.addLayout(todosLayout);
-        this->saveToJsonFile(false," ",-1);
+        todosVboxLayout->addLayout(todosLayout);
+        this->saveToJsonFile(false," ",-1,false);
+        connect(todo->checkBox, &QCheckBox::stateChanged, this,[=](){
+            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index,false);
+        });
 
+        connect(todo->line, &QLineEdit::editingFinished, this, [=](){
+            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index,false);
+        });
+        connect(todo->delBtn, &QPushButton::clicked, this, [=](){
+            todo->checkBox->deleteLater();
+            todo->checkBox->setParent(nullptr);
+            todo->line->deleteLater();
+            todo->line->setParent(nullptr);
+            todo->delBtn->deleteLater();
+            todo->delBtn->setParent(nullptr);
+            this->saveToJsonFile(false,"",index,false);
+
+        });
+        index+=1;
     });
+
 
 }
 
@@ -101,17 +121,18 @@ void TodoClassManager::loadFromJsonFile(){
         qDebug() <<"File open!";
     }
     qDebug()<<"file路径为"<<path;
-/////
+
     QByteArray data=file.readAll();//将内容加载到data中
 
     QJsonDocument doc=QJsonDocument::fromJson(data);//将data转为json格式
     qDebug()<<doc;
     QJsonObject itemObj=doc.object();//将json格式的内容初始化
     itemArray=itemObj.value("items").toArray();//解析items数组,将json存放于itemArray
+    file.close();
 }
 
 
-void TodoClassManager::saveToJsonFile(bool completed,QString name,int i){
+void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isDel){
     //创建文件路径
     QDir home = QDir::home();
     QString configPath = home.filePath(".config/sparkassistant");
@@ -144,11 +165,16 @@ void TodoClassManager::saveToJsonFile(bool completed,QString name,int i){
     QJsonObject itemObj = doc.object();
     QJsonArray itemArr = itemObj["items"].toArray();
     if(name.size()==0){
-        itemArr.removeAt(i);//删除第i组
+        smallObj.insert("isDel", true);
+        itemArr[i]=smallObj;
+
     }else if(i==-1){//新增一条
         itemArr.append(smallObj);
     }else{//保存该条
         itemArr[i]=smallObj;
+    }
+    if(isDel==true){
+        itemArr.removeAt(i);//删除第i组
     }
 
     itemObj.insert("items", itemArr);

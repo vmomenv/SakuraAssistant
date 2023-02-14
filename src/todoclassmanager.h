@@ -11,16 +11,16 @@ public:
     ~TodoClassManager();
     //从json中加载todo项目
     void loadFromJsonFile();
-    void saveToJsonFile(bool completed,QString name,int i);
-
+    void saveToJsonFile(bool completed,QString name,int i,bool isDel);
+    QJsonArray itemArray;
 private:
     QList<ToDo*>todos;//根据todo类，创建Qlist
 
-    QVBoxLayout todosVboxLayout;
-    QSpacerItem spacer;//QSpacerItem?
-    QPushButton addBtn;
+    QVBoxLayout *todosVboxLayout;
+    QSpacerItem *spacer;//QSpacerItem?
+    QPushButton *addBtn;
 
-    QJsonArray itemArray;
+
 
 
 signals:
