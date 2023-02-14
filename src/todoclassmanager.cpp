@@ -8,6 +8,18 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
   , spacer(new QSpacerItem(10,10, QSizePolicy::Minimum, QSizePolicy::Expanding))
 
 {
+    QWidget *todoWidget=new QWidget(this);
+    QScrollArea *scrollArea=new QScrollArea(this);
+    scrollArea->setWidget(todoWidget);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    this->setStyleSheet("QScrollArea,QWidget#viewport,.QWidget\
+    {\
+        background-color:transparent;\
+        margin:0px;\
+    }\
+    ");
+
     this->loadFromJsonFile();
     QPushButton *addBtn=new QPushButton(this);
     addBtn->resize(30,30);
@@ -20,11 +32,16 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
         todoItem.completed=item.value("completed").toBool();
 
         QHBoxLayout *todosLayout =new QHBoxLayout();
-        ToDo *todo=new ToDo();
+
+        ToDo *todo=new ToDo(todoWidget);
+        scrollArea->setFixedSize(208, 200);
 
         todo->checkBox->setChecked(todoItem.completed);
+        todo->checkBox->setFixedHeight(16);
         todo->line->setText(todoItem.name);
+        todo->line->setFixedHeight(40);
         todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
+        todo->delBtn->setFixedHeight(40);
 
         todo->setLayout(todosLayout);
         todosVboxLayout->addLayout(todosLayout);
@@ -51,12 +68,11 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
 
     }
 
-    QVBoxLayout *vbox =new QVBoxLayout(this);
-    vbox->addLayout(todosVboxLayout);
-    vbox->addItem(spacer);
-
-
-
+//    QVBoxLayout *vbox =new QVBoxLayout(todoWidget);
+//    vbox->addLayout(todosVboxLayout);
+//    vbox->addItem(spacer);
+      todoWidget->setLayout(todosVboxLayout);
+      todosVboxLayout->setAlignment(Qt::AlignTop);
 
 //    vbox->addWidget(addBtn);
     static int index;

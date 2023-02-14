@@ -3,9 +3,9 @@
 #include<QDebug>
 #include<QDir>
 ToDo::ToDo(QWidget *parent) : QWidget(parent)
-    , checkBox(new QCheckBox)
-    , line(new QLineEdit)
-    , delBtn(new QPushButton())
+    , checkBox(new QCheckBox(this))
+    , line(new QLineEdit(this))
+    , delBtn(new QPushButton(this))
     , isDel(false)
 {
 

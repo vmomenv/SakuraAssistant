@@ -2,7 +2,7 @@
 #define TODOCLASSMANAGER_H
 #include "todo.h"
 #include <QWidget>
-#include <QSlider>
+#include<QScrollArea>
 class TodoClassManager : public QWidget
 {
     Q_OBJECT
@@ -20,8 +20,8 @@ private:
     QSpacerItem *spacer;//QSpacerItem?
     QPushButton *addBtn;
 
-
-
+    QWidget *todoWidget;
+    QScrollArea *scrollArea;
 
 signals:
 
