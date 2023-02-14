@@ -247,7 +247,7 @@ void MainWindow::destructToDo()
     }
 }
 MainWindow::~MainWindow(){
-    TodoClassManager *delToDo;
+    TodoClassManager *delToDo=new TodoClassManager;
     delToDo->loadFromJsonFile();
     for(int i=0;i<delToDo->itemArray.size();i++){
         QJsonObject item =delToDo->itemArray[i].toObject();
@@ -257,5 +257,5 @@ MainWindow::~MainWindow(){
         }
 
     }
-
+//qDebug()<<"析构";
 }

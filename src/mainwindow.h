@@ -10,6 +10,7 @@
 #include<QTextEdit>
 #include<QProcess>
 #include<DSpinner>
+#include<todoclassmanager.h>
 DWIDGET_USE_NAMESPACE
 class MainWindow :public DMainWindow
 {
@@ -37,7 +38,7 @@ private:
     QThread *spinnerThread;
 
     
-
+    TodoClassManager *delToDo;
 
 
 protected:

@@ -3,8 +3,8 @@
 #include<QFile>
 #include<QScrollArea>
 TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
-  ,todosVboxLayout(new QVBoxLayout)
   , todos()
+  ,todosVboxLayout(new QVBoxLayout)
   , spacer(new QSpacerItem(10,10, QSizePolicy::Minimum, QSizePolicy::Expanding))
 
 {
