@@ -34,7 +34,7 @@ MainWindow::MainWindow(DWidget *parent)
     this->move(desktopWidget-230,desktopHeight-376);
 //    setWindowOpacity(0.5);//设置透明
     setAttribute(Qt::WA_TranslucentBackground);//设置背景透明
-    setEnableBlurWindow(true);
+    setEnableBlurWindow(true);//设置高斯模糊
 
     updateUpdateButton();
 
@@ -247,15 +247,6 @@ void MainWindow::destructToDo()
     }
 }
 MainWindow::~MainWindow(){
-    TodoClassManager *delToDo=new TodoClassManager;
-    delToDo->loadFromJsonFile();
-    for(int i=0;i<delToDo->itemArray.size();i++){
-        QJsonObject item =delToDo->itemArray[i].toObject();
-        TodoItem todoItem;
-        if(item.value("isDel").toBool()==true){
-            delToDo->saveToJsonFile(false,"",i,true);
-        }
 
-    }
 //qDebug()<<"析构";
 }

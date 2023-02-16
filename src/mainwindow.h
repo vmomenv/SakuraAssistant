@@ -38,7 +38,6 @@ private:
     QThread *spinnerThread;
 
     
-    TodoClassManager *delToDo;
 
 
 protected:
