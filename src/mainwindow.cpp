@@ -247,6 +247,4 @@ void MainWindow::destructToDo()
     }
 }
 MainWindow::~MainWindow(){
-
-//qDebug()<<"析构";
 }

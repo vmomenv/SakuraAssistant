@@ -3,6 +3,7 @@
 #include "todo.h"
 #include <QWidget>
 #include<QScrollArea>
+#include<QFile>
 class TodoClassManager : public QWidget
 {
     Q_OBJECT
@@ -12,7 +13,9 @@ public:
     //从json中加载todo项目
     void loadFromJsonFile();
     void saveToJsonFile(bool completed,QString name,int i,bool isDel);
+    void delJsonFile();
     QJsonArray itemArray;
+    QJsonDocument doc;
 private:
     QList<ToDo*>todos;//根据todo类，创建Qlist
 
@@ -23,9 +26,10 @@ private:
     QWidget *todoWidget;
     QScrollArea *scrollArea;
 
+    QFile file;
+
 signals:
 
 public slots:
 };
-
 #endif // TODOCLASSMANAGER_H
