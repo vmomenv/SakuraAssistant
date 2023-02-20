@@ -77,8 +77,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             });
 
         }
-        todoWidget->setLayout(todosVboxLayout);
-        todosVboxLayout->setAlignment(Qt::AlignTop);
+
     }else{
 
     }
@@ -93,6 +92,9 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
     static int index;
     index=itemArray.size();
     connect(addBtn,&QPushButton::clicked,this,[&](){
+        if(index==0){
+            index=1;
+        }
         qDebug()<<index;
         QHBoxLayout *todosLayout =new QHBoxLayout();
         ToDo *todo=new ToDo();
@@ -102,13 +104,16 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
 
         todo->setLayout(todosLayout);
         todosVboxLayout->addLayout(todosLayout);
-        this->saveToJsonFile(false," ",itemArray.size(),false,true);
+        this->saveToJsonFile(false," ",index-1,false,true);
+        QJsonObject item =this->itemArray[index].toObject();
+
+
         connect(todo->checkBox, &QCheckBox::stateChanged, this,[=](){
-            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index,false,false);
+            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index-1,false,false);
         });
 
         connect(todo->line, &QLineEdit::editingFinished, this, [=](){
-            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index,false,false);
+            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index-1,false,false);
         });
         connect(todo->delBtn, &QPushButton::clicked, this, [=](){
             todo->checkBox->deleteLater();
@@ -117,13 +122,14 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             todo->line->setParent(nullptr);
             todo->delBtn->deleteLater();
             todo->delBtn->setParent(nullptr);
-            this->saveToJsonFile(false,"",index,false,false);
+            this->saveToJsonFile(false,"",index-1,false,false);
 
         });
         index+=1;
     });
 
-
+    todoWidget->setLayout(todosVboxLayout);
+    todosVboxLayout->setAlignment(Qt::AlignTop);
 }
 
 
