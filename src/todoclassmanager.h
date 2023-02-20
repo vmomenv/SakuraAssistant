@@ -12,10 +12,11 @@ public:
     ~TodoClassManager();
     //从json中加载todo项目
     void loadFromJsonFile();
-    void saveToJsonFile(bool completed,QString name,int i,bool isDel);
+    void saveToJsonFile(bool completed,QString name,int i,bool isDel,bool isAdd);
     void delJsonFile();
     QJsonArray itemArray;
     QJsonDocument doc;
+
 private:
     QList<ToDo*>todos;//根据todo类，创建Qlist
 
@@ -26,6 +27,7 @@ private:
     QWidget *todoWidget;
     QScrollArea *scrollArea;
 
+    ToDo *todo;
     QFile file;
 
 signals:

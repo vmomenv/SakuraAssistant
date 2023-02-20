@@ -33,55 +33,61 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
     addBtn->setText("+");
     addBtn->move(20,200);
 
-    for(int i=0;i<this->itemArray.size();i++){
-        QJsonObject item =this->itemArray[i].toObject();
-        TodoItem todoItem;
-        todoItem.name=item.value("name").toString();
-        todoItem.completed=item.value("completed").toBool();
+    if(this->itemArray.size()!=0){
+        for(int i=0;i<this->itemArray.size();i++){
+            QJsonObject item =this->itemArray[i].toObject();
+            TodoItem todoItem;
+            todoItem.name=item.value("name").toString();
+            todoItem.completed=item.value("completed").toBool();
 
-        QHBoxLayout *todosLayout =new QHBoxLayout();
+            QHBoxLayout *todosLayout =new QHBoxLayout();
 
-        ToDo *todo=new ToDo(todoWidget);
-        scrollArea->setFixedSize(208, 200);
+            ToDo *todo=new ToDo(todoWidget);
+            scrollArea->setFixedSize(208, 200);
 
-        todo->checkBox->setChecked(todoItem.completed);
-        todo->checkBox->setFixedHeight(16);
-        todo->line->setText(todoItem.name);
-        todo->line->setFixedHeight(40);
-        todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
-        todo->delBtn->setFixedHeight(40);
+            todo->checkBox->setChecked(todoItem.completed);
+            todo->checkBox->setFixedHeight(16);
+            todo->line->setText(todoItem.name);
+            todo->line->setFixedHeight(40);
+            todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
+            todo->delBtn->setFixedHeight(40);
 
-        todo->setLayout(todosLayout);
-        todosVboxLayout->addLayout(todosLayout);
+            todo->setLayout(todosLayout);
+            todosVboxLayout->addLayout(todosLayout);
 
 
 
-        connect(todo->checkBox, &QCheckBox::stateChanged, this,[=](){
-            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i,false);
-        });
+            connect(todo->checkBox, &QCheckBox::stateChanged, this,[=](){
+                this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i,false,false);
+            });
 
-        connect(todo->line, &QLineEdit::editingFinished, this, [=](){
-            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i,false);
-        });
-        connect(todo->delBtn, &QPushButton::clicked, this, [=](){
-//            todo->checkBox->deleteLater();
-            todo->checkBox->setParent(nullptr);
-//            todo->line->deleteLater();
-            todo->line->setParent(nullptr);
-//            todo->delBtn->deleteLater();
-            todo->delBtn->setParent(nullptr);
-            qDebug()<<"正在删除第"<<i<<"组件";
-            this->saveToJsonFile(false,"",i,false);
+            connect(todo->line, &QLineEdit::editingFinished, this, [=](){
+                this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i,false,false);
+            });
+            connect(todo->delBtn, &QPushButton::clicked, this, [=](){
+    //            todo->checkBox->deleteLater();
+                todo->checkBox->setParent(nullptr);
+    //            todo->line->deleteLater();
+                todo->line->setParent(nullptr);
+    //            todo->delBtn->deleteLater();
+                todo->delBtn->setParent(nullptr);
+                qDebug()<<"正在删除第"<<i<<"组件";
+                this->saveToJsonFile(false,"",i,false,false);
 
-        });
+            });
+
+        }
+        todoWidget->setLayout(todosVboxLayout);
+        todosVboxLayout->setAlignment(Qt::AlignTop);
+    }else{
 
     }
+
 
 //    QVBoxLayout *vbox =new QVBoxLayout(todoWidget);
 //    vbox->addLayout(todosVboxLayout);
 //    vbox->addItem(spacer);
-      todoWidget->setLayout(todosVboxLayout);
-      todosVboxLayout->setAlignment(Qt::AlignTop);
+
 
 //    vbox->addWidget(addBtn);
     static int index;
@@ -96,13 +102,13 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
 
         todo->setLayout(todosLayout);
         todosVboxLayout->addLayout(todosLayout);
-        this->saveToJsonFile(false," ",-1,false);
+        this->saveToJsonFile(false," ",itemArray.size(),false,true);
         connect(todo->checkBox, &QCheckBox::stateChanged, this,[=](){
-            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index,false);
+            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index,false,false);
         });
 
         connect(todo->line, &QLineEdit::editingFinished, this, [=](){
-            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index,false);
+            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index,false,false);
         });
         connect(todo->delBtn, &QPushButton::clicked, this, [=](){
             todo->checkBox->deleteLater();
@@ -111,7 +117,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             todo->line->setParent(nullptr);
             todo->delBtn->deleteLater();
             todo->delBtn->setParent(nullptr);
-            this->saveToJsonFile(false,"",index,false);
+            this->saveToJsonFile(false,"",index,false,false);
 
         });
         index+=1;
@@ -158,7 +164,7 @@ void TodoClassManager::loadFromJsonFile(){
 }
 
 
-void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isDel){
+void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isDel,bool isAdd){
 
     QJsonObject smallObj;
     smallObj.insert("completed", completed);
@@ -172,7 +178,7 @@ void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isD
         smallObj.insert("isDel", true);
         itemArr[i]=smallObj;
 
-    }else if(i==-1){//新增一条
+    }else if(isAdd==true){//新增一条
         itemArr.append(smallObj);
     }else{//保存该条
         itemArr[i]=smallObj;
@@ -185,6 +191,7 @@ void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isD
 
     doc.setObject(itemObj);
     qDebug()<<"第"<<i<<"组保存后"<<itemObj;
+    itemArray=itemObj.value("items").toArray();
 
 //    file.resize(0);
 //    file.write(doc.toJson());
@@ -216,7 +223,7 @@ void TodoClassManager::delJsonFile()
         QJsonObject item =itemArray[i].toObject();
         TodoItem todoItem;
         if(item.value("isDel").toBool()==true){
-            saveToJsonFile(false,"",i,true);
+            saveToJsonFile(false,"",i,true,false);
             qDebug()<<"正在删除第"<<i<<"数据";
         }
 
