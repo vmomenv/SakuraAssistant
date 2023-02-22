@@ -246,5 +246,8 @@ void MainWindow::destructToDo()
         pushButton->deleteLater();
     }
 }
+
+
 MainWindow::~MainWindow(){
+
 }

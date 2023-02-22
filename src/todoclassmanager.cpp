@@ -172,21 +172,27 @@ void TodoClassManager::loadFromJsonFile(){
 
 void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isDel,bool isAdd){
 
-    QJsonObject smallObj;
-    smallObj.insert("completed", completed);
-    smallObj.insert("name", name);
+
 
 //    QJsonDocument
     QJsonObject itemObj = doc.object();
-    qDebug()<<"第"<<i<<"组保存前"<<itemObj;
     QJsonArray itemArr = itemObj["items"].toArray();
     if(name.size()==0){
+        QJsonObject smallObj;
+        smallObj.insert("completed", completed);
+        smallObj.insert("name", name);
         smallObj.insert("isDel", true);
         itemArr[i]=smallObj;
 
     }else if(isAdd==true){//新增一条
+        QJsonObject smallObj;
+        smallObj.insert("completed", completed);
+        smallObj.insert("name", name);
         itemArr.append(smallObj);
     }else{//保存该条
+        QJsonObject smallObj;
+        smallObj.insert("completed", completed);
+        smallObj.insert("name", name);
         itemArr[i]=smallObj;
     }
     if(isDel==true){
@@ -194,10 +200,7 @@ void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isD
     }
 
     itemObj.insert("items", itemArr);
-
     doc.setObject(itemObj);
-    qDebug()<<"第"<<i<<"组保存后"<<itemObj;
-    itemArray=itemObj.value("items").toArray();
 
 //    file.resize(0);
 //    file.write(doc.toJson());
@@ -206,8 +209,12 @@ void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isD
 
 void TodoClassManager::delJsonFile()
 {
+    qDebug()<<doc;
     qDebug()<<"del"<<doc;
 
+
+//    QJsonDocument fixedDoc;
+//    fixedDoc=doc;
     QDir home = QDir::home();
     QString configPath = home.filePath(".config/sparkassistant");
     QDir dir(configPath);
@@ -221,24 +228,21 @@ void TodoClassManager::delJsonFile()
         qDebug() <<"File open!";
     }
     //删除多余条目
-    QJsonObject item =doc.object();
-    QJsonObject itemObj=doc.object();
-    qDebug()<<"del"<<doc;
-    QJsonArray itemArray=itemObj.value("items").toArray();
+    QJsonObject docObj =doc.object();
+    QJsonArray docArray=docObj.value("items").toArray();
     for(int i=0;i<itemArray.size();i++){
         QJsonObject item =itemArray[i].toObject();
-        TodoItem todoItem;
         if(item.value("isDel").toBool()==true){
-            saveToJsonFile(false,"",i,true,false);
-            qDebug()<<"正在删除第"<<i<<"数据";
+            docArray.removeAt(i);
         }
-
     }
-//    qDebug()<<"del"<<doc;
+    docObj.insert("items", docArray);
+    doc.setObject(docObj);
+    qDebug()<<"del"<<doc;
     file.resize(0);
     file.write(doc.toJson());
 }
 
 TodoClassManager::~TodoClassManager() {
-    delJsonFile();
+delJsonFile();
 }
