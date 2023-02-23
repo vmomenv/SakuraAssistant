@@ -41,7 +41,6 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             todoItem.completed=item.value("completed").toBool();
 
             if(item.value("isDel").toBool()==true){
-
                 continue;
             }
 
@@ -49,7 +48,6 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
 
             ToDo *todo=new ToDo(todoWidget);
             scrollArea->setFixedSize(208, 200);
-
             todo->checkBox->setChecked(todoItem.completed);
             todo->checkBox->setFixedHeight(16);
             todo->line->setText(todoItem.name);
@@ -97,6 +95,8 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
     static int index;
     index=itemArray.size();
     connect(addBtn,&QPushButton::clicked,this,[&](){
+        int *addIndex=new int();
+        *addIndex=index;
         if(index==0){
             index=1;
         }
@@ -109,15 +109,15 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
 
         todo->setLayout(todosLayout);
         todosVboxLayout->addLayout(todosLayout);
-        this->saveToJsonFile(false," ",index-1,false,true);//新增一条
+        this->saveToJsonFile(false," ",*addIndex,false,true);//新增一条
 
 
         connect(todo->checkBox, &QCheckBox::stateChanged, this,[=](){
-            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index-1,false,false);
+            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),*addIndex,false,false);
         });
 
         connect(todo->line, &QLineEdit::editingFinished, this, [=](){
-            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),index-1,false,false);
+            this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),*addIndex,false,false);
         });
         connect(todo->delBtn, &QPushButton::clicked, this, [=](){
             todo->checkBox->deleteLater();
@@ -126,7 +126,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             todo->line->setParent(nullptr);
             todo->delBtn->deleteLater();
             todo->delBtn->setParent(nullptr);
-            this->saveToJsonFile(false,"",index-1,true,false);
+            this->saveToJsonFile(false,"",*addIndex,true,false);
 
         });
         index+=1;
