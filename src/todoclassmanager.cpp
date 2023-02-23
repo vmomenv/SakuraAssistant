@@ -2,7 +2,7 @@
 #include<QDir>
 #include<QFile>
 #include<QScrollArea>
-
+#include<QProcess>
 TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
   , todos()
   ,todosVboxLayout(new QVBoxLayout)
@@ -40,6 +40,11 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             todoItem.name=item.value("name").toString();
             todoItem.completed=item.value("completed").toBool();
 
+            if(item.value("isDel").toBool()==true){
+
+                continue;
+            }
+
             QHBoxLayout *todosLayout =new QHBoxLayout();
 
             ToDo *todo=new ToDo(todoWidget);
@@ -72,7 +77,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
     //            todo->delBtn->deleteLater();
                 todo->delBtn->setParent(nullptr);
                 qDebug()<<"正在删除第"<<i<<"组件";
-                this->saveToJsonFile(false,"",i,false,false);
+                this->saveToJsonFile(false,"",i,true,false);
 
             });
 
@@ -104,8 +109,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
 
         todo->setLayout(todosLayout);
         todosVboxLayout->addLayout(todosLayout);
-        this->saveToJsonFile(false," ",index-1,false,true);
-        QJsonObject item =this->itemArray[index].toObject();
+        this->saveToJsonFile(false," ",index-1,false,true);//新增一条
 
 
         connect(todo->checkBox, &QCheckBox::stateChanged, this,[=](){
@@ -122,7 +126,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             todo->line->setParent(nullptr);
             todo->delBtn->deleteLater();
             todo->delBtn->setParent(nullptr);
-            this->saveToJsonFile(false,"",index-1,false,false);
+            this->saveToJsonFile(false,"",index-1,true,false);
 
         });
         index+=1;
@@ -167,43 +171,39 @@ void TodoClassManager::loadFromJsonFile(){
     doc=QJsonDocument::fromJson(data);//将data转为json格式
     QJsonObject itemObj=doc.object();//将json格式的内容初始化
     itemArray=itemObj.value("items").toArray();//解析items数组,将json存放于itemArray
+
 }
 
 
 void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isDel,bool isAdd){
 
+    QJsonObject smallObj;
+    smallObj.insert("completed", completed);
+    smallObj.insert("name", name);
 
 
-//    QJsonDocument
+
     QJsonObject itemObj = doc.object();
+    qDebug()<<"保存时大json"<<itemObj;
     QJsonArray itemArr = itemObj["items"].toArray();
-    if(name.size()==0){
-        QJsonObject smallObj;
-        smallObj.insert("completed", completed);
-        smallObj.insert("name", name);
+    if(isAdd==true){//新增一条
+
+        itemArr.append(smallObj);
+        qDebug()<<"new"<<itemArr;
+    }
+
+    if(isDel==true){
         smallObj.insert("isDel", true);
         itemArr[i]=smallObj;
-
-    }else if(isAdd==true){//新增一条
-        QJsonObject smallObj;
-        smallObj.insert("completed", completed);
-        smallObj.insert("name", name);
-        itemArr.append(smallObj);
-    }else{//保存该条
-        QJsonObject smallObj;
-        smallObj.insert("completed", completed);
-        smallObj.insert("name", name);
-        itemArr[i]=smallObj;
     }
-    if(isDel==true){
-        itemArr.removeAt(i);//删除第i组
-    }
+    qDebug()<<"若保存修改"<<i;
+    itemArr[i]=smallObj;
 
     itemObj.insert("items", itemArr);
     doc.setObject(itemObj);
+    qDebug()<<"保存时doc"<<doc;
 
-//    file.resize(0);
-//    file.write(doc.toJson());
+
 
 }
 
@@ -230,15 +230,17 @@ void TodoClassManager::delJsonFile()
     //删除多余条目
     QJsonObject docObj =doc.object();
     QJsonArray docArray=docObj.value("items").toArray();
-    for(int i=0;i<itemArray.size();i++){
-        QJsonObject item =itemArray[i].toObject();
+    qDebug()<<"del1"<<doc;
+    for(int i=0;i<docArray.size();i++){
+        QJsonObject item =docArray[i].toObject();
+        qDebug()<<"item信息"<<item;
         if(item.value("isDel").toBool()==true){
             docArray.removeAt(i);
         }
     }
     docObj.insert("items", docArray);
     doc.setObject(docObj);
-    qDebug()<<"del"<<doc;
+    qDebug()<<"del2"<<doc;
     file.resize(0);
     file.write(doc.toJson());
 }
