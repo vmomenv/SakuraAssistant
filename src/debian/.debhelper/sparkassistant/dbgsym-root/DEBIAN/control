@@ -4,9 +4,9 @@ Version: 1.0.0
 Auto-Built-Package: debug-symbols
 Architecture: amd64
 Maintainer: momen  <momen@deepinos.org>
-Installed-Size: 1565
+Installed-Size: 2121
 Depends: sparkassistant (= 1.0.0)
 Section: debug
 Priority: optional
 Description: debug symbols for sparkassistant
-Build-Ids: 4265455ceddb1c351032f318d2e63752244bb1d4
+Build-Ids: 7a5250b80c73a5c0f30cfdbe0009a3c649237a61
