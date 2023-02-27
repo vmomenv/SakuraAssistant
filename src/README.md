@@ -69,4 +69,6 @@ bool isDel:是否删除
 
 多个控件组用QVBoxLayout *todosVboxLayout;进行垂直布局。与QScrollArea一起放入一个QWidget中。
 
-   
+  ### 编译
+
+dpkg-buildpackage -b -us -uc
