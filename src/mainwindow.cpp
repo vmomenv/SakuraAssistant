@@ -25,6 +25,7 @@
 #include "todoclassmanager.h"
 MainWindow::MainWindow(DWidget *parent)
 {
+
 //    isUpdating=true;
     setFixedSize(230,376);
     titlebar()->setFixedHeight(0);
@@ -246,7 +247,8 @@ void MainWindow::destructToDo()
         pushButton->deleteLater();
     }
 }
+
+
 MainWindow::~MainWindow(){
 
-//qDebug()<<"析构";
 }

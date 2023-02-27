@@ -5,7 +5,7 @@
 #include<QDebug>
 MonitorThread::MonitorThread(QWidget *parent) : QWidget(parent)
 {
-
+ run();
 }
 
 void MonitorThread::run()
@@ -31,6 +31,7 @@ void MonitorThread::run()
         qDebug()<<cpu<<mem;
         emit updateData(cpu, mem);
 
-//        msleep(1000);
+
     }
 }
+
