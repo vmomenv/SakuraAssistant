@@ -1,10 +1,10 @@
-#include "todoclassmanager.h"
+       #include "todoclassmanager.h"
 #include<QDir>
 #include<QFile>
 #include<QScrollArea>
 #include<QProcess>
 TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
-  , todos()
+  , todos() 
   ,todosVboxLayout(new QVBoxLayout)
   , spacer(new QSpacerItem(10,10, QSizePolicy::Minimum, QSizePolicy::Expanding))
 
@@ -20,7 +20,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
         background-color:transparent;\
         margin:0px;\
     }\
-    ");
+    ");//qwidget透明
 
     //重新载入文档
     this->loadFromJsonFile();
@@ -33,8 +33,30 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
     addBtn->setText("+");
     addBtn->move(20,200);
 
+    QHBoxLayout *todosLayout =new QHBoxLayout();
+
+    //临时解决方案：创建一个todo再删除以达到样式设置的目的
+    ToDo *todo=new ToDo(todoWidget);
+    scrollArea->setFixedSize(208, 200);
+    todo->checkBox->setChecked(false);
+    todo->checkBox->setFixedHeight(16);
+    todo->line->setText("");
+    todo->line->setFixedHeight(40);
+    todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
+    todo->delBtn->setFixedHeight(40);
+    todo->setLayout(todosLayout);
+    todosVboxLayout->addLayout(todosLayout);
+    todo->checkBox->deleteLater();
+    todo->checkBox->setParent(nullptr);
+    todo->line->deleteLater();
+    todo->line->setParent(nullptr);
+    todo->delBtn->deleteLater();
+    todo->delBtn->setParent(nullptr);
+
+
     if(this->itemArray.size()!=0){
         for(int i=0;i<this->itemArray.size();i++){
+
             QJsonObject item =this->itemArray[i].toObject();
             TodoItem todoItem;
             todoItem.name=item.value("name").toString();
@@ -78,37 +100,37 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
                 this->saveToJsonFile(false,"",i,true,false);
 
             });
-
         }
+
 
     }else{
 
     }
 
 
-//    QVBoxLayout *vbox =new QVBoxLayout(todoWidget);
-//    vbox->addLayout(todosVboxLayout);
-//    vbox->addItem(spacer);
+    QVBoxLayout *vbox =new QVBoxLayout(todoWidget);
+    vbox->addLayout(todosVboxLayout);
+    vbox->addItem(spacer);
 
 
 //    vbox->addWidget(addBtn);
-    static int index;
+    static int index=0;
     index=itemArray.size();
     connect(addBtn,&QPushButton::clicked,this,[&](){
+
         int *addIndex=new int();
         *addIndex=index;
-        if(index==0){
-            index=1;
-        }
         qDebug()<<index;
         QHBoxLayout *todosLayout =new QHBoxLayout();
-        ToDo *todo=new ToDo();
+        ToDo *todo=new ToDo(this);
         todo->checkBox->setChecked(false);
         todo->line->setText("");
         todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
 
         todo->setLayout(todosLayout);
         todosVboxLayout->addLayout(todosLayout);
+
+
         this->saveToJsonFile(false," ",*addIndex,false,true);//新增一条
 
 
@@ -130,10 +152,11 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
 
         });
         index+=1;
+
+
     });
 
-    todoWidget->setLayout(todosVboxLayout);
-    todosVboxLayout->setAlignment(Qt::AlignTop);
+
 }
 
 
