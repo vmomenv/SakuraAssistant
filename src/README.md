@@ -1,5 +1,5 @@
 ## 这是星火助手的文档
-
+###感谢[zinface](https://github.com/zinface)和[柚子](https://blog.yzzi.icu/)对我的代码提出修改意见，爱你们呦！
 部分功能采用dtk，如按钮，背景高斯模糊
 
 [传送门 - DTK 文档与资源 | dtk (linuxdeepin.github.io)](https://linuxdeepin.github.io/dtk/README.zh_CN)
