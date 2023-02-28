@@ -1,0 +1,13 @@
+Source: sparkassistant
+Section: utils
+Priority: optional
+Maintainer: momen  <momen@deepinos.org>
+Build-Depends: debhelper (>= 9),pkg-config, dpkg-dev, qt5-qmake, qtbase5-dev,qttools5-dev-tools
+Standards-Version: 1.0.0
+Homepage: sparkassistant
+
+Package: sparkassistant
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: spark-store
+Description: 星火小助手

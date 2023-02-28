@@ -1,10 +1,52 @@
-## 这是星火助手的文档
+## 星火助手文档
 
-部分功能采用dtk，如按钮，背景高斯模糊
+
+
+### 构建依赖
+
+* Qt >= 5.6
+* debhelper (>= 9)
+* pkg-config
+* dpkg-dev
+* qt5-qmake
+* qtbase5-dev
+* qttools5-dev-tools
+
+## 安装
+#### 从源代码构建
+首先，请确保你正在使用deepin发行版。[我不是deepin发行版]()
+```bash
+cd SparkAssistant
+mkdir build
+cd build
+qmake ../sparkassistant.pro
+make
+```
+参考文件
+---
+[dtk简介](http://www.momen.world:8880/post/46)
+
+[创建一个dtk文件](http://www.momen.world:8880/post/63)
+
+
+
+DTK官方文档
+---
+
+本应用部分功能采用dtk，如按钮，背景高斯模糊等
 
 [传送门 - DTK 文档与资源 | dtk (linuxdeepin.github.io)](https://linuxdeepin.github.io/dtk/README.zh_CN)
 
+https://linuxdeepin.github.io/dtk-docs/index.html
+
 https://deepin-opensource.gitee.io/dtk/class_dtk_1_1_widget_1_1_d_application.html
+
+参与开发
+---
+
+以下为sparkassistant的开发文档
+
+
 
 ### mainwindow主界面
 
@@ -15,8 +57,6 @@ https://deepin-opensource.gitee.io/dtk/class_dtk_1_1_widget_1_1_d_application.ht
 setEnableBlurWindow(true);//设置高斯模糊
 
 https://linuxdeepin.github.io/dtkwidget/classDtk_1_1Widget_1_1DMainWindow.html#a4e932450731898588cfa47379936cfb7
-
-
 
 ### 系统更新功能
 
