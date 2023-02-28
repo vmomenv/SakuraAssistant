@@ -1,0 +1,23 @@
+#!/usr/bin/make -f
+include /usr/share/dpkg/default.mk
+
+# export QT_SELECT = qt5
+
+%:
+	dh $@ --parallel
+
+override_dh_auto_configure:
+	cmake $(CURDIR) -Bbuild
+
+override_dh_auto_install:
+	make -C build DESTDIR=$(CURDIR)/debian/sparkassistant install
+	
+override_dh_auto_clean:
+	rm -rf $(CURDIR)/build
+
+
+# 1. CURDIR 为执行 dpkg-buildpackage 目录
+# 2. configure 相当于使用 cmake .. 但需要指定一个在配置时不影响源代码目录的构建位置(build 目录)
+# 3. install 必须指定在 dpkg-buildpackage 执行的目录的 debian/<包名> 目录
+# 4. dpkg-buildpackage --post-clean 将会在构建完成时执行 clean 动作
+#    除了在 configure 时指定的 build 需要删除外，其它无需处理
