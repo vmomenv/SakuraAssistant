@@ -48,8 +48,7 @@ WeatherParse::WeatherParse(QObject *parent) : QObject(parent)
 
 //    connect(mNetAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestWeatherData(QNetworkReply*)));
     connect(mNetAccessManager,&QNetworkAccessManager::finished,this,&WeatherParse::requestServer);
-    QUrl url("http://ip-api.com/json");
-    mNetAccessManager->get(QNetworkRequest(url));
+    ipCityParse();
 }
 
 
@@ -68,12 +67,7 @@ void WeatherParse::requestServer(QNetworkReply *reply){
     }else{
         QByteArray byteArray=reply->readAll();
         qDebug()<<"请求成功！"<<byteArray.data();
-        if (reply->url() == QUrl("http://ip-api.com/json")) {
-            ipCityParseJson(byteArray);
-        }
-        else{
-            weatherParseJson(byteArray);
-        }
+        weatherParseJson(byteArray);
     }
     reply->deleteLater();
 
@@ -102,21 +96,50 @@ void WeatherParse::weatherParseJson(QByteArray &byteArray)
 
 }
 
-void WeatherParse::ipCityParseJson(QByteArray &byteArray)
+void WeatherParse::ipCityParse()
 {
-    QJsonParseError err;
-    QJsonDocument doc=QJsonDocument::fromJson(byteArray,&err);
-    if(err.error!=QJsonParseError::NoError){
-        qDebug()<<"解析失败";
-    }
-        QJsonObject rootObj=doc.object();
-        cityName=rootObj.value("city").toString();
-        qDebug()<<cityName;
-        IpToWeatherCity *ip2city=new IpToWeatherCity;
+    QTcpSocket *socket = new QTcpSocket(this);
+
+    connect(socket, &QTcpSocket::readyRead, this, [=]() {
+        QByteArray data = socket->readAll();
+        qDebug() << "Received data: " << data;
+        //GBK转中文
+        QTextCodec *codec = QTextCodec::codecForName("GBK");
+        QTextCodec *codecUtf8 = QTextCodec::codecForName("UTF-8");
+        QString strUtf8 = codecUtf8->toUnicode(data);
+        qDebug()<<strUtf8;
+        QString cityName;
+        //正则输出市
+        QRegularExpression re("(?<province>[^省]+省|.+自治区|上海|北京|天津|重庆|内蒙古|.+特别行政区)?(?<city>[^市]+市|.+自治州)?(?<county>[^县]+县|.+区|.+镇|.+局)?(?<town>[^区]+区|.+镇)?(?<village>.*)");
+        QRegularExpressionMatch match = re.match(strUtf8);
+        if (match.hasMatch()) {
+            cityName = match.captured("city");
+            cityName.replace("市", "");
+            qDebug()<<cityName;
+        } else {
+            qDebug() << "No match found.";
+        }
         QString citycode;
-        citycode=ip2city->getCityCode(cityName);
+        IpToWeatherCity ip2city;
+
+        citycode=ip2city.getCityCode(cityName);
+
         QUrl url("http://t.weather.itboy.net/api/weather/city/"+citycode);
         mNetAccessManager->get(QNetworkRequest(url));
+
+    });
+
+    socket->connectToHost("47.242.171.248", 12345);
+
+    if (socket->waitForConnected()) {
+        qDebug() << "Connected to server.";
+    } else {
+        qDebug() << "Failed to connect to server.";
+    }
+
+
+
+
 }
 
 

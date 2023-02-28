@@ -12,6 +12,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QTextCodec>
+#include <QRegularExpression>
 class WeatherParse : public QObject
 {
     Q_OBJECT
@@ -21,7 +23,7 @@ public:
     QNetworkAccessManager* mNetAccessManager;
     void requestServer(QNetworkReply *reply);//与天气和ip服务商通信
     void weatherParseJson(QByteArray &byteArray);//天气服务json
-    void ipCityParseJson(QByteArray &byteArray);//ip转城市服务json
+    void ipCityParse();//ip转城市
     QString cityName;//所在城市city
     QString cityTemperature;
     QString weatherType;

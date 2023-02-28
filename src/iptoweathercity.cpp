@@ -10,10 +10,10 @@ QString IpToWeatherCity::getCityCode(QString CityName)
         initCityMap();
     QMap<QString,QString>::iterator it=cityMap.find(CityName);//通过cityname获得citycode
     if(it==cityMap.end()){
-        it=cityMap.find(CityName+"shi");
+        it=cityMap.find(CityName+"市");
     }
     if(it==cityMap.end()){
-        it=cityMap.find(CityName+"xian");
+        it=cityMap.find(CityName+"县");
     }
     if(it!=cityMap.end()){
         qDebug()<<it.value();
@@ -53,7 +53,7 @@ void IpToWeatherCity::initCityMap()
 
     //导入map表
     for(int i=0;i<cities.size();i++){
-        QString ENcity_name = cities[i].toObject().value("ENcity_name").toString();
+        QString ENcity_name = cities[i].toObject().value("city_name").toString();
         QString cityCode =cities[i].toObject().value("city_code").toString();
         if(cityCode.size()>0)
         {
