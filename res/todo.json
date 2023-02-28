@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "name": "Go to the store",
+      "completed": false
+    },
+    {
+      "name": "Buy milk",
+      "completed": true
+    },
+    {
+      "name": "Do laundry",
+      "completed": false
+    }
+  ]
+}
