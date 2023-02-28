@@ -34,7 +34,7 @@ public class Ip2City {
 
     private static String getCityFromIP(String ip) throws IOException {
         QQWry wry = new QQWry();
-        IPZone zone = wry.findIP("223.104.204.22");
+        IPZone zone = wry.findIP("ip");
         System.out.println(((IPZone) zone).getMainInfo());
         System.out.println(zone.getSubInfo());
         System.out.println("------");
