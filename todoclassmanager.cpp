@@ -33,9 +33,10 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
     addBtn->setText("+");
     addBtn->move(20,200);
 
-    QHBoxLayout *todosLayout =new QHBoxLayout();
+
 
     //临时解决方案：创建一个todo再删除以达到样式设置的目的
+    QHBoxLayout *todosLayout =new QHBoxLayout();
     ToDo *todo=new ToDo(todoWidget);
     scrollArea->setFixedSize(208, 200);
     todo->checkBox->setChecked(false);

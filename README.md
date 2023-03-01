@@ -112,3 +112,7 @@ bool isDel:是否删除
   ### 编译
 
 dpkg-buildpackage -b -us -uc
+
+
+
+感谢[zinface](https://github.com/zinface)和[柚子](https://blog.yzzi.icu/)对我的代码提出修改意见，爱你们呦！
