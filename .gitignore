@@ -50,3 +50,5 @@ build
 debian/*.debhelper*
 debian/files
 debian/*.substvars
+debian/sparkassistant
+debian/.debhelper
