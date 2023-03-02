@@ -28,8 +28,8 @@ target.path=/usr/bin
 
 
 icon.path =/usr/share/icons
-icon.files=$$PWD/icon/spark-store.png
+icon.files+= pkg/usr/share/icons/hicolor/scalable/apps/spark-store.svg
 
 desktop.path = /usr/share/applications/
-desktop.files = $$PWD/sparkassistant.desktop
-!isEmpty(target.path): INSTALLS += target desktop
+desktop.files+= pkg/usr/share/applications/sparkassistant.desktop
+!isEmpty(target.path): INSTALLS += target icon desktop

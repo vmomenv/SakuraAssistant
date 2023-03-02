@@ -22,7 +22,7 @@
 cd SparkAssistant
 mkdir build
 cd build
-qmake ../sparkassistant.pro
+qmake qmake ../src/sparkassistant/sparkassistant.pro
 make
 ```
 ### 二、开发星火小助手
