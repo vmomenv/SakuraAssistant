@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=@APP_NAME@
+Name[zh_CN]=@APP_NAME_ZH_CN@
+Exec=AppRun %F
+Icon=default
+Comment=@APP_COMMENT@
+Terminal=true
+Type=Application
+Categories=@APP_CATEGORIES@

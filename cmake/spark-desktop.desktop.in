@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=@APP_NAME@
+Name[zh_CN]=@APP_NAME_ZH_CN@
+Comment=@APP_COMMENT@
+Type=@APP_TYPE@
+Exec=@APP_EXECUTE_PATH@
+Icon=@APP_EXECUTE_ICON_PATH@
+Categories=@APP_CATEGORIES@
+
+# Generated from the DesktopGenerater component of the z-Tools toolkit
