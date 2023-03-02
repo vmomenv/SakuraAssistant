@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ip2city:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ip2city_jar</output-path>
+    <root id="archive" name="ip2city.jar">
+      <element id="module-output" name="ip2city" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/jarod/qqwry-java/0.7.0/qqwry-java-0.7.0.jar" path-in-jar="/" />
+      <element id="library" level="project" name="qqwry-java-0.7.0" />
+      <element id="library" level="project" name="Maven: com.github.jarod:qqwry-java:0.7.0" />
+      <element id="module-source" name="ip2city" />
+    </root>
+  </artifact>
+</component>
