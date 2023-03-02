@@ -33,3 +33,22 @@ endmacro(spark_desktop_macros _APP_NAME _APP_NAME_ZH_CN _APP_COMMENT _APP_TYPE _
 # install(FILES ${APP_NAME}.desktop
 #     DESTINATION /usr/share/applications
 # )
+
+################ 提供用于 Appimage 所用的配置 ################################
+# 内容默认应用名称: Name= 应与项目名称相同
+spark_desktop_macros(
+    # 应用名称: Name=
+    ${PROJECT_NAME}
+    # 应用名称: Name[zh_CN]=
+    星火小助手
+    # 应用说明: Comment=
+    星火小助手
+    # 应用类型: Type=
+    Application
+    # 执行程序: Exec=
+    "/usr/bin/spark-assistant %F"
+    # 图标路径: Icon=
+    "spark-assistant"
+    # 应用分类: Category=
+    Application
+)
