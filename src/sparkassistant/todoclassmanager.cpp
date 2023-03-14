@@ -1,4 +1,4 @@
-       #include "todoclassmanager.h"
+#include "todoclassmanager.h"
 #include<QDir>
 #include<QFile>
 #include<QScrollArea>
@@ -31,14 +31,14 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
     QPushButton *addBtn=new QPushButton(this);
     addBtn->resize(30,30);
     addBtn->setText("+");
-    addBtn->move(20,200);
+    addBtn->move(20,175);
 
 
 
     //临时解决方案：创建一个todo再删除以达到样式设置的目的
     QHBoxLayout *todosLayout =new QHBoxLayout();
     ToDo *todo=new ToDo(todoWidget);
-    scrollArea->setFixedSize(208, 200);
+    scrollArea->setFixedSize(208, 170);
     todo->checkBox->setChecked(false);
     todo->checkBox->setFixedHeight(16);
     todo->line->setText("");
@@ -70,7 +70,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             QHBoxLayout *todosLayout =new QHBoxLayout();
 
             ToDo *todo=new ToDo(todoWidget);
-            scrollArea->setFixedSize(208, 200);
+            scrollArea->setFixedSize(208, 170);
             todo->checkBox->setChecked(todoItem.completed);
             todo->checkBox->setFixedHeight(16);
             todo->line->setText(todoItem.name);

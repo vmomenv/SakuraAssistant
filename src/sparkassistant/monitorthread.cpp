@@ -3,9 +3,22 @@
 #include<QTextStream>
 #include<QRegularExpression>
 #include<QDebug>
-MonitorThread::MonitorThread(QWidget *parent) : QWidget(parent)
+#include<DLabel>
+MonitorThread::MonitorThread(QWidget *parent):QWidget(parent)
 {
- run();
+    QWidget *labelWidget=new QWidget(this);
+    DLabel *label1 = new DLabel(labelWidget);
+    label1->setText("Label 1");
+
+    DLabel *label2 = new DLabel(labelWidget);
+    label2->setText("Label 2");
+    QHBoxLayout *hboxLayout =new QHBoxLayout(labelWidget);
+
+//     将两个 QLabel 对象添加到布局中
+    hboxLayout->addWidget(label1);
+    hboxLayout->addWidget(label2);
+    labelWidget->move(10,10);
+
 }
 
 void MonitorThread::run()

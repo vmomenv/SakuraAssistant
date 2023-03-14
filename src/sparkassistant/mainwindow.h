@@ -27,7 +27,7 @@ private:
     int desktopHeight = desktop->height();
 
     DPushButton *sysUpdateButton;
-    DPushButton *appUpdateButton;
+    DPushButton *passbookButton;
 
     DLabel *weatherCity;
     DLabel *weatherTemperature;
@@ -45,9 +45,11 @@ protected:
     void updateUpdateButton();
     void weather();
     void setToDo();
+    void setMonitor();
 
 private slots:
     void on_sysUpdateButton_clicked();
+    void on_passbookButton_clicked();
     bool eventFilter(QObject *,QEvent *);
 
 

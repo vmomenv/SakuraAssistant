@@ -25,7 +25,6 @@
 #include "todoclassmanager.h"
 MainWindow::MainWindow(DWidget *parent)
 {
-
 //    isUpdating=true;
     setFixedSize(230,376);
     titlebar()->setFixedHeight(0);
@@ -40,6 +39,7 @@ MainWindow::MainWindow(DWidget *parent)
     updateUpdateButton();
 
     connect(sysUpdateButton, SIGNAL(clicked()), this, SLOT(on_sysUpdateButton_clicked()));
+    connect(passbookButton, SIGNAL(clicked()), this, SLOT(on_passbookButton_clicked()));
 
     weather();
     WeatherParse *weather=new WeatherParse;
@@ -51,7 +51,7 @@ MainWindow::MainWindow(DWidget *parent)
             weather->deleteLater();
     });
     setToDo();
-
+    setMonitor();
 }
 
 ////失焦关闭窗口 --已替换为eventFilter：失焦判断更精确，单击文本框不会判定为失焦
@@ -69,10 +69,10 @@ void MainWindow::updateUpdateButton(){
     sysUpdateButton->setText("系统更新");
 //    system("sudo apt update");
 
-    appUpdateButton=new DPushButton(this);
-    appUpdateButton->resize(97,34);
-    appUpdateButton->move(115,322);
-    appUpdateButton->setText("我是凑数的");
+    passbookButton=new DPushButton(this);
+    passbookButton->resize(97,34);
+    passbookButton->move(115,322);
+    passbookButton->setText("密码本");
 
 
 }
@@ -128,6 +128,13 @@ void MainWindow::setToDo()
     TodoClassManager *todo =new TodoClassManager(this);
     todo->resize(220,238);
     todo->move(0,80);
+
+}
+
+void MainWindow::setMonitor()
+{
+    MonitorThread *monitor=new MonitorThread(this);
+
 
 }
 void MainWindow::on_sysUpdateButton_clicked(){
@@ -249,7 +256,9 @@ void MainWindow::destructToDo()
     }
 }
 
-
+void MainWindow::on_passbookButton_clicked(){
+    qDebug()<<"1";
+}
 MainWindow::~MainWindow(){
 
 }
