@@ -10,13 +10,11 @@ class MonitorThread : public QWidget{
     Q_OBJECT
 public:
     explicit MonitorThread(QWidget *parent = nullptr);
-    void run();
 private:
     QHBoxLayout *hboxLayout;
     QWidget *labelWidget;
 
 signals:
-    void updateData(double cpu, double mem);
 public slots:
 };
 

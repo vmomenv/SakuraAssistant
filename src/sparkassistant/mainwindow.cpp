@@ -134,6 +134,12 @@ void MainWindow::setToDo()
 void MainWindow::setMonitor()
 {
     MonitorThread *monitor=new MonitorThread(this);
+//    monitor->move(293,58);
+    monitor->resize(130,30);
+    monitor->move(50,280);
+
+
+
 
 
 }
@@ -144,6 +150,7 @@ void MainWindow::on_sysUpdateButton_clicked(){
 
     QProcess processUpdate;//apt update
     QProcess processList;//apt list
+
 
     processUpdate.start("bash", QStringList() << "-c" << "pkexec apt update");
     processUpdate.waitForFinished();
