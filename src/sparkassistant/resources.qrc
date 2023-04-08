@@ -41,5 +41,6 @@
         <file>res/todo.json</file>
         <file>res/delete.png</file>
         <file>res/plus.png</file>
+        <file>res/passbook/search.png</file>
     </qresource>
 </RCC>

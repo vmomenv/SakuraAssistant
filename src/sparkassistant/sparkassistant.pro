@@ -12,7 +12,11 @@ SOURCES += \
     iptoweathercity.cpp \
     todo.cpp \
     monitorthread.cpp \
-    todoclassmanager.cpp
+    todoclassmanager.cpp \
+    passbook.cpp \
+    aesencrypt.cpp \
+    qaesencryption.cpp
+
 
 RESOURCES +=         resources.qrc
 
@@ -22,7 +26,13 @@ HEADERS += \
     iptoweathercity.h \
     todo.h \
     monitorthread.h \
-    todoclassmanager.h
+    todoclassmanager.h \
+    passbook.h \
+    aesencrypt.h \
+    aesni/aesni-enc-cbc.h \
+    aesni/aesni-enc-ecb.h \
+    aesni/aesni-key-exp.h \
+    qaesencryption.h
 
 target.path=/usr/bin
 

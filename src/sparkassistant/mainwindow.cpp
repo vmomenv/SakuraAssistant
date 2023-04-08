@@ -133,14 +133,10 @@ void MainWindow::setToDo()
 
 void MainWindow::setMonitor()
 {
-    MonitorThread *monitor=new MonitorThread(this);
-//    monitor->move(293,58);
-    monitor->resize(130,30);
-    monitor->move(50,280);
-
-
-
-
+//    MonitorThread *monitor=new MonitorThread(this);
+////    monitor->move(293,58);
+//    monitor->resize(130,30);
+//    monitor->move(50,280);
 
 }
 void MainWindow::on_sysUpdateButton_clicked(){
@@ -264,7 +260,8 @@ void MainWindow::destructToDo()
 }
 
 void MainWindow::on_passbookButton_clicked(){
-    qDebug()<<"1";
+    PassBook *passBook=new PassBook;
+    passBook->show();
 }
 MainWindow::~MainWindow(){
 

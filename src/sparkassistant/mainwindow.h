@@ -11,6 +11,7 @@
 #include<QProcess>
 #include<DSpinner>
 #include<todoclassmanager.h>
+#include<passbook.h>
 DWIDGET_USE_NAMESPACE
 class MainWindow :public DMainWindow
 {
