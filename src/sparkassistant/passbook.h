@@ -5,6 +5,9 @@
 #include <QMainWindow>
 #include <QObject>
 #include <QWidget>
+#include<QLineEdit>
+#include<QHBoxLayout>
+#include<QLabel>
 DWIDGET_USE_NAMESPACE
 
 class PassBook : public DMainWindow
@@ -15,6 +18,10 @@ public:
 private:
     QWidget *titleWidget;
     QWidget *searchWidget;
+    QLineEdit *searchEdit;
+    QHBoxLayout *searchEditLayout;
+    QLabel *searchPicLabel;
+
 signals:
 
 public slots:

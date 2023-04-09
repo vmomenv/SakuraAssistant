@@ -3,6 +3,7 @@
 #include<DWidget>
 #include<DTitlebar>
 #include<DMainWindow>
+#include<QVBoxLayout>
 PassBook::PassBook(DWidget *parent)
 {
     setFixedSize(861,490);
@@ -21,9 +22,23 @@ PassBook::PassBook(DWidget *parent)
     titleWidget->setAutoFillBackground(true);
     titleWidget->move(0,0);
 
-    QWidget *searchWidget=new QWidget(this);
-    searchWidget->resize(816,53);
+    //创建搜索框widget并且将控件放入该widget
+    QWidget *searchWidget = new QWidget(this);
+    QHBoxLayout *searchLayout = new QHBoxLayout(searchWidget);
+
+    QLabel *searchPicLabel=new QLabel(searchWidget);
+
+    QPixmap searchPixmap(":/res/passbook/search.png");
+    searchPicLabel->setPixmap(searchPixmap);
+
+    QLineEdit *searchEdit = new QLineEdit(searchWidget);
+    searchLayout->addWidget(searchPicLabel);
+    searchLayout->addWidget(searchEdit);
+    searchWidget->setFixedSize(816, 53);
+    searchWidget->setStyleSheet("background-color: #C3C9D3;border-radius: 12px;");
+    searchWidget->move(22, 69);
 //    QPixmap *searchPic
+
 
 
 
