@@ -15,7 +15,8 @@ SOURCES += \
     todoclassmanager.cpp \
     passbook.cpp \
     aesencrypt.cpp \
-    qaesencryption.cpp
+    qaesencryption.cpp \
+    labelbutton.cpp
 
 
 RESOURCES +=         resources.qrc
@@ -32,7 +33,8 @@ HEADERS += \
     aesni/aesni-enc-cbc.h \
     aesni/aesni-enc-ecb.h \
     aesni/aesni-key-exp.h \
-    qaesencryption.h
+    qaesencryption.h \
+    labelbutton.h
 
 target.path=/usr/bin
 

@@ -42,5 +42,7 @@
         <file>res/delete.png</file>
         <file>res/plus.png</file>
         <file>res/passbook/search.png</file>
+        <file>res/plus-circle.png</file>
+        <file>res/passbook/data.json</file>
     </qresource>
 </RCC>
