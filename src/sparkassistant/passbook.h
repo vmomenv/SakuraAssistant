@@ -14,7 +14,7 @@
 #include <QJsonArray>
 #include <QFile>
 #include<QPushButton>
-//#include "labelbutton.h"
+#include "labelbutton.h"
 DWIDGET_USE_NAMESPACE
 
 class PassBook : public DMainWindow
@@ -24,7 +24,10 @@ public:
     explicit PassBook(DWidget *parent = nullptr);
     void readJson();
     void writeJson(QString targetName, QString username, QString password);
-    void addCredentialsWidget(QString targetName, QString username, QString password);
+    void addCredentialsWidget(const QString& targetName, const QString& username, const QString& password);
+    bool eventFilter(QObject *watched, QEvent *event);
+    void displayCredentials(const QString& targetName, const QString& username, const QString& password);
+
 private:
     QWidget *titleWidget;
     QWidget *searchWidget;
@@ -36,11 +39,15 @@ private:
     QLabel *passwordLabel;
     QLabel *usernameLabel;
     QLabel *targetNameLabel;
-    QWidget *credentialsWidget;
     QLineEdit *targetNameLineEdit;
     QLineEdit *usernameLineEdit;
     QLineEdit *passwordLineEdit;
-    QHBoxLayout *credentialsLayout;
+    QWidget *credentialWidget;//一条凭据
+    QHBoxLayout *credentialLayout;
+    QWidget *allCredentialsWidget;//所有凭据
+    QHBoxLayout *allCredentialsLayout;
+    LabelButton *delButton;
+    bool isUpdating;
 
 
 signals:

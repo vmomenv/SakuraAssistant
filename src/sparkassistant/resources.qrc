@@ -44,5 +44,8 @@
         <file>res/passbook/search.png</file>
         <file>res/plus-circle.png</file>
         <file>res/passbook/data.json</file>
+        <file>res/passbook/key.png</file>
+        <file>res/passbook/pin.png</file>
+        <file>res/passbook/delete.png</file>
     </qresource>
 </RCC>

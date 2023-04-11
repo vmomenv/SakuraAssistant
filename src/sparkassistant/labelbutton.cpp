@@ -1,18 +1,20 @@
-//#include "labelbutton.h"
+#include "labelbutton.h"
 
-//LabelButton::LabelButton(QWidget *parent)
-//    : QLabel(parent)
-//{
-//    setMouseTracking(true);
-//}
+#include <QDebug>
 
-//void LabelButton::setText(const QString &text)
-//{
-//    m_text = text;
-//    QLabel::setText(text);
-//}
+LabelButton::LabelButton(QWidget *parent)
+    : QLabel(parent)
+{
 
-//void LabelButton::mousePressEvent(QMouseEvent *event)
-//{
-//    emit clicked();
-//}
+}
+
+LabelButton::~LabelButton()
+{
+
+}
+
+void LabelButton::mousePressEvent(QMouseEvent *event)
+{
+    qDebug() << "LabelButton::mousePressEvent";
+    emit clicked(event);
+}

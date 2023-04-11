@@ -7,6 +7,7 @@
 #include<QFormLayout>
 PassBook::PassBook(DWidget *parent)
 {
+    isUpdating=false;
     setFixedSize(861,490);
     titlebar()->setFixedHeight(0);
     setFocusPolicy(Qt::ClickFocus);
@@ -14,7 +15,6 @@ PassBook::PassBook(DWidget *parent)
 
     //设置窗口透明
     setAttribute(Qt::WA_TranslucentBackground);
-//    setWindowFlags(Qt::FramelessWindowHint);
     QPalette palette = QPalette();
         palette.setColor(QPalette::Background, QColor(0x00,0xFF,0x00,0x00));
     setPalette(palette);
@@ -37,7 +37,7 @@ PassBook::PassBook(DWidget *parent)
     QHBoxLayout *searchLayout = new QHBoxLayout(searchWidget);
     QLabel *searchPicLabel=new QLabel(searchWidget);
     QPixmap searchPixmap(":/res/passbook/search.png");
-
+    searchPicLabel->setPixmap(searchPixmap);
 
 
     QLineEdit *searchEdit = new QLineEdit(searchWidget);
@@ -54,31 +54,76 @@ PassBook::PassBook(DWidget *parent)
     passWidget->move(22,142);
     passWidget->resize(816,325);
 
+
+
+    // 创建添加密码按钮
+    LabelButton *addPassLabel = new LabelButton(passWidget);
+
+
+
+    QPixmap addPixmap(":/res/plus-circle.png");
+    addPassLabel->setPixmap(addPixmap);
+    addPassLabel->move(0,295);
+
+
+    QWidget *allCredentialsWidget=new QWidget(passWidget);
+    allCredentialsWidget->resize(816,266);
+    allCredentialsWidget->move(0,30);
+
+
+    QWidget *credentialWidget=new QWidget(allCredentialsWidget);
+    credentialWidget->resize(816,53);
     QLabel *targetNameLabel = new QLabel(passWidget);
     targetNameLabel->setText("目标选项");
     targetNameLabel->setFont(QFont("Arial", 15));
     targetNameLabel->setAlignment(Qt::AlignCenter);
     targetNameLabel->setStyleSheet("color: black;");
+    targetNameLabel->move(0,0);
 
     QLabel *usernameLabel = new QLabel(passWidget);
     usernameLabel->setText("账号");
     usernameLabel->setFont(QFont("Arial", 15));
     usernameLabel->setAlignment(Qt::AlignCenter);
     usernameLabel->setStyleSheet("color: black;");
-    usernameLabel->move(326,0);
+    usernameLabel->move(305,0);
 
     QLabel *passwordLabel = new QLabel(passWidget);
     passwordLabel->setText("密码");
     passwordLabel->setFont(QFont("Arial", 15));
     passwordLabel->setAlignment(Qt::AlignCenter);
     passwordLabel->setStyleSheet("color: black;");
-    passwordLabel->move(536,0);
+    passwordLabel->move(515,0);
 
-    // 创建添加密码按钮
-//    LabelButton *addPassLabel;
-//    QPixmap addPixmap(":/res/plus-circle.png");
-//    addPassLabel->setPixmap(addPixmap);
-//    addPassLabel->move(0,295);
+    // 创建 QLineEdit 控件
+    QLineEdit *targetNameLineEdit = new QLineEdit(credentialWidget);
+    targetNameLineEdit->setFont(QFont("Arial", 13));
+    targetNameLineEdit->setAlignment(Qt::AlignCenter);
+    targetNameLineEdit->setStyleSheet("background-color: #D9D9D9;border-radius: 6px;");
+    targetNameLineEdit->setFixedSize(286, 40);
+    targetNameLineEdit->move(0,0);
+
+    QLineEdit *usernameLineEdit = new QLineEdit(credentialWidget);
+    usernameLineEdit->setFont(QFont("Arial", 13));
+    usernameLineEdit->setAlignment(Qt::AlignCenter);
+    usernameLineEdit->setStyleSheet("background-color: #D9D9D9;border-radius: 6px;");
+    usernameLineEdit->setFixedSize(192, 40);
+    usernameLineEdit->move(305,0);
+
+    QLineEdit *passwordLineEdit = new QLineEdit(credentialWidget);
+    passwordLineEdit->setFont(QFont("Arial", 13));
+    passwordLineEdit->setAlignment(Qt::AlignCenter);
+    passwordLineEdit->setStyleSheet("background-color: #D9D9D9;border-radius: 6px;");
+    passwordLineEdit->setEchoMode(QLineEdit::Password);
+    passwordLineEdit->setFixedSize(256, 40);
+    passwordLineEdit->move(515,0);
+
+    LabelButton *delButton=new LabelButton(credentialWidget);
+    QPixmap delPix(":/res/passbook/delete.png");
+    delButton->setPixmap(delPix);
+    delButton->setFixedSize(38,38);
+    delButton->move(779,0);
+    readJson();
+
 
 //    connect(addPassLabel, &LabelButton::clicked, this, [=](){
 //        QString targetName = targetNameLineEdit->text();
@@ -86,32 +131,42 @@ PassBook::PassBook(DWidget *parent)
 //        QString password = passwordLineEdit->text();
 //        writeJson(targetName, username, password);
 //    });
-    readJson();
-
-
+}
+bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
+{
+    if (Q_NULLPTR == watched)
+    {
+        return false;
+    }
+    if (QEvent::ActivationChange == event->type())
+    {
+        if (QApplication::activeWindow() != this)
+        {
+            if(isUpdating==false){
+                this->close();
+            }
+        }
+    }
+    return QWidget::eventFilter(watched, event);
 }
 
 void PassBook::readJson()
 {
     QFile file(":/res/passbook/data.json");
     if(!file.open(QIODevice::ReadOnly)){
-        qDebug()<<"密码本文件占用";
+        qDebug() << "密码本文件占用";
         return;
     }
-    QByteArray jsonData=file.readAll();
+    QByteArray jsonData = file.readAll();
     QJsonDocument doc(QJsonDocument::fromJson(jsonData));
-    QJsonArray jsonArray=doc.array();
-    for(int i=0;i<jsonArray.size();i++){
-        QJsonObject obj = jsonArray.at(i).toObject();
-        QString targetName = obj.value("targetName").toString();
-        QString username = obj.value("username").toString();
-        QString password = obj.value("password").toString();
-
-        // 在界面上显示读取到的数据
-        addCredentialsWidget(targetName, username, password);
-    }
+    QJsonObject json = doc.object();
+    qDebug() << QJsonDocument(json).toJson(QJsonDocument::Indented);//.toJson(QJsonDocument::Indented) 方法可以将 JSON 对象转换为具有缩进格式的字符串。
+//    if(jsonData.size()!=0){
+//        for(int i=0;i<this->)
+//    }
     file.close();
 }
+
 void PassBook::writeJson(QString targetName, QString username, QString password)
 {
     QFile file("data.json");
@@ -136,54 +191,34 @@ void PassBook::writeJson(QString targetName, QString username, QString password)
     file.close();
 
     // 在界面上添加新的数据
-    addCredentialsWidget(targetName, username, password);
 }
 
 // 创建一个新的QWidget并添加到credentialsWidget中
-void PassBook::addCredentialsWidget(QString targetName, QString username, QString password)
+void PassBook::addCredentialsWidget(const QString& targetName, const QString& username, const QString& password)
 {
-//    // 创建输入框和标签
-//    QWidget *credentialsWidget = new QWidget(passWidget);
-//    QVBoxLayout *credentialsLayout = new QVBoxLayout(credentialsWidget);
+    // 创建密码详情控件
+    displayCredentials(targetName, username, password);
 
-//    QHBoxLayout *inputLayout = new QHBoxLayout;
-//    QLineEdit *targetNameLineEdit = new QLineEdit;
-//    targetNameLineEdit->setFixedSize(286, 34);
-//    QLineEdit *usernameLineEdit = new QLineEdit;
-//    usernameLineEdit->setFixedSize(192, 34);
-//    QLineEdit *passwordLineEdit = new QLineEdit;
-//    passwordLineEdit->setFixedSize(256, 34);
-//    passwordLineEdit->setEchoMode(QLineEdit::Password); // 设置密码模式
-//    inputLayout->addWidget(targetNameLineEdit);
-//    inputLayout->addWidget(usernameLineEdit);
-//    inputLayout->addWidget(passwordLineEdit);
+    // 创建删除密码按钮
+    LabelButton *deletePassLabel = new LabelButton(passWidget);
+    QPixmap deletePixmap(":/res/delete-circle.png");
+    deletePassLabel->setPixmap(deletePixmap);
+    deletePassLabel->move(790, passWidget->height() - 35);
 
-//    credentialsLayout->addLayout(inputLayout);
+    // 连接删除密码按钮的槽函数
+    connect(deletePassLabel, &LabelButton::clicked, [=](){
+        // 删除密码详情控件和删除密码按钮
+        delete deletePassLabel;
+        delete passWidget->layout()->takeAt(passWidget->layout()->count()-1)->widget();
+        delete passWidget->layout()->takeAt(passWidget->layout()->count()-1)->widget();
+        delete passWidget->layout()->takeAt(passWidget->layout()->count()-1)->widget();
+        delete passWidget->layout()->takeAt(passWidget->layout()->count()-1)->widget();
+    });
+}
 
-    QWidget *credentialWidget = new QWidget(credentialsWidget);
-    QVBoxLayout *credentialLayout = new QVBoxLayout(credentialWidget);
+void PassBook::displayCredentials(const QString& targetName, const QString& username, const QString& password)
+{
 
-    QLabel *targetNameLabel = new QLabel(credentialWidget);
-    targetNameLabel->setText(targetName);
-    targetNameLabel->setFont(QFont("Arial", 15));
-    targetNameLabel->setAlignment(Qt::AlignCenter);
-    targetNameLabel->setStyleSheet("color: black;");
 
-    QLabel *usernameLabel = new QLabel(credentialWidget);
-    usernameLabel->setText(username);
-    usernameLabel->setFont(QFont("Arial", 15));
-    usernameLabel->setAlignment(Qt::AlignCenter);
-    usernameLabel->setStyleSheet("color: black;");
 
-    QLabel *passwordLabel = new QLabel(credentialWidget);
-    passwordLabel->setText(password);
-    passwordLabel->setFont(QFont("Arial", 15));
-    passwordLabel->setAlignment(Qt::AlignCenter);
-    passwordLabel->setStyleSheet("color: black;");
-
-    credentialLayout->addWidget(targetNameLabel);
-    credentialLayout->addWidget(usernameLabel);
-    credentialLayout->addWidget(passwordLabel);
-
-    credentialsLayout->addWidget(credentialWidget);
 }

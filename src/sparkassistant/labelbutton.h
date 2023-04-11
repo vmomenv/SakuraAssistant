@@ -1,26 +1,23 @@
-//#ifndef LABELBUTTON_H
-//#define LABELBUTTON_H
+#ifndef LABELBUTTON_H
+#define LABELBUTTON_H
 
-//#include <QWidget>
-//#include <QLabel>
-//#include <QMouseEvent>
+#include <QLabel>
+#include <QMouseEvent>
 
-//class LabelButton : public QLabel
-//{
-//    Q_OBJECT
+class LabelButton : public QLabel
 
-//public:
-//    explicit LabelButton(QWidget *parent = nullptr);
-//    void setText(const QString &text);
+{
+    Q_OBJECT
+public:
+    LabelButton(QWidget *parent = nullptr);
+    ~LabelButton();
 
-//signals:
-//    void clicked();
+signals:
+    void clicked(QMouseEvent *ev);
 
-//protected:
-//    void mousePressEvent(QMouseEvent *event);
+protected:
+    void mousePressEvent(QMouseEvent *event);
 
-//private:
-//    QString m_text;
-//};
+};
 
-//#endif // LABELBUTTON_H
+#endif // LABELBUTTON_H
