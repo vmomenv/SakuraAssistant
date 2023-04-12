@@ -14,6 +14,8 @@
 #include <QJsonArray>
 #include <QFile>
 #include<QPushButton>
+#include<QScrollArea>
+#include<QClipboard>
 #include "labelbutton.h"
 DWIDGET_USE_NAMESPACE
 
@@ -47,6 +49,9 @@ private:
     QWidget *allCredentialsWidget;//所有凭据
     QHBoxLayout *allCredentialsLayout;
     LabelButton *delButton;
+    QScrollArea *scrollArea;
+    QPushButton *showPasswordButton;
+    QPushButton *copyButton;
     bool isUpdating;
 
 
