@@ -38,6 +38,7 @@ private:
     QLabel *passwordLabel;
     QLabel *usernameLabel;
     QLabel *targetNameLabel;
+    QLabel *keyLabel;
     QLineEdit *targetNameLineEdit;
     QLineEdit *usernameLineEdit;
     QLineEdit *passwordLineEdit;

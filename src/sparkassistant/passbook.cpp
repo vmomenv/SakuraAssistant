@@ -31,7 +31,11 @@ PassBook::PassBook(DWidget *parent)
     titleWidget->move(0,0);
 
     //创建主widget
+    //创建左上角key的装饰图标
     //创建置顶按钮
+    QLabel *keyLabel=new QLabel(titleWidget);
+    keyLabel->setPixmap(QPixmap(":/res/passbook/key.png"));
+    keyLabel->move(22,7);
     QPushButton *setTopButton = new QPushButton(titleWidget);
     setTopButton->setFixedSize(29,29);
     setTopButton->move(809,12);
@@ -135,14 +139,16 @@ PassBook::PassBook(DWidget *parent)
             QString username = credentialObj["username"].toString();
             QString password = credentialObj["password"].toString();
             qDebug()<<targetName<<username<<password;
+
             // 创建 QLineEdit 控件
             QWidget *credentialWidget=new QWidget(allCredentialsWidget);
             credentialWidget->resize(816,53);
 
+
             QLineEdit *targetNameLineEdit = new QLineEdit(credentialWidget);
             targetNameLineEdit->setFont(QFont("Arial", 13));
             targetNameLineEdit->setAlignment(Qt::AlignCenter);
-            targetNameLineEdit->setStyleSheet("background-color: #D9D9D9;border-radius: 6px;");
+            targetNameLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
             targetNameLineEdit->setFixedSize(286, 40);
             targetNameLineEdit->setText(targetName);
             targetNameLineEdit->move(0,0);
@@ -150,7 +156,7 @@ PassBook::PassBook(DWidget *parent)
             QLineEdit *usernameLineEdit = new QLineEdit(credentialWidget);
             usernameLineEdit->setFont(QFont("Arial", 13));
             usernameLineEdit->setAlignment(Qt::AlignCenter);
-            usernameLineEdit->setStyleSheet("background-color: #D9D9D9;border-radius: 6px;");
+            usernameLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
             usernameLineEdit->setFixedSize(192, 40);
             usernameLineEdit->setText(username);
             usernameLineEdit->move(305,0);
@@ -158,7 +164,7 @@ PassBook::PassBook(DWidget *parent)
             QLineEdit *passwordLineEdit = new QLineEdit(credentialWidget);
             passwordLineEdit->setFont(QFont("Arial", 13));
             passwordLineEdit->setAlignment(Qt::AlignCenter);
-            passwordLineEdit->setStyleSheet("background-color: #D9D9D9;border-radius: 6px;");
+            passwordLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
             passwordLineEdit->setEchoMode(QLineEdit::Password);
             passwordLineEdit->setFixedSize(256, 40);
             passwordLineEdit->setTextMargins(40, 0, 40, 0);
