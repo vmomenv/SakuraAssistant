@@ -16,6 +16,7 @@
 #include<QPushButton>
 #include<QScrollArea>
 #include<QClipboard>
+#include<QMessageBox>
 #include "labelbutton.h"
 DWIDGET_USE_NAMESPACE
 
@@ -24,11 +25,7 @@ class PassBook : public DMainWindow
     Q_OBJECT
 public:
     explicit PassBook(DWidget *parent = nullptr);
-    void readJson();
-    void writeJson(QString targetName, QString username, QString password);
-    void addCredentialsWidget(const QString& targetName, const QString& username, const QString& password);
     bool eventFilter(QObject *watched, QEvent *event);
-    void displayCredentials(const QString& targetName, const QString& username, const QString& password);
 
 private:
     QWidget *titleWidget;
@@ -52,6 +49,7 @@ private:
     QScrollArea *scrollArea;
     QPushButton *showPasswordButton;
     QPushButton *copyButton;
+    QPushButton *setTopButton;
     bool isUpdating;
 
 

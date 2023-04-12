@@ -52,6 +52,8 @@ MainWindow::MainWindow(DWidget *parent)
     });
     setToDo();
     setMonitor();
+
+
 }
 
 ////失焦关闭窗口 --已替换为eventFilter：失焦判断更精确，单击文本框不会判定为失焦
@@ -185,7 +187,7 @@ void MainWindow::on_sysUpdateButton_clicked(){
     }
 
     //添加按钮
-    QPushButton *updateButton = new QPushButton("Update", resultDialog);
+    QPushButton *updateButton = new QPushButton("更新", resultDialog);
     //布局
     QVBoxLayout *layout = new QVBoxLayout(resultDialog);
     layout->addWidget(listWidget);
@@ -229,7 +231,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)//感谢柚柚帮�
         if (QApplication::activeWindow() != this)
         {
             if(isUpdating==false){
-                this->close();
+                this->hide();
             }
         }
     }

@@ -31,7 +31,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
     QPushButton *addBtn=new QPushButton(this);
     addBtn->resize(30,30);
     addBtn->setText("+");
-    addBtn->move(20,175);
+    addBtn->move(20,200);
 
 
 
@@ -70,7 +70,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             QHBoxLayout *todosLayout =new QHBoxLayout();
 
             ToDo *todo=new ToDo(todoWidget);
-            scrollArea->setFixedSize(208, 170);
+            scrollArea->setFixedSize(208, 198);
             todo->checkBox->setChecked(todoItem.completed);
             todo->checkBox->setFixedHeight(16);
             todo->line->setText(todoItem.name);

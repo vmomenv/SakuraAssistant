@@ -12,6 +12,8 @@
 #include<DSpinner>
 #include<todoclassmanager.h>
 #include<passbook.h>
+#include<QSystemTrayIcon>
+
 DWIDGET_USE_NAMESPACE
 class MainWindow :public DMainWindow
 {

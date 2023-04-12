@@ -5,6 +5,7 @@
 #include<DMainWindow>
 #include<QVBoxLayout>
 #include<QFormLayout>
+
 PassBook::PassBook(DWidget *parent)
 {
     isUpdating=false;
@@ -30,6 +31,26 @@ PassBook::PassBook(DWidget *parent)
     titleWidget->move(0,0);
 
     //创建主widget
+    //创建置顶按钮
+    QPushButton *setTopButton = new QPushButton(titleWidget);
+    setTopButton->setFixedSize(29,29);
+    setTopButton->move(809,12);
+    setTopButton->setIcon(QIcon(":/res/passbook/unPin.png"));
+    setTopButton->setIconSize(QSize(31,31));
+    setTopButton->setStyleSheet("border:none; background-color:transparent;");
+    connect(setTopButton, &QPushButton::clicked, [=] {
+    if (isUpdating == false) {
+        setTopButton->setIcon(QIcon(":/res/passbook/pin.png"));
+        this->isUpdating=true;
+        setWindowFlag(Qt::WindowStaysOnTopHint);
+        this->show();
+
+
+    } else {
+        setTopButton->setIcon(QIcon(":/res/passbook/unPin.png"));
+        this->isUpdating=false;
+    }
+    });
 
 
     //创建搜索框widget并且将控件放入该widget
@@ -93,7 +114,7 @@ PassBook::PassBook(DWidget *parent)
     scrollArea->move(0,32);
     scrollArea->setWidgetResizable(true);
     QWidget *allCredentialsWidget=new QWidget(scrollArea);
-    allCredentialsWidget->setFixedSize(816, 266);
+    allCredentialsWidget->setFixedSize(816, 290);
     scrollArea->setWidget(allCredentialsWidget);
 
 
@@ -140,6 +161,7 @@ PassBook::PassBook(DWidget *parent)
             passwordLineEdit->setStyleSheet("background-color: #D9D9D9;border-radius: 6px;");
             passwordLineEdit->setEchoMode(QLineEdit::Password);
             passwordLineEdit->setFixedSize(256, 40);
+            passwordLineEdit->setTextMargins(40, 0, 40, 0);
             passwordLineEdit->setText(password);
             passwordLineEdit->move(515,0);
 
@@ -168,6 +190,7 @@ PassBook::PassBook(DWidget *parent)
             // 连接showPasswordButton的点击事件
             connect(showPasswordButton, &QPushButton::clicked, [=] {
             if (passwordLineEdit->echoMode() == QLineEdit::Password) {
+
             passwordLineEdit->setEchoMode(QLineEdit::Normal);
             } else {
             passwordLineEdit->setEchoMode(QLineEdit::Password);
@@ -177,8 +200,6 @@ PassBook::PassBook(DWidget *parent)
             // 连接copyButton的点击事件
             connect(copyButton, &QPushButton::clicked, [=] {
             QApplication::clipboard()->setText(passwordLineEdit->text());
-//            // 或者使用QMessageBox弹出提示框
-////             QMessageBox::information(this, "Copy Password", "Password copied to clipboard!");
             });
 
             credentialWidget->move(0, y);
@@ -208,83 +229,14 @@ bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
     {
         if (QApplication::activeWindow() != this)
         {
-            if(isUpdating==false){
-                this->close();
+            if(this->isUpdating==false){
+                this->hide();
             }
         }
     }
     return QWidget::eventFilter(watched, event);
 }
 
-void PassBook::readJson()
-{
-    QFile file(":/res/passbook/data.json");
-    if(!file.open(QIODevice::ReadOnly)){
-        qDebug() << "密码本文件占用";
-        return;
-    }
-    QByteArray jsonData = file.readAll();
-    QJsonDocument doc(QJsonDocument::fromJson(jsonData));
-    QJsonObject json = doc.object();
-    qDebug() << QJsonDocument(json).toJson(QJsonDocument::Indented);//.toJson(QJsonDocument::Indented) 方法可以将 JSON 对象转换为具有缩进格式的字符串。
-//    if(jsonData.size()!=0){
-//        for(int i=0;i<this->)
-//    }
-    file.close();
-}
-
-void PassBook::writeJson(QString targetName, QString username, QString password)
-{
-    QFile file("data.json");
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
-        qDebug() << "Open json file failed.";
-        return;
-    }
-
-    QByteArray jsonData = file.readAll();
-    QJsonDocument doc(QJsonDocument::fromJson(jsonData));
-    QJsonArray jsonArray = doc.array();
-
-    QJsonObject obj;
-    obj.insert("targetName", targetName);
-    obj.insert("username", username);
-    obj.insert("password", password);
-    jsonArray.append(obj);
-
-    doc.setArray(jsonArray);
-    file.resize(0);
-    file.write(doc.toJson());
-    file.close();
-
-    // 在界面上添加新的数据
-}
-
-// 创建一个新的QWidget并添加到credentialsWidget中
-void PassBook::addCredentialsWidget(const QString& targetName, const QString& username, const QString& password)
-{
-    // 创建密码详情控件
-    displayCredentials(targetName, username, password);
-
-    // 创建删除密码按钮
-    LabelButton *deletePassLabel = new LabelButton(passWidget);
-    QPixmap deletePixmap(":/res/delete-circle.png");
-    deletePassLabel->setPixmap(deletePixmap);
-    deletePassLabel->move(790, passWidget->height() - 35);
-
-    // 连接删除密码按钮的槽函数
-    connect(deletePassLabel, &LabelButton::clicked, [=](){
-        // 删除密码详情控件和删除密码按钮
-        delete deletePassLabel;
-        delete passWidget->layout()->takeAt(passWidget->layout()->count()-1)->widget();
-        delete passWidget->layout()->takeAt(passWidget->layout()->count()-1)->widget();
-        delete passWidget->layout()->takeAt(passWidget->layout()->count()-1)->widget();
-        delete passWidget->layout()->takeAt(passWidget->layout()->count()-1)->widget();
-    });
-}
-
-void PassBook::displayCredentials(const QString& targetName, const QString& username, const QString& password)
-{
 
 
 
-}

@@ -49,5 +49,7 @@
         <file>res/passbook/delete.png</file>
         <file>res/passbook/showPass.png</file>
         <file>res/passbook/copy.png</file>
+        <file>res/passbook/unPin.png</file>
+        <file>res/sakura.png</file>
     </qresource>
 </RCC>
