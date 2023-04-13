@@ -75,18 +75,15 @@ PassBook::PassBook(DWidget *parent)
     //密码详情
     QWidget *passWidget=new QWidget(this);
     passWidget->move(22,142);
-    passWidget->resize(816,325);
+    passWidget->resize(830,330);
 
 
 
     // 创建添加密码按钮
     LabelButton *addPassLabel = new LabelButton(passWidget);
-
-
-
     QPixmap addPixmap(":/res/plus-circle.png");
     addPassLabel->setPixmap(addPixmap);
-    addPassLabel->move(0,295);
+    addPassLabel->move(0,301);
 
 
     //文字
@@ -114,11 +111,13 @@ PassBook::PassBook(DWidget *parent)
 
     int y = 0;//高，显示主界面
     QScrollArea *scrollArea = new QScrollArea(passWidget);
-    scrollArea->setFixedSize(836, 266);
+    scrollArea->setFixedSize(830, 266);
     scrollArea->move(0,32);
     scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+
     QWidget *allCredentialsWidget=new QWidget(scrollArea);
-    allCredentialsWidget->setFixedSize(816, 290);
+    allCredentialsWidget->setFixedSize(816, 0);
     scrollArea->setWidget(allCredentialsWidget);
 
 
@@ -151,6 +150,7 @@ PassBook::PassBook(DWidget *parent)
             targetNameLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
             targetNameLineEdit->setFixedSize(286, 40);
             targetNameLineEdit->setText(targetName);
+            targetNameLineEdit->setPlaceholderText("网址/app名称/服务器地址");
             targetNameLineEdit->move(0,0);
 
             QLineEdit *usernameLineEdit = new QLineEdit(credentialWidget);
@@ -159,6 +159,7 @@ PassBook::PassBook(DWidget *parent)
             usernameLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
             usernameLineEdit->setFixedSize(192, 40);
             usernameLineEdit->setText(username);
+            usernameLineEdit->setPlaceholderText("请输入您的账户");
             usernameLineEdit->move(305,0);
 
             QLineEdit *passwordLineEdit = new QLineEdit(credentialWidget);
@@ -169,6 +170,8 @@ PassBook::PassBook(DWidget *parent)
             passwordLineEdit->setFixedSize(256, 40);
             passwordLineEdit->setTextMargins(40, 0, 40, 0);
             passwordLineEdit->setText(password);
+            passwordLineEdit->setPlaceholderText("请输入您的密码");
+
             passwordLineEdit->move(515,0);
 
             // 创建QPushButton控件用于切换明文和暗文
@@ -210,6 +213,7 @@ PassBook::PassBook(DWidget *parent)
 
             credentialWidget->move(0, y);
             y += 50;
+            allCredentialsWidget->setFixedSize(816, y);
 
         }
     }

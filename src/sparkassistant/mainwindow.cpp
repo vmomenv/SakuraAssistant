@@ -23,6 +23,7 @@
 #include<QTableView>
 #include<monitorthread.h>
 #include "todoclassmanager.h"
+#include<QPalette>
 MainWindow::MainWindow(DWidget *parent)
 {
 //    isUpdating=true;
@@ -40,6 +41,16 @@ MainWindow::MainWindow(DWidget *parent)
 
     connect(sysUpdateButton, SIGNAL(clicked()), this, SLOT(on_sysUpdateButton_clicked()));
     connect(passbookButton, SIGNAL(clicked()), this, SLOT(on_passbookButton_clicked()));
+
+
+//    //设置背景色
+//    QLinearGradient gradient(0, 0, 0, height());
+//    gradient.setColorAt(0, QColor("#fce38a"));
+//    gradient.setColorAt(1, QColor("#f38181"));
+//    QBrush brush(gradient);
+//    QPalette palette;
+//    palette.setBrush(QPalette::Background, brush);
+//    this->setPalette(palette);
 
     weather();
     WeatherParse *weather=new WeatherParse;
