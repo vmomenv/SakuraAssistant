@@ -165,7 +165,7 @@ void TodoClassManager::loadFromJsonFile(){
 
     //创建文件路径
     QDir home = QDir::home();
-    QString configPath = home.filePath(".config/sparkassistant");
+    QString configPath = home.filePath(".config/sakuraassistant");
     QDir dir(configPath);
     if (!dir.exists()) {
         dir.mkpath(".");

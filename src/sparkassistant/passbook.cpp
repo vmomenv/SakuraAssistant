@@ -8,6 +8,7 @@
 
 PassBook::PassBook(DWidget *parent)
 {
+
     isUpdating=false;
     setFixedSize(861,490);
     titlebar()->setFixedHeight(0);
@@ -80,10 +81,13 @@ PassBook::PassBook(DWidget *parent)
 
 
     // 创建添加密码按钮
-    LabelButton *addPassLabel = new LabelButton(passWidget);
+    QPushButton *addPassButton = new QPushButton(passWidget);
     QPixmap addPixmap(":/res/plus-circle.png");
-    addPassLabel->setPixmap(addPixmap);
-    addPassLabel->move(0,301);
+    addPassButton->setIcon(addPixmap);
+    addPassButton->setIconSize(QSize(31,31));
+    addPassButton->setStyleSheet("border:none; background-color:transparent;");
+    addPassButton->move(0,301);
+
 
 
     //文字
@@ -116,17 +120,42 @@ PassBook::PassBook(DWidget *parent)
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameShape(QFrame::NoFrame);
 
+
     QWidget *allCredentialsWidget=new QWidget(scrollArea);
-    allCredentialsWidget->setFixedSize(816, 0);
-    scrollArea->setWidget(allCredentialsWidget);
+    QVBoxLayout *allCredentialsLayout=new QVBoxLayout(allCredentialsWidget);//设置样式
+    scrollArea->setWidget(allCredentialsWidget);//设置滚动
 
+    // 初始化布局
+    QWidget *credentialWidget=new QWidget(allCredentialsWidget);
+    credentialWidget->resize(816,53);
+    credentialWidget->deleteLater();
+    credentialWidget->setParent(nullptr);
 
-    //循环遍历json并创建多个qwidget
-    QFile file(":/res/passbook/data.json");
-    if(!file.open(QIODevice::ReadOnly)){
-        qDebug() << "密码本文件占用";
-        return;
+    //创建文件路径
+    QDir home = QDir::home();
+    QString configPath = home.filePath(".config/sakuraassistant");
+    QDir dir(configPath);
+    if (!dir.exists()) {
+        dir.mkpath(".");
     }
+    //打开文件
+    QString path = dir.filePath("data.json");
+    QFile file;
+    file.setFileName(path);
+    //将qt中文件复制到~/.config/sparkassistant/
+    if (!file.exists()) {
+        QFile todoJson(":/res/passbook/data.json");
+        todoJson.copy(path);
+    }
+    //设置文件权限
+    file.setPermissions(QFile::ReadUser | QFile::WriteUser | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther | QFile::WriteOther);
+    if(!file.open(QIODevice::ReadWrite)) {
+        qDebug() << "File open error";
+    } else {
+        qDebug() <<"File open!";
+    }
+    qDebug()<<"file路径为"<<path;
+    //循环遍历json并创建多个qwidget
     QByteArray jsonData = file.readAll();
     QJsonDocument doc(QJsonDocument::fromJson(jsonData));
     QJsonObject jsonObj = doc.object();
@@ -141,7 +170,7 @@ PassBook::PassBook(DWidget *parent)
 
             // 创建 QLineEdit 控件
             QWidget *credentialWidget=new QWidget(allCredentialsWidget);
-            credentialWidget->resize(816,53);
+            credentialWidget->setFixedSize(816,53);
 
 
             QLineEdit *targetNameLineEdit = new QLineEdit(credentialWidget);
@@ -190,12 +219,17 @@ PassBook::PassBook(DWidget *parent)
             copyButton->setIconSize(QSize(30, 30));
             copyButton->setStyleSheet("border:none; background-color:transparent;");
             //创建删除按钮
-            LabelButton *delButton=new LabelButton(credentialWidget);
+            QPushButton *delButton=new QPushButton(credentialWidget);
             QPixmap delPix(":/res/passbook/delete.png");
-            delButton->setPixmap(delPix);
+            delButton->setIcon(delPix);
             delButton->setFixedSize(38,38);
             delButton->move(779,0);
+            delButton->setIconSize(QSize(31,31));
+            delButton->setStyleSheet("border:none; background-color:transparent;");
 
+
+            //对一条内容进行布局
+            allCredentialsLayout->addWidget(credentialWidget);
             // 连接showPasswordButton的点击事件
             connect(showPasswordButton, &QPushButton::clicked, [=] {
             if (passwordLineEdit->echoMode() == QLineEdit::Password) {
@@ -206,28 +240,25 @@ PassBook::PassBook(DWidget *parent)
             }
             });
 
+
             // 连接copyButton的点击事件
             connect(copyButton, &QPushButton::clicked, [=] {
             QApplication::clipboard()->setText(passwordLineEdit->text());
+            });        
+
+            connect(delButton ,&QPushButton::clicked, this, [=](){
+                credentialWidget->setParent(nullptr);
+                qDebug()<<"正在删除第"<<i<<"组件";
+//                this->saveToJsonFile(false,"",i,true,false);
+
             });
-
-            credentialWidget->move(0, y);
-            y += 50;
-            allCredentialsWidget->setFixedSize(816, y);
-
         }
     }
-
-
-//    readJson();
-
-
-//    connect(addPassLabel, &LabelButton::clicked, this, [=](){
-//        QString targetName = targetNameLineEdit->text();
-//        QString username = usernameLineEdit->text();
-//        QString password = passwordLineEdit->text();
-//        writeJson(targetName, username, password);
-//    });
+    //设置密码条目底部弹簧
+    QSpacerItem* passbookSpacer = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    //将弹簧加入布局
+    allCredentialsLayout->addItem(passbookSpacer);
+    allCredentialsWidget->setLayout(allCredentialsLayout);
 }
 bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
 {

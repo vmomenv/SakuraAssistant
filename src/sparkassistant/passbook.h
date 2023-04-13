@@ -17,6 +17,9 @@
 #include<QScrollArea>
 #include<QClipboard>
 #include<QMessageBox>
+#include<QSpacerItem>
+#include<QDir>
+#include<QVBoxLayout>
 #include "labelbutton.h"
 DWIDGET_USE_NAMESPACE
 
@@ -45,12 +48,15 @@ private:
     QWidget *credentialWidget;//一条凭据
     QHBoxLayout *credentialLayout;
     QWidget *allCredentialsWidget;//所有凭据
-    QHBoxLayout *allCredentialsLayout;
-    LabelButton *delButton;
+    QVBoxLayout *allCredentialsLayout;
+    QPushButton *delButton;
     QScrollArea *scrollArea;
     QPushButton *showPasswordButton;
     QPushButton *copyButton;
     QPushButton *setTopButton;
+    QSpacerItem *spacer;
+    QPushButton *addPassButton;
+    QSpacerItem *passbookSpacer;//底部弹簧
     bool isUpdating;
 
 

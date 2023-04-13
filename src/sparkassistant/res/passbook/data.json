@@ -13,36 +13,6 @@
             "targetName": "Amazon",
             "username": "john_doe",
             "password": "p@ssw0rd3"
-        },
-        {
-            "targetName": "Facebook",
-            "username": "john.doe",
-            "password": "p@ssw0rd1"
-        },
-        {
-            "targetName": "Gmail",
-            "username": "johndoe@gmail.com",
-            "password": "p@ssw0rd2"
-        },
-        {
-            "targetName": "Amazon",
-            "username": "john_doe",
-            "password": "p@ssw0rd3"
-        },
-        {
-            "targetName": "Facebook",
-            "username": "john.doe",
-            "password": "p@ssw0rd1"
-        },
-        {
-            "targetName": "Gmail",
-            "username": "johndoe@gmail.com",
-            "password": "p@ssw0rd2"
-        },
-        {
-            "targetName": "Amazon",
-            "username": "john_doe",
-            "password": "p@ssw0rd3"
         }
     ]
 }
