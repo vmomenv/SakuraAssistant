@@ -241,6 +241,7 @@ PassBook::PassBook(DWidget *parent)
             });
 
 
+
             // 连接copyButton的点击事件
             connect(copyButton, &QPushButton::clicked, [=] {
             QApplication::clipboard()->setText(passwordLineEdit->text());
@@ -254,6 +255,89 @@ PassBook::PassBook(DWidget *parent)
             });
         }
     }
+
+    connect(addPassButton ,&QPushButton::clicked, this, [=](){
+        QWidget *credentialWidget=new QWidget(allCredentialsWidget);
+        credentialWidget->setFixedSize(816,53);
+
+
+        QLineEdit *targetNameLineEdit = new QLineEdit(credentialWidget);
+        targetNameLineEdit->setFont(QFont("Arial", 13));
+        targetNameLineEdit->setAlignment(Qt::AlignCenter);
+        targetNameLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
+        targetNameLineEdit->setFixedSize(286, 40);
+        targetNameLineEdit->setPlaceholderText("网址/app名称/服务器地址");
+        targetNameLineEdit->move(0,0);
+
+        QLineEdit *usernameLineEdit = new QLineEdit(credentialWidget);
+        usernameLineEdit->setFont(QFont("Arial", 13));
+        usernameLineEdit->setAlignment(Qt::AlignCenter);
+        usernameLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
+        usernameLineEdit->setFixedSize(192, 40);
+        usernameLineEdit->setPlaceholderText("请输入您的账户");
+        usernameLineEdit->move(305,0);
+
+        QLineEdit *passwordLineEdit = new QLineEdit(credentialWidget);
+        passwordLineEdit->setFont(QFont("Arial", 13));
+        passwordLineEdit->setAlignment(Qt::AlignCenter);
+        passwordLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
+        passwordLineEdit->setEchoMode(QLineEdit::Password);
+        passwordLineEdit->setFixedSize(256, 40);
+        passwordLineEdit->setTextMargins(40, 0, 40, 0);
+        passwordLineEdit->setPlaceholderText("请输入您的密码");
+
+        passwordLineEdit->move(515,0);
+
+        // 创建QPushButton控件用于切换明文和暗文
+        QPushButton *showPasswordButton = new QPushButton(credentialWidget);
+        showPasswordButton->setFixedSize(31, 31);
+        showPasswordButton->move(520, 5);
+        showPasswordButton->setIcon(QIcon(":/res/passbook/showPass.png"));
+        showPasswordButton->setIconSize(QSize(31,31));
+        showPasswordButton->setStyleSheet("border:none; background-color:transparent;");
+
+        // 创建QPushButton控件用于复制内容
+        QPushButton *copyButton = new QPushButton(credentialWidget);
+        copyButton->setFixedSize(30, 30);
+        copyButton->move(738, 5);
+        copyButton->setIcon(QIcon(":/res/passbook/copy.png"));
+        copyButton->setIconSize(QSize(30, 30));
+        copyButton->setStyleSheet("border:none; background-color:transparent;");
+        //创建删除按钮
+        QPushButton *delButton=new QPushButton(credentialWidget);
+        QPixmap delPix(":/res/passbook/delete.png");
+        delButton->setIcon(delPix);
+        delButton->setFixedSize(38,38);
+        delButton->move(779,0);
+        delButton->setIconSize(QSize(31,31));
+        delButton->setStyleSheet("border:none; background-color:transparent;");
+        //将credentialswidget插入布局
+        allCredentialsLayout->insertWidget(allCredentialsLayout->count()-1,credentialWidget);
+        // 连接showPasswordButton的点击事件
+        connect(showPasswordButton, &QPushButton::clicked, [=] {
+        if (passwordLineEdit->echoMode() == QLineEdit::Password) {
+
+        passwordLineEdit->setEchoMode(QLineEdit::Normal);
+        } else {
+        passwordLineEdit->setEchoMode(QLineEdit::Password);
+        }
+        });
+
+
+
+        // 连接copyButton的点击事件
+        connect(copyButton, &QPushButton::clicked, [=] {
+        QApplication::clipboard()->setText(passwordLineEdit->text());
+        });
+
+        connect(delButton ,&QPushButton::clicked, this, [=](){
+            credentialWidget->setParent(nullptr);
+//                this->saveToJsonFile(false,"",i,true,false);
+
+        });
+
+    });
+
     //设置密码条目底部弹簧
     QSpacerItem* passbookSpacer = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
     //将弹簧加入布局
