@@ -133,15 +133,33 @@ PassBook::PassBook(DWidget *parent)
 
     //创建文件路径
     QDir home = QDir::home();
-    QString configPath = home.filePath(".config/sakuraassistant");
-    QDir dir(configPath);
+    QString dataPath = home.filePath(".config/sakuraassistant");
+    QDir dir(dataPath);
     if (!dir.exists()) {
         dir.mkpath(".");
     }
+//    //转储文件
+//    QString tmpDataFile = dataPath+ "/tmpdata.json";
+//    QFile tmp(tmpDataFile);
+//    if (!tmp.exists()) {
+//        qDebug() << "tmp.json文件不存在";
+//    }
     //打开文件
     QString path = dir.filePath("data.json");
     QFile file;
     file.setFileName(path);
+
+//    if (file.exists() && !file.remove()) {
+//        qDebug() << "无法删除data.json文件";
+//    }
+
+//    // 将tmp.json文件移动到data.json
+//    if (!tmp.copy(path)|| !tmp.remove()) {
+//        qDebug() << "无法将tmp.json文件移动到data.json";
+//    }
+//    if (file.exists() && !file.remove()) {
+//        qDebug() << "无法删除data.json文件";
+//    }
     //将qt中文件复制到~/.config/sparkassistant/
     if (!file.exists()) {
         QFile todoJson(":/res/passbook/data.json");
@@ -157,9 +175,10 @@ PassBook::PassBook(DWidget *parent)
     qDebug()<<"file路径为"<<path;
     //循环遍历json并创建多个qwidget
     QByteArray jsonData = file.readAll();
-    QJsonDocument doc(QJsonDocument::fromJson(jsonData));
+    doc=QJsonDocument::fromJson(jsonData);
     QJsonObject jsonObj = doc.object();
     QJsonArray credentialsArray = jsonObj["credentials"].toArray();
+
     if(credentialsArray.size()!=0){
         for(int i=0;i<credentialsArray.size();i++){
             QJsonObject credentialObj = credentialsArray[i].toObject();
@@ -167,6 +186,9 @@ PassBook::PassBook(DWidget *parent)
             QString username = credentialObj["username"].toString();
             QString password = credentialObj["password"].toString();
             qDebug()<<targetName<<username<<password;
+            if(credentialObj.value("isDel").toBool()==true){
+                continue;
+            }
 
             // 创建 QLineEdit 控件
             QWidget *credentialWidget=new QWidget(allCredentialsWidget);
@@ -239,6 +261,18 @@ PassBook::PassBook(DWidget *parent)
             passwordLineEdit->setEchoMode(QLineEdit::Password);
             }
             });
+            //修改完成进行保存
+            connect(targetNameLineEdit, &QLineEdit::editingFinished, this, [=](){
+                this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),i,false,false);
+            });
+            connect(usernameLineEdit, &QLineEdit::editingFinished, this, [=](){
+                this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),i,false,false);
+
+            });
+            connect(passwordLineEdit, &QLineEdit::editingFinished, this, [=](){
+                this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),i,false,false);
+
+            });
 
 
 
@@ -250,16 +284,20 @@ PassBook::PassBook(DWidget *parent)
             connect(delButton ,&QPushButton::clicked, this, [=](){
                 credentialWidget->setParent(nullptr);
                 qDebug()<<"正在删除第"<<i<<"组件";
-//                this->saveToJsonFile(false,"",i,true,false);
+                this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),i,true,false);
 
             });
         }
     }
-
+    static int index=0;
+    index=credentialsArray.size();
     connect(addPassButton ,&QPushButton::clicked, this, [=](){
+        int *addIndex=new int();
+        *addIndex=index;
+        qDebug()<<index;
         QWidget *credentialWidget=new QWidget(allCredentialsWidget);
         credentialWidget->setFixedSize(816,53);
-
+        saveToJsonFile("","","",*addIndex,false,true);//新增一条
 
         QLineEdit *targetNameLineEdit = new QLineEdit(credentialWidget);
         targetNameLineEdit->setFont(QFont("Arial", 13));
@@ -325,6 +363,21 @@ PassBook::PassBook(DWidget *parent)
 
 
 
+        //修改完成进行保存
+        connect(targetNameLineEdit, &QLineEdit::editingFinished, this, [=](){
+            this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),*addIndex,false,false);
+        });
+        connect(usernameLineEdit, &QLineEdit::editingFinished, this, [=](){
+            this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),*addIndex,false,false);
+
+        });
+        connect(passwordLineEdit, &QLineEdit::editingFinished, this, [=](){
+            this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),*addIndex,false,false);
+
+        });
+
+
+
         // 连接copyButton的点击事件
         connect(copyButton, &QPushButton::clicked, [=] {
         QApplication::clipboard()->setText(passwordLineEdit->text());
@@ -332,11 +385,12 @@ PassBook::PassBook(DWidget *parent)
 
         connect(delButton ,&QPushButton::clicked, this, [=](){
             credentialWidget->setParent(nullptr);
-//                this->saveToJsonFile(false,"",i,true,false);
+            this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),*addIndex,true,false);
 
         });
 
     });
+
 
     //设置密码条目底部弹簧
     QSpacerItem* passbookSpacer = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -355,6 +409,8 @@ bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
         if (QApplication::activeWindow() != this)
         {
             if(this->isUpdating==false){
+                delJsonFile();
+
                 this->hide();
             }
         }
@@ -362,6 +418,74 @@ bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
     return QWidget::eventFilter(watched, event);
 }
 
+void PassBook::saveToJsonFile(QString targetName, QString username, QString password, int i,bool isDel,bool isAdd)
+{
+
+    QJsonObject CredentialsObj;
+    CredentialsObj.insert("targetName",targetName);
+    CredentialsObj.insert("username",username);
+    CredentialsObj.insert("password",password);
+
+    QJsonObject allCredentialsObj=doc.object();
+
+    QJsonArray CredentialsArr = allCredentialsObj["credentials"].toArray();
+
+    if(isAdd==true){
+        CredentialsArr.append(CredentialsObj);
+    }
+    if(isDel==true){
+        CredentialsObj.insert("isDel", true);
+        CredentialsArr[i]=CredentialsObj;
+    }
+    qDebug()<<"保存"<<i;
+
+    CredentialsArr[i]=CredentialsObj;
+    qDebug()<<CredentialsArr;
+
+    allCredentialsObj.insert("credentials", CredentialsArr);
+    doc.setObject(allCredentialsObj);
+}
 
 
+void PassBook::delJsonFile()
+{
 
+
+//    QJsonDocument fixedDoc;
+//    fixedDoc=doc;
+    QDir home = QDir::home();
+    QString configPath = home.filePath(".config/sakuraassistant");
+    QDir dir(configPath);
+    QString path = dir.filePath("data.json");
+    QFile file(path);
+    if (!file.exists()) {
+        if (file.open(QIODevice::WriteOnly)) {
+            file.write("[]");
+        }
+    }
+    //删除多余条目
+    QJsonObject docObj =doc.object();
+    QJsonArray docArray=docObj.value("credentials").toArray();
+    qDebug()<<"del1"<<doc;
+    for(int i=0;i<docArray.size();i++){
+        QJsonObject item =docArray[i].toObject();
+        qDebug()<<"item信息"<<item;
+        if(item.value("isDel").toBool()==true){
+            docArray.removeAt(i);
+        }
+    }
+    docObj.insert("credentials", docArray);
+    doc.setObject(docObj);
+    qDebug()<<"del2"<<doc;
+    file.setPermissions(QFile::ReadUser | QFile::WriteUser | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther | QFile::WriteOther);
+    if(!file.open(QIODevice::ReadWrite)) {
+        qDebug() << "File open error";
+    } else {
+        qDebug() <<"File open!";
+    }
+    file.resize(0);
+    file.write(doc.toJson());
+}
+
+PassBook::~PassBook() {
+}

@@ -35,6 +35,7 @@ private:
     DLabel *weatherCity;
     DLabel *weatherTemperature;
     DLabel *weatherPic;
+    TodoClassManager *todo;
 
     bool isUpdating;
 

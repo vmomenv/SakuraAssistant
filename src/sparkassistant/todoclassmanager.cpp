@@ -9,7 +9,6 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
   , spacer(new QSpacerItem(10,10, QSizePolicy::Minimum, QSizePolicy::Expanding))
 
 {
-
     QWidget *todoWidget=new QWidget(this);
     QScrollArea *scrollArea=new QScrollArea(this);
     scrollArea->setWidget(todoWidget);
@@ -224,7 +223,6 @@ void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isD
     itemObj.insert("items", itemArr);
     doc.setObject(itemObj);
     qDebug()<<"保存时doc"<<doc;
-    delJsonFile();
 
 
 

@@ -29,6 +29,10 @@ class PassBook : public DMainWindow
 public:
     explicit PassBook(DWidget *parent = nullptr);
     bool eventFilter(QObject *watched, QEvent *event);
+    void saveToJsonFile(QString targetName,QString username,QString password,int i,bool isDel,bool isAdd);
+    void delJsonFile();
+    ~PassBook();
+
 
 private:
     QWidget *titleWidget;
@@ -57,7 +61,9 @@ private:
     QSpacerItem *spacer;
     QPushButton *addPassButton;
     QSpacerItem *passbookSpacer;//底部弹簧
+    QJsonDocument doc;
     bool isUpdating;
+    int *addIndex;
 
 
 signals:
