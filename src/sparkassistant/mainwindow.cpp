@@ -23,9 +23,9 @@
 #include<QTableView>
 #include<monitorthread.h>
 #include "todoclassmanager.h"
+#include<QPalette>
 MainWindow::MainWindow(DWidget *parent)
 {
-
 //    isUpdating=true;
     setFixedSize(230,376);
     titlebar()->setFixedHeight(0);
@@ -40,6 +40,17 @@ MainWindow::MainWindow(DWidget *parent)
     updateUpdateButton();
 
     connect(sysUpdateButton, SIGNAL(clicked()), this, SLOT(on_sysUpdateButton_clicked()));
+    connect(passbookButton, SIGNAL(clicked()), this, SLOT(on_passbookButton_clicked()));
+
+
+//    //设置背景色
+//    QLinearGradient gradient(0, 0, 0, height());
+//    gradient.setColorAt(0, QColor("#fce38a"));
+//    gradient.setColorAt(1, QColor("#f38181"));
+//    QBrush brush(gradient);
+//    QPalette palette;
+//    palette.setBrush(QPalette::Background, brush);
+//    this->setPalette(palette);
 
     weather();
     WeatherParse *weather=new WeatherParse;
@@ -51,6 +62,8 @@ MainWindow::MainWindow(DWidget *parent)
             weather->deleteLater();
     });
     setToDo();
+    setMonitor();
+
 
 }
 
@@ -69,10 +82,10 @@ void MainWindow::updateUpdateButton(){
     sysUpdateButton->setText("系统更新");
 //    system("sudo apt update");
 
-    appUpdateButton=new DPushButton(this);
-    appUpdateButton->resize(97,34);
-    appUpdateButton->move(115,322);
-    appUpdateButton->setText("我是凑数的");
+    passbookButton=new DPushButton(this);
+    passbookButton->resize(97,34);
+    passbookButton->move(115,322);
+    passbookButton->setText("密码本");
 
 
 }
@@ -130,6 +143,15 @@ void MainWindow::setToDo()
     todo->move(0,80);
 
 }
+
+void MainWindow::setMonitor()
+{
+//    MonitorThread *monitor=new MonitorThread(this);
+////    monitor->move(293,58);
+//    monitor->resize(130,30);
+//    monitor->move(50,280);
+
+}
 void MainWindow::on_sysUpdateButton_clicked(){
 
     isUpdating=true;//正在系统更新，取消失焦关闭动作
@@ -137,6 +159,7 @@ void MainWindow::on_sysUpdateButton_clicked(){
 
     QProcess processUpdate;//apt update
     QProcess processList;//apt list
+
 
     processUpdate.start("bash", QStringList() << "-c" << "pkexec apt update");
     processUpdate.waitForFinished();
@@ -175,7 +198,7 @@ void MainWindow::on_sysUpdateButton_clicked(){
     }
 
     //添加按钮
-    QPushButton *updateButton = new QPushButton("Update", resultDialog);
+    QPushButton *updateButton = new QPushButton("更新", resultDialog);
     //布局
     QVBoxLayout *layout = new QVBoxLayout(resultDialog);
     layout->addWidget(listWidget);
@@ -219,7 +242,8 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)//感谢柚柚帮�
         if (QApplication::activeWindow() != this)
         {
             if(isUpdating==false){
-                this->close();
+
+                this->hide();
             }
         }
     }
@@ -249,7 +273,10 @@ void MainWindow::destructToDo()
     }
 }
 
-
+void MainWindow::on_passbookButton_clicked(){
+    PassBook *passBook=new PassBook;
+    passBook->show();
+}
 MainWindow::~MainWindow(){
 
 }

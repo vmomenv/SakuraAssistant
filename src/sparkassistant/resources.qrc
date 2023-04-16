@@ -41,5 +41,15 @@
         <file>res/todo.json</file>
         <file>res/delete.png</file>
         <file>res/plus.png</file>
+        <file>res/passbook/search.png</file>
+        <file>res/plus-circle.png</file>
+        <file>res/passbook/data.json</file>
+        <file>res/passbook/key.png</file>
+        <file>res/passbook/pin.png</file>
+        <file>res/passbook/delete.png</file>
+        <file>res/passbook/showPass.png</file>
+        <file>res/passbook/copy.png</file>
+        <file>res/passbook/unPin.png</file>
+        <file>res/sakura.png</file>
     </qresource>
 </RCC>

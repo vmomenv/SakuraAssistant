@@ -1,4 +1,4 @@
-       #include "todoclassmanager.h"
+#include "todoclassmanager.h"
 #include<QDir>
 #include<QFile>
 #include<QScrollArea>
@@ -9,7 +9,6 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
   , spacer(new QSpacerItem(10,10, QSizePolicy::Minimum, QSizePolicy::Expanding))
 
 {
-
     QWidget *todoWidget=new QWidget(this);
     QScrollArea *scrollArea=new QScrollArea(this);
     scrollArea->setWidget(todoWidget);
@@ -38,7 +37,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
     //临时解决方案：创建一个todo再删除以达到样式设置的目的
     QHBoxLayout *todosLayout =new QHBoxLayout();
     ToDo *todo=new ToDo(todoWidget);
-    scrollArea->setFixedSize(208, 200);
+    scrollArea->setFixedSize(208, 170);
     todo->checkBox->setChecked(false);
     todo->checkBox->setFixedHeight(16);
     todo->line->setText("");
@@ -70,7 +69,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             QHBoxLayout *todosLayout =new QHBoxLayout();
 
             ToDo *todo=new ToDo(todoWidget);
-            scrollArea->setFixedSize(208, 200);
+            scrollArea->setFixedSize(208, 198);
             todo->checkBox->setChecked(todoItem.completed);
             todo->checkBox->setFixedHeight(16);
             todo->line->setText(todoItem.name);
@@ -165,7 +164,7 @@ void TodoClassManager::loadFromJsonFile(){
 
     //创建文件路径
     QDir home = QDir::home();
-    QString configPath = home.filePath(".config/sparkassistant");
+    QString configPath = home.filePath(".config/sakuraassistant");
     QDir dir(configPath);
     if (!dir.exists()) {
         dir.mkpath(".");
@@ -238,7 +237,7 @@ void TodoClassManager::delJsonFile()
 //    QJsonDocument fixedDoc;
 //    fixedDoc=doc;
     QDir home = QDir::home();
-    QString configPath = home.filePath(".config/sparkassistant");
+    QString configPath = home.filePath(".config/sakuraassistant");
     QDir dir(configPath);
     QString path = dir.filePath("todo.json");
     QFile file;

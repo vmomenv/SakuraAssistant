@@ -11,6 +11,9 @@
 #include<QProcess>
 #include<DSpinner>
 #include<todoclassmanager.h>
+#include<passbook.h>
+#include<QSystemTrayIcon>
+
 DWIDGET_USE_NAMESPACE
 class MainWindow :public DMainWindow
 {
@@ -27,11 +30,12 @@ private:
     int desktopHeight = desktop->height();
 
     DPushButton *sysUpdateButton;
-    DPushButton *appUpdateButton;
+    DPushButton *passbookButton;
 
     DLabel *weatherCity;
     DLabel *weatherTemperature;
     DLabel *weatherPic;
+    TodoClassManager *todo;
 
     bool isUpdating;
 
@@ -45,9 +49,11 @@ protected:
     void updateUpdateButton();
     void weather();
     void setToDo();
+    void setMonitor();
 
 private slots:
     void on_sysUpdateButton_clicked();
+    void on_passbookButton_clicked();
     bool eventFilter(QObject *,QEvent *);
 
 
