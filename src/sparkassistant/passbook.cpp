@@ -183,9 +183,11 @@ PassBook::PassBook(DWidget *parent)
     } else {
         qDebug() << "不包含credentials已加密";
         doc=QJsonDocument::fromJson(decryptJsonFile(jsonData,"1"));
-        QJsonObject jsonObj = doc.object();
+        jsonObj = doc.object();
         qDebug()<<"jsonobj"<<jsonObj;
     }
+    qDebug()<<"jsonobj"<<jsonObj;
+
     QJsonArray credentialsArray = jsonObj["credentials"].toArray();
     qDebug()<<"显示数据";
 
