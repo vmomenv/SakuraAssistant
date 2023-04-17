@@ -37,19 +37,23 @@ public:
     bool eventFilter(QObject *watched, QEvent *event);
     void saveToJsonFile(QString targetName,QString username,QString password,int i,bool isDel,bool isAdd);
     void delJsonFile();
+    void enterPassWord(QString &password);
     QByteArray encryptJsonFile(QJsonDocument doc,const QString& password);
     QByteArray decryptJsonFile(QByteArray jsonData, const QString& password);
+    void passMainWindow();
 
     ~PassBook();
 
 
 private:
+    QWidget *passMainWidget;
     QWidget *titleWidget;
     QWidget *searchWidget;
     QLineEdit *searchEdit;
     QHBoxLayout *searchEditLayout;
     QLabel *searchPicLabel;
     QWidget *passWidget;
+    QWidget *enterPassWidget;
     QLabel *label;
     QLabel *passwordLabel;
     QLabel *usernameLabel;
@@ -71,6 +75,10 @@ private:
     QPushButton *addPassButton;
     QSpacerItem *passbookSpacer;//底部弹簧
     QJsonDocument doc;
+    QLineEdit* setPassword;
+    QLineEdit* confirmPassword;
+    QPushButton *confirmButton;
+    QString *password;
     bool isUpdating;
     int *addIndex;
 

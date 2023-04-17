@@ -13,7 +13,7 @@
 #include<todoclassmanager.h>
 #include<passbook.h>
 #include<QSystemTrayIcon>
-
+#include<passbookpassword.h>
 DWIDGET_USE_NAMESPACE
 class MainWindow :public DMainWindow
 {

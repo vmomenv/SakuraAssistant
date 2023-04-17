@@ -8,7 +8,6 @@
 
 PassBook::PassBook(DWidget *parent)
 {
-
     isUpdating=false;
     setFixedSize(861,490);
     titlebar()->setFixedHeight(0);
@@ -291,7 +290,7 @@ PassBook::PassBook(DWidget *parent)
             // 连接copyButton的点击事件
             connect(copyButton, &QPushButton::clicked, [=] {
             QApplication::clipboard()->setText(passwordLineEdit->text());
-            });        
+            });
 
             connect(delButton ,&QPushButton::clicked, this, [=](){
                 credentialWidget->setParent(nullptr);
@@ -409,6 +408,7 @@ PassBook::PassBook(DWidget *parent)
     //将弹簧加入布局
     allCredentialsLayout->addItem(passbookSpacer);
     allCredentialsWidget->setLayout(allCredentialsLayout);
+
 }
 bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
 {
@@ -499,6 +499,8 @@ void PassBook::delJsonFile()
     file.close();
 }
 
+
+
 QByteArray PassBook::encryptJsonFile(QJsonDocument doc,const QString &password)
 {
     QString key = "0123456789012345";
@@ -528,5 +530,12 @@ QByteArray PassBook::decryptJsonFile(QByteArray jsonData, const QString &passwor
 
 }
 
+void PassBook::passMainWindow()
+{
+
+}
+
 PassBook::~PassBook() {
 }
+
+
