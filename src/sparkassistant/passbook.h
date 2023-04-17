@@ -20,6 +20,12 @@
 #include<QSpacerItem>
 #include<QDir>
 #include<QVBoxLayout>
+#include "aesencrypt.h"
+#include <QCoreApplication>
+#include <QCryptographicHash>
+#include <QVector>
+#include <QDebug>
+#include "qaesencryption.h"
 #include "labelbutton.h"
 DWIDGET_USE_NAMESPACE
 
@@ -31,6 +37,9 @@ public:
     bool eventFilter(QObject *watched, QEvent *event);
     void saveToJsonFile(QString targetName,QString username,QString password,int i,bool isDel,bool isAdd);
     void delJsonFile();
+    QByteArray encryptJsonFile(QJsonDocument doc,const QString& password);
+    QByteArray decryptJsonFile(QByteArray jsonData, const QString& password);
+
     ~PassBook();
 
 
