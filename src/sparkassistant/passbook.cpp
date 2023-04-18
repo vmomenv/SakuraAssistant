@@ -6,7 +6,7 @@
 #include<QVBoxLayout>
 #include<QFormLayout>
 
-PassBook::PassBook(QString password, DWidget *parent)
+PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(accountPassword)
 {
     isUpdating=false;
     setFixedSize(861,490);
@@ -181,7 +181,7 @@ PassBook::PassBook(QString password, DWidget *parent)
         qDebug() << "包含credentials字段，未加密";
     } else {
         qDebug() << "不包含credentials已加密";
-        doc=QJsonDocument::fromJson(decryptJsonFile(jsonData,"1"));
+        doc=QJsonDocument::fromJson(decryptJsonFile(jsonData,accountPassword));
         jsonObj = doc.object();
         qDebug()<<"jsonobj"<<jsonObj;
     }
@@ -421,7 +421,7 @@ bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
         if (QApplication::activeWindow() != this)
         {
             if(this->isUpdating==false){
-                delJsonFile();
+                delJsonFile(m_accountPassword);
                 this->hide();
             }
         }
@@ -458,7 +458,7 @@ void PassBook::saveToJsonFile(QString targetName, QString username, QString pass
 }
 
 
-void PassBook::delJsonFile()
+void PassBook::delJsonFile(QString accountPassword)
 {
 
 
@@ -495,19 +495,19 @@ void PassBook::delJsonFile()
         qDebug() <<"File open!";
     }
     file.resize(0);
-    file.write(encryptJsonFile(doc,"23"));
+    qDebug()<<"加密时秘钥"<<accountPassword;
+    file.write(encryptJsonFile(doc,accountPassword));
     file.close();
 }
 
 
 
-QByteArray PassBook::encryptJsonFile(QJsonDocument doc,const QString &password)
+QByteArray PassBook::encryptJsonFile(QJsonDocument doc,const QString accountPassword)
 {
-    QString key = "0123456789012345";
     QAESEncryption encryption(QAESEncryption::AES_128, QAESEncryption::ECB, QAESEncryption::PKCS7);
     QByteArray utf8Data = doc.toJson(QJsonDocument::Compact);
     QString str = QString::fromUtf8(utf8Data.constData(), utf8Data.size());
-    QByteArray enBA = encryption.encode(str.toUtf8(), key.toUtf8());
+    QByteArray enBA = encryption.encode(str.toUtf8(), accountPassword.toUtf8());
     QByteArray enBABase64 = enBA.toBase64();
     qDebug()<<"enBABase64"<<enBABase64;
     enBA = QByteArray::fromBase64(enBABase64);
@@ -518,11 +518,10 @@ QByteArray PassBook::encryptJsonFile(QJsonDocument doc,const QString &password)
 
 }
 
-QByteArray PassBook::decryptJsonFile(QByteArray jsonData, const QString &password)
+QByteArray PassBook::decryptJsonFile(QByteArray jsonData, const QString accountPassword)
 {
-    QString key = "0123456789012345";
     QAESEncryption encryption(QAESEncryption::AES_128, QAESEncryption::ECB, QAESEncryption::PKCS7);
-    QByteArray deBA = encryption.decode(jsonData, key.toUtf8());
+    QByteArray deBA = encryption.decode(jsonData, accountPassword.toUtf8());
     qDebug()<<deBA;
     return QAESEncryption::RemovePadding(deBA, QAESEncryption::PKCS7);
 

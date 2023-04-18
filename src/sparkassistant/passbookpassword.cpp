@@ -2,7 +2,6 @@
 
 passbookPassword::passbookPassword()
 {
-    QString *password=new QString;
     QDir home = QDir::home();
     QString dataPath = home.filePath(".config/sakuraassistant");
     QDir dir(dataPath);
@@ -32,21 +31,21 @@ passbookPassword::passbookPassword()
     QJsonObject jsonObj = doc.object();
     if (jsonObj.contains("credentials")) {
         qDebug() << "包含credentials字段，未加密";
-        QWidget *enterPassWidget=new QWidget;
-        enterPassWidget->setWindowTitle("密码本");
-        enterPassWidget->setFixedSize(550,303);
-        QLineEdit *setPassword=new QLineEdit(enterPassWidget);
-        QLineEdit *confirmPassword=new QLineEdit(enterPassWidget);
+        QDialog *enterPassDialog=new QDialog;
+        enterPassDialog->setWindowTitle("密码本");
+        enterPassDialog->setFixedSize(550,303);
+        QLineEdit *setPassword=new QLineEdit(enterPassDialog);
+        QLineEdit *confirmPassword=new QLineEdit(enterPassDialog);
         setPassword->setFixedSize(240,31);
         confirmPassword->setFixedSize(240,31);
         setPassword->move(155,100);
         confirmPassword->move(155,174);
-        QPushButton *confirmButton = new QPushButton("确认",enterPassWidget);
+        QPushButton *confirmButton = new QPushButton("确认",enterPassDialog);
         confirmButton->setFixedSize(100, 31);
         confirmButton->move(225,242);
         setPassword->setPlaceholderText("请设置密码");
         confirmPassword->setPlaceholderText("请再次输入密码");
-        QLabel *warning=new QLabel(enterPassWidget);
+        QLabel *warning=new QLabel(enterPassDialog);
         warning->setText("密码用于验证进入密码本并加解密数据，若忘记密码无法找回！");
         warning->setFixedSize(400,28);
         warning->move(75,210);
@@ -55,46 +54,58 @@ passbookPassword::passbookPassword()
             // 密码验证通过，关闭窗口
                 QByteArray ba = QCryptographicHash::hash(confirmPassword->text().toUtf8(), QCryptographicHash::Md5);
                 QString a=QString(ba.toHex().left(16));
-                *password=a;
-                qDebug()<<*password;
-                enterPassWidget->hide();
+                m_password=a;
+                enterPassDialog->hide();
 
             } else {
             // 密码不一致，弹出提示框
-            QMessageBox::warning(enterPassWidget, "提示", "两次输入的密码不一致！");
+            QMessageBox::warning(enterPassDialog, "提示", "两次输入的密码不一致！");
             }
         });
-        enterPassWidget->show();
+        enterPassDialog->exec();
 
 
     } else {
         qDebug() << "不包含credentials已加密";
 
-        QWidget *enterPassWidget=new QWidget;
-        enterPassWidget->setWindowTitle("密码本");
-        enterPassWidget->setFixedSize(550,303);
-        QLineEdit *confirmPassword=new QLineEdit(enterPassWidget);
+        QDialog *enterPassDialog=new QDialog;
+        enterPassDialog->setWindowTitle("密码本");
+        enterPassDialog->setFixedSize(550,303);
+        QLineEdit *confirmPassword=new QLineEdit(enterPassDialog);
         confirmPassword->setFixedSize(240,31);
         confirmPassword->move(155,118);
         confirmPassword->setPlaceholderText("请输入密码");
 
-        QPushButton *confirmButton = new QPushButton("确认",enterPassWidget);
+        QPushButton *confirmButton = new QPushButton("确认",enterPassDialog);
         confirmButton->setFixedSize(100, 31);
         confirmButton->move(225,242);
 
         QObject::connect(confirmButton, &QPushButton::clicked, [=]{
             QByteArray ba = QCryptographicHash::hash(confirmPassword->text().toUtf8(), QCryptographicHash::Md5);
-//            qDebug()<<QJsonDocument::fromJson(PassBook::decryptJsonFile(jsonData,QString(ba.toHex().left(16))));
-            if (jsonObj.contains("credentials")) {
-                *password = QString(ba.toHex().left(16));
+            QString password = QString(ba.toHex().left(16));
+
+            QAESEncryption encryption(QAESEncryption::AES_128, QAESEncryption::ECB, QAESEncryption::PKCS7);
+            QByteArray deBA = encryption.decode(jsonData, password.toUtf8());
+           QByteArray newJsonData = QAESEncryption::RemovePadding(deBA, QAESEncryption::PKCS7);
+           QJsonDocument newDoc=QJsonDocument::fromJson(newJsonData);
+           QJsonObject newJsonObj = newDoc.object();
+            if (newJsonObj.contains("credentials")) {
+                m_password = QString(ba.toHex().left(16));
+                enterPassDialog->hide();
             } else {
-                QMessageBox::warning(enterPassWidget, "提示", "密码错误！");
+                QMessageBox::warning(enterPassDialog, "提示", "密码错误！");
 
             }
 
         });
-        enterPassWidget->show();
+        enterPassDialog->exec();
 
     }
 
+}
+
+QString passbookPassword::getPassword()
+{
+
+    return m_password;
 }

@@ -36,13 +36,14 @@ public:
     explicit PassBook(QString password,DWidget *parent = nullptr);
     bool eventFilter(QObject *watched, QEvent *event);
     void saveToJsonFile(QString targetName,QString username,QString password,int i,bool isDel,bool isAdd);
-    void delJsonFile();
+    void delJsonFile(QString accountPassword);
     void enterPassWord(QString &password);
-    QByteArray encryptJsonFile(QJsonDocument doc,const QString& password);
-    QByteArray decryptJsonFile(QByteArray jsonData, const QString& password);
+    QByteArray encryptJsonFile(QJsonDocument doc,const QString password);
+    QByteArray decryptJsonFile(QByteArray jsonData, const QString password);
     void passMainWindow();
 
     ~PassBook();
+
 
 
 private:
@@ -81,6 +82,7 @@ private:
     QString *password;
     bool isUpdating;
     int *addIndex;
+    QString m_accountPassword;
 
 
 signals:
