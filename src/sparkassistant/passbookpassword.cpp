@@ -89,6 +89,7 @@ passbookPassword::passbookPassword()
            QByteArray newJsonData = QAESEncryption::RemovePadding(deBA, QAESEncryption::PKCS7);
            QJsonDocument newDoc=QJsonDocument::fromJson(newJsonData);
            QJsonObject newJsonObj = newDoc.object();
+           qDebug()<<deBA;
             if (newJsonObj.contains("credentials")) {
                 m_password = QString(ba.toHex().left(16));
                 enterPassDialog->hide();

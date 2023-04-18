@@ -309,7 +309,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
         QWidget *credentialWidget=new QWidget(allCredentialsWidget);
         credentialWidget->setFixedSize(816,53);
         saveToJsonFile("","","",*addIndex,false,true);//新增一条
-
+        index++;
         QLineEdit *targetNameLineEdit = new QLineEdit(credentialWidget);
         targetNameLineEdit->setFont(QFont("Arial", 13));
         targetNameLineEdit->setAlignment(Qt::AlignCenter);
@@ -408,7 +408,6 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     //将弹簧加入布局
     allCredentialsLayout->addItem(passbookSpacer);
     allCredentialsWidget->setLayout(allCredentialsLayout);
-
 }
 bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
 {
