@@ -274,8 +274,9 @@ void MainWindow::destructToDo()
 }
 
 void MainWindow::on_passbookButton_clicked(){
-
-    PassBook *passBook=new PassBook;
+//    passbookPassword *pbp=new passbookPassword;
+    QString password="1";
+    PassBook *passBook=new PassBook(password);
     passBook->show();
 }
 MainWindow::~MainWindow(){

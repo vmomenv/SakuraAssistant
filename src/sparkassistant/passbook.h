@@ -33,7 +33,7 @@ class PassBook : public DMainWindow
 {
     Q_OBJECT
 public:
-    explicit PassBook(DWidget *parent = nullptr);
+    explicit PassBook(QString password,DWidget *parent = nullptr);
     bool eventFilter(QObject *watched, QEvent *event);
     void saveToJsonFile(QString targetName,QString username,QString password,int i,bool isDel,bool isAdd);
     void delJsonFile();

@@ -6,7 +6,7 @@
 #include<QVBoxLayout>
 #include<QFormLayout>
 
-PassBook::PassBook(DWidget *parent)
+PassBook::PassBook(QString password, DWidget *parent)
 {
     isUpdating=false;
     setFixedSize(861,490);
