@@ -408,6 +408,155 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     //将弹簧加入布局
     allCredentialsLayout->addItem(passbookSpacer);
     allCredentialsWidget->setLayout(allCredentialsLayout);
+
+
+    connect(searchEdit, &QLineEdit::editingFinished, this,[=]{
+        delete allCredentialsWidget;
+        QJsonArray search_resultArray;//放置搜索出来的json数据
+        QString searchKeyword = searchEdit->text();
+        QJsonObject searchJsonObj = doc.object();
+        QJsonArray search_credentialsArray = searchJsonObj["credentials"].toArray();
+        for (int i=0;i<search_credentialsArray.size();i++) {
+           QJsonObject search_credentialObj = search_credentialsArray[i].toObject();
+           QString targetName = search_credentialObj["targetName"].toString().toLower();
+           if (targetName.contains(searchKeyword)) {
+//            将符合搜索条件的凭据添加到新JSON对象中
+           QJsonObject newCredential;
+           newCredential["targetName"] = search_credentialObj["targetName"].toString();
+           newCredential["username"] = search_credentialObj["username"].toString();
+           newCredential["password"] = search_credentialObj["password"].toString();
+           newCredential["index"]=i;
+           search_resultArray.append(newCredential);
+          }
+        }
+        qDebug()<<"new"<<search_resultArray;
+        // 将结果转换为标准的JSON格式
+
+        QWidget *allCredentialsWidget=new QWidget(scrollArea);
+        QVBoxLayout *allCredentialsLayout=new QVBoxLayout(allCredentialsWidget);//设置样式
+        scrollArea->setWidget(allCredentialsWidget);//设置滚动
+        // 初始化布局
+        QWidget *credentialWidget=new QWidget(allCredentialsWidget);
+        credentialWidget->resize(816,53);
+        credentialWidget->deleteLater();
+        credentialWidget->setParent(nullptr);
+        if(search_resultArray.size()!=0){
+            for(int i=0;i<search_resultArray.size();i++){
+                QJsonObject search_credentialObj = search_resultArray[i].toObject();
+                QString search_targetName = search_credentialObj["targetName"].toString();
+                QString search_username = search_credentialObj["username"].toString();
+                QString search_password = search_credentialObj["password"].toString();
+                int search_index=search_credentialObj["index"].toInt();
+                qDebug()<<search_targetName<<search_username;
+                if(search_credentialObj.value("isDel").toBool()==true){
+                    continue;
+                }
+
+                // 创建 QLineEdit 控件
+                QWidget *credentialWidget=new QWidget(allCredentialsWidget);
+                credentialWidget->setFixedSize(816,53);
+
+
+                QLineEdit *targetNameLineEdit = new QLineEdit(credentialWidget);
+                targetNameLineEdit->setFont(QFont("Arial", 13));
+                targetNameLineEdit->setAlignment(Qt::AlignCenter);
+                targetNameLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
+                targetNameLineEdit->setFixedSize(286, 40);
+                targetNameLineEdit->setText(search_targetName);
+                targetNameLineEdit->setPlaceholderText("网址/app名称/服务器地址");
+                targetNameLineEdit->move(0,0);
+
+                QLineEdit *usernameLineEdit = new QLineEdit(credentialWidget);
+                usernameLineEdit->setFont(QFont("Arial", 13));
+                usernameLineEdit->setAlignment(Qt::AlignCenter);
+                usernameLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
+                usernameLineEdit->setFixedSize(192, 40);
+                usernameLineEdit->setText(search_username);
+                usernameLineEdit->setPlaceholderText("请输入您的账户");
+                usernameLineEdit->move(305,0);
+
+                QLineEdit *passwordLineEdit = new QLineEdit(credentialWidget);
+                passwordLineEdit->setFont(QFont("Arial", 13));
+                passwordLineEdit->setAlignment(Qt::AlignCenter);
+                passwordLineEdit->setStyleSheet("background-color: #C3C9D3;border-radius: 6px;");
+                passwordLineEdit->setEchoMode(QLineEdit::Password);
+                passwordLineEdit->setFixedSize(256, 40);
+                passwordLineEdit->setTextMargins(40, 0, 40, 0);
+                passwordLineEdit->setText(search_password);
+                passwordLineEdit->setPlaceholderText("请输入您的密码");
+                passwordLineEdit->move(515,0);
+
+                // 创建QPushButton控件用于切换明文和暗文
+                QPushButton *showPasswordButton = new QPushButton(credentialWidget);
+                showPasswordButton->setFixedSize(31, 31);
+                showPasswordButton->move(520, 5);
+                showPasswordButton->setIcon(QIcon(":/res/passbook/showPass.png"));
+                showPasswordButton->setIconSize(QSize(31,31));
+                showPasswordButton->setStyleSheet("border:none; background-color:transparent;");
+
+                // 创建QPushButton控件用于复制内容
+                QPushButton *copyButton = new QPushButton(credentialWidget);
+                copyButton->setFixedSize(30, 30);
+                copyButton->move(738, 5);
+                copyButton->setIcon(QIcon(":/res/passbook/copy.png"));
+                copyButton->setIconSize(QSize(30, 30));
+                copyButton->setStyleSheet("border:none; background-color:transparent;");
+                //创建删除按钮
+                QPushButton *delButton=new QPushButton(credentialWidget);
+                QPixmap delPix(":/res/passbook/delete.png");
+                delButton->setIcon(delPix);
+                delButton->setFixedSize(38,38);
+                delButton->move(779,0);
+                delButton->setIconSize(QSize(31,31));
+                delButton->setStyleSheet("border:none; background-color:transparent;");
+
+
+                //对一条内容进行布局
+                allCredentialsLayout->addWidget(credentialWidget);
+                // 连接showPasswordButton的点击事件
+                connect(showPasswordButton, &QPushButton::clicked, [=] {
+                if (passwordLineEdit->echoMode() == QLineEdit::Password) {
+
+                passwordLineEdit->setEchoMode(QLineEdit::Normal);
+                } else {
+                passwordLineEdit->setEchoMode(QLineEdit::Password);
+                }
+                });
+                //修改完成进行保存
+                connect(targetNameLineEdit, &QLineEdit::editingFinished, this, [=](){
+                    this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),search_index,false,false);
+                });
+                connect(usernameLineEdit, &QLineEdit::editingFinished, this, [=](){
+                    this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),search_index,false,false);
+
+                });
+                connect(passwordLineEdit, &QLineEdit::editingFinished, this, [=](){
+                    this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),search_index,false,false);
+
+                });
+
+
+
+                // 连接copyButton的点击事件
+                connect(copyButton, &QPushButton::clicked, [=] {
+                QApplication::clipboard()->setText(passwordLineEdit->text());
+                });
+
+                connect(delButton ,&QPushButton::clicked, this, [=](){
+                    credentialWidget->setParent(nullptr);
+                    qDebug()<<"正在删除第"<<i<<"组件";
+                    this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),search_index,true,false);
+
+                });
+
+            }
+        }
+        scrollArea->update();
+
+      });
+
+
+
 }
 bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
 {

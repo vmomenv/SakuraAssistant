@@ -83,6 +83,7 @@ private:
     bool isUpdating;
     int *addIndex;
     QString m_accountPassword;
+    QJsonArray search_resultArray;
 
 
 signals:
