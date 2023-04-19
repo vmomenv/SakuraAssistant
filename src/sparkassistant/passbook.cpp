@@ -424,6 +424,9 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
            if (targetName.contains(searchKeyword)) {
 //            将符合搜索条件的凭据添加到新JSON对象中
            QJsonObject newCredential;
+           if(search_credentialObj.value("isDel").toBool()==true){
+               continue;
+           }
            newCredential["targetName"] = search_credentialObj["targetName"].toString();
            newCredential["username"] = search_credentialObj["username"].toString();
            newCredential["password"] = search_credentialObj["password"].toString();
