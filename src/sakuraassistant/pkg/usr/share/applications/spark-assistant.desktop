@@ -1,0 +1,16 @@
+[Desktop Entry]
+Categories=Application;
+Comment=spark-assistant
+Comment[zh_CN]=星火小助手
+Exec=/usr/bin/spark-assistant %F
+GenericName=spark-assistant
+GenericName[zh_CN]=星火小助手
+Icon=spark-assistant
+Name=spark-assistant
+Name[zh_CN]=星火小助手
+StartupNotify=false
+Terminal=false
+Type=Application
+Version=1.0.0.2
+X-Deepin-ManualID=spark-assistant
+X-Deepin-Vendor=user-custom
