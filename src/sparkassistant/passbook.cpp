@@ -410,8 +410,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     allCredentialsWidget->setLayout(allCredentialsLayout);
 
 
-    connect(searchEdit, &QLineEdit::editingFinished, this,[=]{
-        delete allCredentialsWidget;
+    connect(searchEdit, &QLineEdit::returnPressed, this,[=]{
         QJsonArray search_resultArray;//放置搜索出来的json数据
         QString searchKeyword = searchEdit->text();
         QJsonObject searchJsonObj = doc.object();
@@ -551,6 +550,11 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
 
             }
         }
+        //设置密码条目底部弹簧
+        QSpacerItem* passbookSpacer = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        //将弹簧加入布局
+        allCredentialsLayout->addItem(passbookSpacer);
+        allCredentialsWidget->setLayout(allCredentialsLayout);
         scrollArea->update();
 
       });
