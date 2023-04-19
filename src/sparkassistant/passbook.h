@@ -20,6 +20,12 @@
 #include<QSpacerItem>
 #include<QDir>
 #include<QVBoxLayout>
+#include "aesencrypt.h"
+#include <QCoreApplication>
+#include <QCryptographicHash>
+#include <QVector>
+#include <QDebug>
+#include "qaesencryption.h"
 #include "labelbutton.h"
 DWIDGET_USE_NAMESPACE
 
@@ -27,20 +33,28 @@ class PassBook : public DMainWindow
 {
     Q_OBJECT
 public:
-    explicit PassBook(DWidget *parent = nullptr);
+    explicit PassBook(QString password,DWidget *parent = nullptr);
     bool eventFilter(QObject *watched, QEvent *event);
     void saveToJsonFile(QString targetName,QString username,QString password,int i,bool isDel,bool isAdd);
-    void delJsonFile();
+    void delJsonFile(QString accountPassword);
+    void enterPassWord(QString &password);
+    QByteArray encryptJsonFile(QJsonDocument doc,const QString password);
+    QByteArray decryptJsonFile(QByteArray jsonData, const QString password);
+    void passMainWindow();
+
     ~PassBook();
 
 
+
 private:
+    QWidget *passMainWidget;
     QWidget *titleWidget;
     QWidget *searchWidget;
     QLineEdit *searchEdit;
     QHBoxLayout *searchEditLayout;
     QLabel *searchPicLabel;
     QWidget *passWidget;
+    QWidget *enterPassWidget;
     QLabel *label;
     QLabel *passwordLabel;
     QLabel *usernameLabel;
@@ -62,8 +76,14 @@ private:
     QPushButton *addPassButton;
     QSpacerItem *passbookSpacer;//底部弹簧
     QJsonDocument doc;
+    QLineEdit* setPassword;
+    QLineEdit* confirmPassword;
+    QPushButton *confirmButton;
+    QString *password;
     bool isUpdating;
     int *addIndex;
+    QString m_accountPassword;
+    QJsonArray search_resultArray;
 
 
 signals:

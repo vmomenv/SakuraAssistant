@@ -18,7 +18,8 @@ HEADERS += \
     aesni/aesni-enc-ecb.h \
     aesni/aesni-key-exp.h \
     qaesencryption.h \
-    labelbutton.h
+    labelbutton.h \
+    passbookpassword.h
 
 SOURCES += \
     main.cpp \
@@ -31,7 +32,8 @@ SOURCES += \
     passbook.cpp \
     aesencrypt.cpp \
     qaesencryption.cpp \
-    labelbutton.cpp
+    labelbutton.cpp \
+    passbookpassword.cpp
 
 RESOURCES += \
     resources.qrc
