@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 3.5.1)
 
-project(spark-assistant LANGUAGES CXX VERSION 1.0.3)
+project(spark-assistant LANGUAGES CXX VERSION 2.0.1)
 
 include(cmake/SparkEnvConfig.cmake)
 include(cmake/SparkMacrosConfig.cmake)
