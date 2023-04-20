@@ -126,13 +126,15 @@ void passbookPassword::login()
     confirmPasswordEdit->setFixedSize(508,53);
     confirmPasswordEdit->move(177,191);
 
+    QPushButton *confirmButton = new QPushButton("确认",loginWidget);
+    confirmButton->setFixedSize(127,53);
+    confirmButton->move(558,268);
+
     QPushButton *changeButton = new QPushButton("更改密码",loginWidget);
     changeButton->setFixedSize(127,53);
     changeButton->move(177,268);
 
-    QPushButton *confirmButton = new QPushButton("确认",loginWidget);
-    confirmButton->setFixedSize(127,53);
-    confirmButton->move(558,268);
+
 
     QObject::connect(confirmButton, &QPushButton::clicked, [=]{
         QString tmppassword=confirmPasswordEdit->text();

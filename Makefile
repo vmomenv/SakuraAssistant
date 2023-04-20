@@ -7,7 +7,7 @@ ifneq ("$(OSID)", "")
 SUFFIX=_$(OSID)$(OSRELEASE)
 endif
 
-PROJECT_NAME=spark-assistant
+PROJECT_NAME=sakura-assistant
 
 all:
 	mkdir -p build

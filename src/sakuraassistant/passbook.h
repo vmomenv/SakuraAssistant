@@ -27,6 +27,10 @@
 #include <QDebug>
 #include "qaesencryption.h"
 #include "labelbutton.h"
+#include<QProcess>
+#include<QDesktopServices>
+#include<QDirIterator>
+#include<QScrollBar>
 DWIDGET_USE_NAMESPACE
 
 class PassBook : public DMainWindow
@@ -84,6 +88,8 @@ private:
     int *addIndex;
     QString m_accountPassword;
     QJsonArray search_resultArray;
+    QPushButton *importButton;
+    QPushButton *exportButton;
 
 
 signals:

@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 3.5.1)
 
-project(spark-assistant LANGUAGES CXX VERSION 1.0.3)
+project(sakura-assistant LANGUAGES CXX VERSION 2.1.0)
 
 include(cmake/SparkEnvConfig.cmake)
 include(cmake/SparkMacrosConfig.cmake)
@@ -11,10 +11,10 @@ include(cmake/SparkFindQt5Config.cmake)
 include(cmake/SparkFindDtkConfig.cmake)
 
 # 资源文件路径
-set(QRC_SOURCES "src/sparkassistant/resources.qrc")
+set(QRC_SOURCES "src/sakuraassistant/resources.qrc")
 
 # 基于指定目录与给定的 qrc 文件构建可执行目标
-spark_add_executable_path(${PROJECT_NAME} src/sparkassistant
+spark_add_executable_path(${PROJECT_NAME} src/sakuraassistant
     ${QRC_SOURCES}
 )
 target_link_qt5(${PROJECT_NAME})
@@ -26,7 +26,7 @@ include(cmake/SparkBuildGraphviz.cmake)
 set(CMAKE_INSTALL_PREFIX "/usr")
 install(TARGETS ${PROJECT_NAME}
     DESTINATION bin)
-install(DIRECTORY src/sparkassistant/pkg/usr
+install(DIRECTORY src/sakuraassistant/pkg/usr
     DESTINATION "/")
 
 # deb 构建支持

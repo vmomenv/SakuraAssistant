@@ -26,7 +26,7 @@
 #include<QPalette>
 MainWindow::MainWindow(DWidget *parent)
 {
-//    isUpdating=true;
+    isUpdating=false;
     setFixedSize(230,376);
     titlebar()->setFixedHeight(0);
     setFocusPolicy(Qt::ClickFocus);
@@ -219,7 +219,10 @@ void MainWindow::on_sysUpdateButton_clicked(){
                 item->setHidden(true);
             }
         }
+        QMessageBox::warning(this, "提示", "已完成一项更新");
     });
+    QMessageBox::warning(this, "提示", "所选内容已全部更新！");
+
     resultDialog->exec();
 
 

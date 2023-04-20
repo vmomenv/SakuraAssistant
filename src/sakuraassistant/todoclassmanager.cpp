@@ -74,6 +74,8 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             todo->checkBox->setFixedHeight(16);
             todo->line->setText(todoItem.name);
             todo->line->setFixedHeight(40);
+            todo->line->setToolTip(todo->line->text());//设置文本悬浮
+            todo->line->setMouseTracking(true);
             todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
             todo->delBtn->setFixedHeight(40);
 
@@ -88,6 +90,8 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
 
             connect(todo->line, &QLineEdit::editingFinished, this, [=](){
                 this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),i,false,false);
+                todo->line->setToolTip(todo->line->text());
+
             });
             connect(todo->delBtn, &QPushButton::clicked, this, [=](){
     //            todo->checkBox->deleteLater();
@@ -123,6 +127,8 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
         ToDo *todo=new ToDo(this);
         todo->checkBox->setChecked(false);
         todo->line->setText("");
+        todo->line->setToolTip(todo->line->text());//设置文本悬浮
+        todo->line->setMouseTracking(true);
         todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
 
         todo->setLayout(todosLayout);
@@ -138,6 +144,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
 
         connect(todo->line, &QLineEdit::editingFinished, this, [=](){
             this->saveToJsonFile(todo->checkBox->checkState(),todo->line->text(),*addIndex,false,false);
+            todo->line->setToolTip(todo->line->text());
         });
         connect(todo->delBtn, &QPushButton::clicked, this, [=](){
             todo->checkBox->deleteLater();

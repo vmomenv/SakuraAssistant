@@ -15,12 +15,13 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     setFocusPolicy(Qt::ClickFocus);
     installEventFilter(this);//安装事件过滤器
 
-    //设置窗口透明
+//    //设置窗口透明
     setAttribute(Qt::WA_TranslucentBackground);
     QPalette palette = QPalette();
         palette.setColor(QPalette::Background, QColor(0x00,0xFF,0x00,0x00));
     setPalette(palette);
     setEnableBlurWindow(true);//设置高斯模糊
+
 
     this->move(552,342);
     QWidget *titleWidget=new QWidget(this);
@@ -87,7 +88,20 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     addPassButton->setIconSize(QSize(31,31));
     addPassButton->setStyleSheet("border:none; background-color:transparent;");
     addPassButton->move(0,301);
+    //创建导入导出按钮
+    QPushButton *importButton =new QPushButton(passWidget);
+    QPixmap importPixmap(":/res/passbook/import.png");
+    importButton->setIcon(importPixmap);
+    importButton->setIconSize(QSize(31,31));
+    importButton->setStyleSheet("border:none; background-color:transparent;");
+    importButton->move(739,301);
 
+    QPushButton *exportButton =new QPushButton(passWidget);
+    QPixmap exportPixmap(":/res/passbook/export.png");
+    exportButton->setIcon(exportPixmap);
+    exportButton->setIconSize(QSize(31,31));
+    exportButton->setStyleSheet("border:none; background-color:transparent;");
+    exportButton->move(787,301);
 
 
     //文字
@@ -124,6 +138,8 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     QWidget *allCredentialsWidget=new QWidget(scrollArea);
     QVBoxLayout *allCredentialsLayout=new QVBoxLayout(allCredentialsWidget);//设置样式
     scrollArea->setWidget(allCredentialsWidget);//设置滚动
+    scrollArea->setWidgetResizable(true);
+
 
     // 初始化布局
     QWidget *credentialWidget=new QWidget(allCredentialsWidget);
@@ -363,6 +379,8 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
         delButton->setStyleSheet("border:none; background-color:transparent;");
         //将credentialswidget插入布局
         allCredentialsLayout->insertWidget(allCredentialsLayout->count()-1,credentialWidget);
+
+
         // 连接showPasswordButton的点击事件
         connect(showPasswordButton, &QPushButton::clicked, [=] {
         if (passwordLineEdit->echoMode() == QLineEdit::Password) {
@@ -400,6 +418,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
             this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),*addIndex,true,false);
 
         });
+
 
     });
 
@@ -518,6 +537,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
 
                 //对一条内容进行布局
                 allCredentialsLayout->addWidget(credentialWidget);
+
                 // 连接showPasswordButton的点击事件
                 connect(showPasswordButton, &QPushButton::clicked, [=] {
                 if (passwordLineEdit->echoMode() == QLineEdit::Password) {
@@ -664,8 +684,46 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
 
       });
 
+    connect(exportButton,&QPushButton::clicked,this,[=]{
+        this->close();
+        QDir home = QDir::home();
+        QString configPath = home.filePath(".config/sakuraassistant");
+        QString desktopPath = home.filePath("Desktop");
+        QString testPath = desktopPath + "/樱花助手备份";
 
+        // 如果不存在，则复制configPath到testPath
+        QDir dir(configPath);
+        if (dir.exists()) {
+            QDir().mkpath(testPath);
+            QDir(testPath).removeRecursively();  // 先删除目标文件夹，避免复制失败
+            if (!QDir().mkdir(testPath)) {
+                qDebug() << "Failed to create directory" << testPath;
+                return;
+            }
+            QDir().mkpath(testPath);
+            QDir().setNameFilters(QStringList("*"));
+            QDir().setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden);
+            QDirIterator it(configPath, QDirIterator::Subdirectories);
+            while (it.hasNext()) {
+                QString srcPath = it.next();
+                QString dstPath = testPath + "/" + it.fileName();
+                if (QFileInfo(srcPath).isDir()) {
+                    QDir().mkpath(dstPath);
+                }
+                else {
+                    QFile::copy(srcPath, dstPath);
+                }
+            }
+        }
+        qDebug()<<"复制完成";
+        QMessageBox::information(this, "复制成功", "请在桌面查看！");
 
+    });
+    connect(importButton,&QPushButton::clicked,this,[=]{
+        QDir home = QDir::home();
+        QString configPath = home.filePath(".config/sakuraassistant");
+        QDesktopServices::openUrl(QUrl::fromLocalFile(configPath));
+    });
 }
 bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
 {
