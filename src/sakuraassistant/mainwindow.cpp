@@ -79,7 +79,7 @@ void MainWindow::updateUpdateButton(){
     sysUpdateButton =new DPushButton(this);
     sysUpdateButton->resize(97,34);
     sysUpdateButton->move(10,322);
-    sysUpdateButton->setText("系统更新");
+    sysUpdateButton->setText("应用更新");
 //    system("sudo apt update");
 
     passbookButton=new DPushButton(this);
@@ -154,7 +154,7 @@ void MainWindow::setMonitor()
 }
 void MainWindow::on_sysUpdateButton_clicked(){
 
-    isUpdating=true;//正在系统更新，取消失焦关闭动作
+    isUpdating=true;//正在系应用统更新，取消失焦关闭动作
 
 
     QProcess processUpdate;//apt update
@@ -168,7 +168,7 @@ void MainWindow::on_sysUpdateButton_clicked(){
     processList.start("bash", QStringList() << "-c" << "apt list --upgradable");
     processList.waitForFinished();
 
-    //将系统更新信息放入updateResult中
+    //将应用更新信息放入updateResult中
     QString updateResult;
     updateResult = processList.readAllStandardOutput();
 //    QProcess::startDetached("pkexec apt-get update && apt-get upgrade");
@@ -217,11 +217,13 @@ void MainWindow::on_sysUpdateButton_clicked(){
                 updatedResult = process.readAllStandardOutput();//更新后信息输出
                 qDebug()<<updatedResult;
                 item->setHidden(true);
+                QMessageBox::warning(this, "提示", "已完成一项更新");
+
             }
         }
-        QMessageBox::warning(this, "提示", "已完成一项更新");
+        QMessageBox::warning(this, "提示", "所选内容已全部更新！");
+
     });
-    QMessageBox::warning(this, "提示", "所选内容已全部更新！");
 
     resultDialog->exec();
 
