@@ -26,7 +26,7 @@
 #include<QPalette>
 MainWindow::MainWindow(DWidget *parent)
 {
-//    isUpdating=true;
+    isUpdating=false;
     setFixedSize(230,376);
     titlebar()->setFixedHeight(0);
     setFocusPolicy(Qt::ClickFocus);
