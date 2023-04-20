@@ -43,10 +43,10 @@ target.path=/usr/bin
 
 
 icon.path =/usr/share/icons
-icon.files+= pkg/usr/share/icons/hicolor/scalable/apps/spark-store.svg
+icon.files+= pkg/usr/share/icons/hicolor/scalable/apps/sakura.svg
 
 desktop.path = /usr/share/applications/
-desktop.files+= pkg/usr/share/applications/sparkassistant.desktop
+desktop.files+= pkg/usr/share/applications/sakura-assistant.desktop
 !isEmpty(target.path): INSTALLS += target icon desktop
 
 FORMS +=

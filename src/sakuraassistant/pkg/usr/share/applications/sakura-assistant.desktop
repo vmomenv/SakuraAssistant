@@ -1,0 +1,16 @@
+[Desktop Entry]
+Categories=Application;
+Comment=sakura-assistant
+Comment[zh_CN]=樱花助手
+Exec=/usr/bin/sakura-assistant %F
+GenericName=sakura-assistant
+GenericName[zh_CN]=樱花助手
+Icon=sakura-assistant
+Name=sakura-assistant
+Name[zh_CN]=樱花助手
+StartupNotify=false
+Terminal=false
+Type=Application
+Version=1.0.0.2
+X-Deepin-ManualID=sakura-assistant
+X-Deepin-Vendor=user-custom
