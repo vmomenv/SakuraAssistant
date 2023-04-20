@@ -138,6 +138,8 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     QWidget *allCredentialsWidget=new QWidget(scrollArea);
     QVBoxLayout *allCredentialsLayout=new QVBoxLayout(allCredentialsWidget);//设置样式
     scrollArea->setWidget(allCredentialsWidget);//设置滚动
+    scrollArea->setWidgetResizable(true);
+
 
     // 初始化布局
     QWidget *credentialWidget=new QWidget(allCredentialsWidget);
@@ -377,6 +379,8 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
         delButton->setStyleSheet("border:none; background-color:transparent;");
         //将credentialswidget插入布局
         allCredentialsLayout->insertWidget(allCredentialsLayout->count()-1,credentialWidget);
+
+
         // 连接showPasswordButton的点击事件
         connect(showPasswordButton, &QPushButton::clicked, [=] {
         if (passwordLineEdit->echoMode() == QLineEdit::Password) {
@@ -414,6 +418,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
             this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),*addIndex,true,false);
 
         });
+
 
     });
 
@@ -532,6 +537,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
 
                 //对一条内容进行布局
                 allCredentialsLayout->addWidget(credentialWidget);
+
                 // 连接showPasswordButton的点击事件
                 connect(showPasswordButton, &QPushButton::clicked, [=] {
                 if (passwordLineEdit->echoMode() == QLineEdit::Password) {

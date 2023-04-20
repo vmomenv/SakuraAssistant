@@ -30,6 +30,7 @@
 #include<QProcess>
 #include<QDesktopServices>
 #include<QDirIterator>
+#include<QScrollBar>
 DWIDGET_USE_NAMESPACE
 
 class PassBook : public DMainWindow
