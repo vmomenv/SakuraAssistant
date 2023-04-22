@@ -1,18 +1,23 @@
 {
     "credentials": [{
-            "targetName": "Facebook",
-            "username": "john.doe",
-            "password": "p@ssw0rd1"
+            "targetName": "(｡･∀･)ﾉﾞ嗨，这里是密码本",
+            "username": "点击右边的“小灯泡”",
+            "password": "就可以看到密码啦"
         },
         {
-            "targetName": "Gmail",
-            "username": "johndoe@gmail.com",
-            "password": "p@ssw0rd2"
+            "targetName": "诶？这里为什么没有密码？",
+            "username": "点“小灯泡”就生成啦",
+            "password": ""
         },
         {
-            "targetName": "Amazon",
-            "username": "john_doe",
-            "password": "p@ssw0rd3"
+            "targetName": "右下角还有导入导出按钮",
+            "username": "可以用于备份你的数据哦",
+            "password": ""
+        },
+        {
+            "targetName": "www.deepin.org",
+            "username": "momen",
+            "password": "(つ﹏⊂)"
         }
     ]
 }
