@@ -1,16 +1,20 @@
 {
-  "items": [
-    {
-      "name": "Go to the store",
-      "completed": false
-    },
-    {
-      "name": "Buy milk",
-      "completed": true
-    },
-    {
-      "name": "Do laundry",
-      "completed": false
-    }
-  ]
+    "items": [
+        {
+            "completed": false,
+            "name": "嘿嘿！"
+        },
+        {
+            "completed": false,
+            "name": "在界面外点击"
+        },
+        {
+            "completed": false,
+            "name": "应用就会关闭啦"
+        },
+        {
+            "completed": true,
+            "name": "鼠标放这里别动，你就可以看到完整了内容啦~\\(≧▽≦)/~"
+        }
+    ]
 }

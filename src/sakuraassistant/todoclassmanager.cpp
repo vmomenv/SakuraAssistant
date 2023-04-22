@@ -76,6 +76,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             todo->line->setFixedHeight(40);
             todo->line->setToolTip(todo->line->text());//设置文本悬浮
             todo->line->setMouseTracking(true);
+            todo->line->setCursorPosition(0);
             todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
             todo->delBtn->setFixedHeight(40);
 
@@ -230,7 +231,7 @@ void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isD
     itemObj.insert("items", itemArr);
     doc.setObject(itemObj);
     qDebug()<<"保存时doc"<<doc;
-
+    delJsonFile();
 
 
 }
@@ -241,8 +242,8 @@ void TodoClassManager::delJsonFile()
     qDebug()<<"del"<<doc;
 
 
-//    QJsonDocument fixedDoc;
-//    fixedDoc=doc;
+    QJsonDocument fixedDoc;
+    fixedDoc=doc;
     QDir home = QDir::home();
     QString configPath = home.filePath(".config/sakuraassistant");
     QDir dir(configPath);

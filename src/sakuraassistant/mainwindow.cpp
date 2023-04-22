@@ -74,8 +74,6 @@ MainWindow::MainWindow(DWidget *parent)
     if (isUpdating == false) {
         setTopButton->setIcon(QIcon(":/res/passbook/pin.png"));
         this->isUpdating=true;
-        setWindowFlag(Qt::WindowStaysOnTopHint);
-        this->show();
 
 
     } else {
