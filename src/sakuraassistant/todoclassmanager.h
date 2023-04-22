@@ -4,7 +4,8 @@
 #include <QWidget>
 #include<QScrollArea>
 #include<QFile>
-
+#include<QEvent>
+#include<QApplication>
 class TodoClassManager : public QWidget
 {
     Q_OBJECT
@@ -34,5 +35,6 @@ private:
 signals:
 
 public slots:
+
 };
 #endif // TODOCLASSMANAGER_H

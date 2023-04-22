@@ -64,6 +64,25 @@ MainWindow::MainWindow(DWidget *parent)
     setToDo();
     setMonitor();
 
+    QPushButton *setTopButton = new QPushButton(this);
+    setTopButton->setFixedSize(29,29);
+    setTopButton->move(190,12);
+    setTopButton->setIcon(QIcon(":/res/passbook/unPin.png"));
+    setTopButton->setIconSize(QSize(15,15));
+    setTopButton->setStyleSheet("border:none; background-color:transparent;");
+    connect(setTopButton, &QPushButton::clicked, [=] {
+    if (isUpdating == false) {
+        setTopButton->setIcon(QIcon(":/res/passbook/pin.png"));
+        this->isUpdating=true;
+        setWindowFlag(Qt::WindowStaysOnTopHint);
+        this->show();
+
+
+    } else {
+        setTopButton->setIcon(QIcon(":/res/passbook/unPin.png"));
+        this->isUpdating=false;
+    }
+    });
 
 }
 
@@ -79,7 +98,7 @@ void MainWindow::updateUpdateButton(){
     sysUpdateButton =new DPushButton(this);
     sysUpdateButton->resize(97,34);
     sysUpdateButton->move(10,322);
-    sysUpdateButton->setText("系统更新");
+    sysUpdateButton->setText("应用更新");
 //    system("sudo apt update");
 
     passbookButton=new DPushButton(this);
@@ -154,7 +173,7 @@ void MainWindow::setMonitor()
 }
 void MainWindow::on_sysUpdateButton_clicked(){
 
-    isUpdating=true;//正在系统更新，取消失焦关闭动作
+    isUpdating=true;//正在系应用统更新，取消失焦关闭动作
 
 
     QProcess processUpdate;//apt update
@@ -168,7 +187,7 @@ void MainWindow::on_sysUpdateButton_clicked(){
     processList.start("bash", QStringList() << "-c" << "apt list --upgradable");
     processList.waitForFinished();
 
-    //将系统更新信息放入updateResult中
+    //将应用更新信息放入updateResult中
     QString updateResult;
     updateResult = processList.readAllStandardOutput();
 //    QProcess::startDetached("pkexec apt-get update && apt-get upgrade");
@@ -217,11 +236,13 @@ void MainWindow::on_sysUpdateButton_clicked(){
                 updatedResult = process.readAllStandardOutput();//更新后信息输出
                 qDebug()<<updatedResult;
                 item->setHidden(true);
+                QMessageBox::warning(this, "提示", "已完成一项更新");
+
             }
         }
-        QMessageBox::warning(this, "提示", "已完成一项更新");
+        QMessageBox::warning(this, "提示", "所选内容已全部更新！");
+
     });
-    QMessageBox::warning(this, "提示", "所选内容已全部更新！");
 
     resultDialog->exec();
 
@@ -245,8 +266,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)//感谢柚柚帮�
         if (QApplication::activeWindow() != this)
         {
             if(isUpdating==false){
-
-                this->hide();
+                this->close();
             }
         }
     }

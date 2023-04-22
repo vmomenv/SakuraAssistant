@@ -273,6 +273,7 @@ void TodoClassManager::delJsonFile()
     file.write(doc.toJson());
 }
 
+
 TodoClassManager::~TodoClassManager() {
-delJsonFile();
+    delJsonFile();
 }
