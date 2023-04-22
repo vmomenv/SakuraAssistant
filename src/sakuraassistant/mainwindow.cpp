@@ -64,6 +64,25 @@ MainWindow::MainWindow(DWidget *parent)
     setToDo();
     setMonitor();
 
+    QPushButton *setTopButton = new QPushButton(this);
+    setTopButton->setFixedSize(29,29);
+    setTopButton->move(190,12);
+    setTopButton->setIcon(QIcon(":/res/passbook/unPin.png"));
+    setTopButton->setIconSize(QSize(15,15));
+    setTopButton->setStyleSheet("border:none; background-color:transparent;");
+    connect(setTopButton, &QPushButton::clicked, [=] {
+    if (isUpdating == false) {
+        setTopButton->setIcon(QIcon(":/res/passbook/pin.png"));
+        this->isUpdating=true;
+        setWindowFlag(Qt::WindowStaysOnTopHint);
+        this->show();
+
+
+    } else {
+        setTopButton->setIcon(QIcon(":/res/passbook/unPin.png"));
+        this->isUpdating=false;
+    }
+    });
 
 }
 
