@@ -76,6 +76,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
             todo->line->setFixedHeight(40);
             todo->line->setToolTip(todo->line->text());//设置文本悬浮
             todo->line->setMouseTracking(true);
+            todo->line->setCursorPosition(0);
             todo->delBtn->setIcon(QPixmap(":/res/delete.png"));
             todo->delBtn->setFixedHeight(40);
 
