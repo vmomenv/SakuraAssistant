@@ -230,7 +230,7 @@ void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isD
     itemObj.insert("items", itemArr);
     doc.setObject(itemObj);
     qDebug()<<"保存时doc"<<doc;
-
+    delJsonFile();
 
 
 }
@@ -241,8 +241,8 @@ void TodoClassManager::delJsonFile()
     qDebug()<<"del"<<doc;
 
 
-//    QJsonDocument fixedDoc;
-//    fixedDoc=doc;
+    QJsonDocument fixedDoc;
+    fixedDoc=doc;
     QDir home = QDir::home();
     QString configPath = home.filePath(".config/sakuraassistant");
     QDir dir(configPath);
