@@ -45,6 +45,7 @@ public:
     QByteArray encryptJsonFile(QJsonDocument doc,const QString password);
     QByteArray decryptJsonFile(QByteArray jsonData, const QString password);
     void passMainWindow();
+    QString generatePassword();
 
     ~PassBook();
 
