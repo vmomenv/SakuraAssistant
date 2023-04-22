@@ -737,7 +737,7 @@ bool PassBook::eventFilter(QObject *watched, QEvent *event)//失焦关闭窗口
         {
             if(this->isUpdating==false){
                 delJsonFile(m_accountPassword);
-                this->hide();
+                this->close();
             }
         }
     }

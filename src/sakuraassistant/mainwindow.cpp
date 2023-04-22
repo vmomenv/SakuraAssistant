@@ -247,8 +247,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)//感谢柚柚帮�
         if (QApplication::activeWindow() != this)
         {
             if(isUpdating==false){
-
-                this->hide();
+                this->close();
             }
         }
     }
