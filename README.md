@@ -17,7 +17,7 @@
 6. qtbase5-dev
 7. qttools5-dev-tools
 
-#### 1.3从源码上构建星火小助手
+#### 1.3从源码上构建樱花助手
 ```bash
 cd SparkAssistant
 mkdir build
@@ -25,7 +25,7 @@ cd build
 qmake qmake ../src/sparkassistant/sparkassistant.pro
 make
 ```
-### 二、开发星火小助手
+### 二、开发樱花助手
 #### 1.1开发之前，你可以先运行一个dtk demo来[熟悉dtk开发](http://www.momen.world:8880/post/63)。
 #### 1.2查看dtk相关文档
 deepin官方提供了三份dtk文档
@@ -269,8 +269,7 @@ void TodoClassManager::delJsonFile()
     file.write(doc.toJson());
 }
 ```
-
-
-
-
+###### 密码本
+   
+![image.png](http://www.momen.world:8880/static/img/3721aed02ba178f625093328e51721d2.image.png)
 
