@@ -94,6 +94,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     importButton->setIconSize(QSize(31,31));
     importButton->setStyleSheet("border:none; background-color:transparent;");
     importButton->move(739,301);
+    importButton->setToolTip("导入数据");
 
     QPushButton *exportButton =new QPushButton(passWidget);
     QPixmap exportPixmap(":/res/passbook/export.png");
@@ -101,6 +102,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     exportButton->setIconSize(QSize(31,31));
     exportButton->setStyleSheet("border:none; background-color:transparent;");
     exportButton->move(787,301);
+    exportButton->setToolTip("复制数据到桌面");
 
 
     //文字
@@ -283,6 +285,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
             connect(showPasswordButton, &QPushButton::clicked, [=] {
                 if(passwordLineEdit->text().isEmpty()){
                     passwordLineEdit->setText(generatePassword());
+                    this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),i,false,false);
                 }
             if (passwordLineEdit->echoMode() == QLineEdit::Password) {
 
@@ -386,6 +389,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
         connect(showPasswordButton, &QPushButton::clicked, [=] {
             if(passwordLineEdit->text().isEmpty()){
                 passwordLineEdit->setText(generatePassword());
+                this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),*addIndex,false,false);
             }
         if (passwordLineEdit->echoMode() == QLineEdit::Password) {
 
@@ -546,6 +550,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
                 connect(showPasswordButton, &QPushButton::clicked, [=] {
                     if(passwordLineEdit->text().isEmpty()){
                         passwordLineEdit->setText(generatePassword());
+                        this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),search_index,false,false);
                     }
                 if (passwordLineEdit->echoMode() == QLineEdit::Password) {
 
@@ -647,6 +652,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
             connect(showPasswordButton, &QPushButton::clicked, [=] {
                 if(passwordLineEdit->text().isEmpty()){
                     passwordLineEdit->setText(generatePassword());
+                    this->saveToJsonFile(targetNameLineEdit->text(),usernameLineEdit->text(),passwordLineEdit->text(),*addIndex,false,false);
                 }
             if (passwordLineEdit->echoMode() == QLineEdit::Password) {
 
@@ -726,7 +732,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
             }
         }
         qDebug()<<"复制完成";
-        QMessageBox::information(this, "复制成功", "请在桌面查看！");
+        QMessageBox::information(this, "复制成功", "请在桌面查看【樱花助手备份】");
 
     });
     connect(importButton,&QPushButton::clicked,this,[=]{
@@ -864,6 +870,9 @@ QString PassBook::generatePassword()
     QString generatePassword;
     const int passwordLength = 10;
     const QString symbols = "~!@#$%^&*()_+`-=[]\\{}|;':\",./<>?";
+
+    // 设置随机种子
+    qsrand(QDateTime::currentMSecsSinceEpoch() / 1000);
 
     // 添加数字
     for (int i = 0; i < 3; ++i) {
