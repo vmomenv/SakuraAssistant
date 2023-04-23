@@ -56,7 +56,14 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
         this->isUpdating=false;
     }
     });
-
+    //创建下方装饰条
+    QWidget *bottomWidget=new QWidget(this);
+    bottomWidget->setFixedSize(861,50);
+    bottomWidget->move(0,440);
+    pal = bottomWidget->palette();//设置widget背景色
+    pal.setColor(QPalette::Background, QColor(49,53,62, 255));
+    bottomWidget->setPalette(pal);
+    bottomWidget->setAutoFillBackground(true);
 
     //创建搜索框widget并且将控件放入该widget
     QWidget *searchWidget = new QWidget(this);
@@ -76,7 +83,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     //密码详情
     QWidget *passWidget=new QWidget(this);
     passWidget->move(22,142);
-    passWidget->resize(830,330);
+    passWidget->resize(830,350);
 
 
 
@@ -86,14 +93,14 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     addPassButton->setIcon(addPixmap);
     addPassButton->setIconSize(QSize(31,31));
     addPassButton->setStyleSheet("border:none; background-color:transparent;");
-    addPassButton->move(0,301);
+    addPassButton->move(0,307);
     //创建导入导出按钮
     QPushButton *importButton =new QPushButton(passWidget);
     QPixmap importPixmap(":/res/passbook/import.png");
     importButton->setIcon(importPixmap);
     importButton->setIconSize(QSize(31,31));
     importButton->setStyleSheet("border:none; background-color:transparent;");
-    importButton->move(739,301);
+    importButton->move(739,307);
     importButton->setToolTip("导入数据");
 
     QPushButton *exportButton =new QPushButton(passWidget);
@@ -101,7 +108,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     exportButton->setIcon(exportPixmap);
     exportButton->setIconSize(QSize(31,31));
     exportButton->setStyleSheet("border:none; background-color:transparent;");
-    exportButton->move(787,301);
+    exportButton->move(787,307);
     exportButton->setToolTip("复制数据到桌面");
 
 

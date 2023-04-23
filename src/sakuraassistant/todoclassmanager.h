@@ -6,6 +6,7 @@
 #include<QFile>
 #include<QEvent>
 #include<QApplication>
+#include<QLabel>
 class TodoClassManager : public QWidget
 {
     Q_OBJECT
