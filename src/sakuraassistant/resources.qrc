@@ -55,5 +55,6 @@
         <file>res/passbook/import.png</file>
         <file>res/passbook/export.png</file>
         <file>res/passbook/sakurabackground.png</file>
+        <file>res/passbook/copied.png</file>
     </qresource>
 </RCC>

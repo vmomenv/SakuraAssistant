@@ -78,6 +78,7 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
     searchLayout->addWidget(searchEdit);
     searchWidget->setFixedSize(816, 53);
     searchWidget->setStyleSheet("background-color: #C3C9D3;border-radius: 12px;");//设置圆角
+    searchEdit->setPlaceholderText("搜索");
     searchWidget->move(22, 69);
 
     //密码详情
@@ -275,6 +276,8 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
             copyButton->move(738, 5);
             copyButton->setIcon(QIcon(":/res/passbook/copy.png"));
             copyButton->setIconSize(QSize(30, 30));
+            copyButton->setToolTip("复制密码");
+            copyButton->setMouseTracking(true);
             copyButton->setStyleSheet("border:none; background-color:transparent;");
             //创建删除按钮
             QPushButton *delButton=new QPushButton(credentialWidget);
@@ -379,6 +382,8 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
         copyButton->move(738, 5);
         copyButton->setIcon(QIcon(":/res/passbook/copy.png"));
         copyButton->setIconSize(QSize(30, 30));
+        copyButton->setToolTip("复制密码");
+        copyButton->setMouseTracking(true);
         copyButton->setStyleSheet("border:none; background-color:transparent;");
         //创建删除按钮
         QPushButton *delButton=new QPushButton(credentialWidget);
@@ -539,6 +544,8 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
                 copyButton->move(738, 5);
                 copyButton->setIcon(QIcon(":/res/passbook/copy.png"));
                 copyButton->setIconSize(QSize(30, 30));
+                copyButton->setToolTip("复制密码");
+                copyButton->setMouseTracking(true);
                 copyButton->setStyleSheet("border:none; background-color:transparent;");
                 //创建删除按钮
                 QPushButton *delButton=new QPushButton(credentialWidget);
@@ -644,6 +651,8 @@ PassBook::PassBook(QString accountPassword, DWidget *parent): m_accountPassword(
             copyButton->move(738, 5);
             copyButton->setIcon(QIcon(":/res/passbook/copy.png"));
             copyButton->setIconSize(QSize(30, 30));
+            copyButton->setToolTip("复制密码");
+            copyButton->setMouseTracking(true);
             copyButton->setStyleSheet("border:none; background-color:transparent;");
             //创建删除按钮
             QPushButton *delButton=new QPushButton(credentialWidget);
