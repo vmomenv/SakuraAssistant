@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 3.5.1)
 
-project(sakura-assistant LANGUAGES CXX VERSION 2.2.2)
+project(sakura-assistant LANGUAGES CXX VERSION 2.2.5)
 
 include(cmake/SparkEnvConfig.cmake)
 include(cmake/SparkMacrosConfig.cmake)

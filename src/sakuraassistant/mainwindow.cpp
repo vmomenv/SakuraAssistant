@@ -157,7 +157,7 @@ void MainWindow::setToDo()
 
     TodoClassManager *todo =new TodoClassManager(this);
     todo->resize(220,238);
-    todo->move(0,80);
+    todo->move(5,80);
 
 }
 

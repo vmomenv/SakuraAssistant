@@ -40,7 +40,6 @@
         <file>res/citycode.json</file>
         <file>res/todo.json</file>
         <file>res/delete.png</file>
-        <file>res/plus.png</file>
         <file>res/passbook/search.png</file>
         <file>res/plus-circle.png</file>
         <file>res/passbook/data.json</file>
@@ -55,5 +54,7 @@
         <file>res/passbook/import.png</file>
         <file>res/passbook/export.png</file>
         <file>res/passbook/sakurabackground.png</file>
+        <file>res/passbook/copied.png</file>
+        <file>res/plus.png</file>
     </qresource>
 </RCC>

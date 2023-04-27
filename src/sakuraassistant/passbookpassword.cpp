@@ -109,8 +109,7 @@ bool passbookPassword::verifyEncryption()
     }
 }
 
-void passbookPassword::login()
-{
+void passbookPassword::login(){
     QDialog *enterPassDialog=new QDialog;
     enterPassDialog->setWindowTitle("密码本");
     enterPassDialog->setFixedSize(861,490);
@@ -177,9 +176,17 @@ void passbookPassword::login()
         confirmButton->setFixedSize(127, 53);
         confirmButton->move(558,384);
         QLabel *warning=new QLabel(changePasswordWidget);
-        warning->setText("密码用于验证进入密码本并加解密数据，若忘记密码无法找回！");
+        warning->setText("密码用于验证进入密码本并加解密数据，若忘记密码无法找回");
         warning->setFixedSize(400,28);
         warning->move(196,332);
+        QPushButton  *delButton=new QPushButton(changePasswordWidget);
+        delButton->setText("销毁密码");
+        delButton->setFixedSize(127, 53);
+        delButton->move(177,384);
+        QObject::connect(delButton,&QPushButton::clicked,[=]{
+            QMessageBox::warning(enterPassDialog, "警告", "三思而后行，请自行进入~/.config/sakuraassistant目录删除data.json文件!");
+        });
+        
         changePasswordWidget->show();
         QObject::connect(confirmButton, &QPushButton::clicked, [=]{
             QString tmppassword=oldPassword->text();

@@ -1,4 +1,4 @@
-QT += core gui dtkwidget network
+QT += core gui dtkwidget network testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,7 +13,6 @@ HEADERS += \
     monitorthread.h \
     todoclassmanager.h \
     passbook.h \
-    aesencrypt.h \
     aesni/aesni-enc-cbc.h \
     aesni/aesni-enc-ecb.h \
     aesni/aesni-key-exp.h \
@@ -30,7 +29,6 @@ SOURCES += \
     monitorthread.cpp \
     todoclassmanager.cpp \
     passbook.cpp \
-    aesencrypt.cpp \
     qaesencryption.cpp \
     labelbutton.cpp \
     passbookpassword.cpp

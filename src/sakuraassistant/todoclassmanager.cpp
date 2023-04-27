@@ -30,7 +30,7 @@ TodoClassManager::TodoClassManager(QWidget *parent) : QWidget(parent)
     QPushButton *addBtn=new QPushButton(this);
     addBtn->resize(30,30);
     addBtn->setText("+");
-    addBtn->move(20,200);
+    addBtn->move(5,200);
 
 
 
@@ -231,7 +231,22 @@ void TodoClassManager::saveToJsonFile(bool completed,QString name,int i,bool isD
     itemObj.insert("items", itemArr);
     doc.setObject(itemObj);
     qDebug()<<"保存时doc"<<doc;
-    delJsonFile();
+
+    QDir home = QDir::home();
+    QString configPath = home.filePath(".config/sakuraassistant");
+    QDir dir(configPath);
+    QString path = dir.filePath("todo.json");
+    QFile file;
+    file.setFileName(path);
+    file.setPermissions(QFile::ReadUser | QFile::WriteUser | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther | QFile::WriteOther);
+    if(!file.open(QIODevice::ReadWrite)) {
+        qDebug() << "File open error";
+    } else {
+        qDebug() <<"File open!";
+    }
+
+    file.resize(0);
+    file.write(doc.toJson());
 
 
 }
