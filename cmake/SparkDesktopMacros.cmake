@@ -40,9 +40,9 @@ spark_desktop_macros(
     # 应用名称: Name=
     ${PROJECT_NAME}
     # 应用名称: Name[zh_CN]=
-    星火小助手
+    樱花助手
     # 应用说明: Comment=
-    星火小助手
+    樱花助手
     # 应用类型: Type=
     Application
     # 执行程序: Exec=

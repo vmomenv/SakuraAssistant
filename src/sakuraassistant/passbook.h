@@ -20,7 +20,7 @@
 #include<QSpacerItem>
 #include<QDir>
 #include<QVBoxLayout>
-#include "aesencrypt.h"
+#include "qaesencryption.h"
 #include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QVector>
