@@ -172,6 +172,12 @@ function(set_package_vars _IN_KEY _IN_VAL)
         set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "${_IN_VAL}" PARENT_SCOPE)
         message("--> 软件建议: ${_IN_VAL}")
     endif(_Recommends EQUAL "0")
+
+    find_str("${_IN_KEY}" "Conflicts" _Conflicts)
+    if(_Conflicts EQUAL "0")
+        set(CPACK_DEBIAN_PACKAGE_CONFLICTS "${_IN_VAL}" PARENT_SCOPE)
+        message("--> 软件冲突: ${_IN_VAL}")
+    endif(_Conflicts EQUAL "0")
     
 endfunction(set_package_vars _IN_KEY _IN_VAL)
 
@@ -238,7 +244,12 @@ function(add_package_descript IN_DES)
         set(PREV_DES_LINE "")
         while(NOT PREV_DES_LINE STREQUAL DES_LINE)
             if(NOT PREV_DES_LINE STREQUAL "")
-                set(Descrition "${Descrition}\n${DES_LINE}")
+                if ("${CMAKE_VERSION}" VERSION_LESS "3.15")
+                    set(Descrition "${Descrition}\n${DES_LINE}")
+                else()
+                    string(STRIP "${DES_LINE}" STRIP_DES_LINE)
+                    set(Descrition "${Descrition}\n${STRIP_DES_LINE}")
+                endif("${CMAKE_VERSION}" VERSION_LESS "3.15")
             endif(NOT PREV_DES_LINE STREQUAL "")
             set(PREV_DES_LINE "${DES_LINE}")
             sub_next(${DES_CONTENT} NEXT_INDEX DES_LINE DES_CONTENT)
@@ -275,6 +286,17 @@ function(add_package_descript IN_DES)
     )
     set(CPACK_DEBIAN_FILE_NAME            ${_DebFileName})
 
+    # 标识: spark-deb-package
+    if(NOT "${PACKAGE_SUFFIX}" STREQUAL "")
+        # eg: remove '_' of '_Debian' 
+        string(SUBSTRING "${PACKAGE_SUFFIX}" 1 -1 DISTRIBUTION)
+        if ("${CMAKE_VERSION}" VERSION_LESS "3.15")
+            set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${Descrition}\n .\n Build for ${DISTRIBUTION} through spark-deb-build.")
+        else()
+            set(CPACK_DEBIAN_PACKAGE_DESCRIPTION ${Descrition} "\n.\nBuild for ${DISTRIBUTION} through spark-deb-build.")
+        endif("${CMAKE_VERSION}" VERSION_LESS "3.15")
+        
+    endif(NOT "${PACKAGE_SUFFIX}" STREQUAL "")
 
     # set(CPACK_DEBIAN_PACKAGE_NAME         "${Package}")
     # set(CPACK_DEBIAN_PACKAGE_VERSION      "${Version}")
@@ -307,7 +329,7 @@ endfunction(add_package_descript IN_DES)
 # CPACK_DEBIAN_FILE_NAME                - n
 # CPACK_DEBIAN_PACKAGE_NAME             - y
 # CPACK_DEBIAN_PACKAGE_VERSION          - y
-# CPACK_DEBIAN_PACKAGE_ARCHITECTURE     - y(auto)
+# CPACK_DEBIAN_PACKAGE_ARCHITECTURE     - y(auto) -> dpkg --print-architecture
 # CPACK_DEBIAN_PACKAGE_DEPENDS          - y
 # CPACK_DEBIAN_PACKAGE_PRIORITY         - y
 # CPACK_DEBIAN_PACKAGE_MAINTAINER       - y
@@ -319,5 +341,6 @@ endfunction(add_package_descript IN_DES)
 # elseif(${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "aarch64")
 #     set(ARCHITECTURE "arm64")
 # endif()
+
 
 # string(TIMESTAMP BUILD_TIME "%Y%m%d")
