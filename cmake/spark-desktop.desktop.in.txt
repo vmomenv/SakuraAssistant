@@ -7,5 +7,7 @@ Type=@APP_TYPE@
 Exec=@APP_EXECUTE_PATH@
 Icon=@APP_EXECUTE_ICON_PATH@
 Categories=@APP_CATEGORIES@
+MimeType=@APP_MIME_TYPE@
 
 # Generated from the DesktopGenerater component of the z-Tools toolkit
+

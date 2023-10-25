@@ -30,8 +30,8 @@ install(DIRECTORY src/sakuraassistant/pkg/usr
     DESTINATION "/")
 
 # deb 构建支持
-find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
-add_package_descript(cmake/package-deb.descript)
+find_package(SparkDebPackage PATHS ${CMAKE_SOURCE_DIR})
+add_package_descript(cmake/spark-deb-package.descript)
 
 
 # 预留，Appimage 构建支持
